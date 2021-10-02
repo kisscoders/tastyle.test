@@ -1,0 +1,6 @@
+{
+	"jwtPrivateKey": "secretkey",
+	"db": "mongodb://localhost/tastyletestdb",
+	"PORT": "1301",
+	"requiresAuth": false
+}

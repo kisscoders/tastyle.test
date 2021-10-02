@@ -1,0 +1,135 @@
+// mongoschemadesign
+// temporary file for determining schema design
+
+{
+	// Users Collection
+	"$Userschema": {
+		"_id": 123,
+		"schema": 0.1,
+		"email": ["tempmail@gmail.com", "backupmail"],
+		"password": "isthissecure",
+		"profileImgUrl": ["primary", "old ones"],
+		"name": ["first", "last", "nick"],
+		"contactNo": ["primary", "secondary"],
+		"address_ids": ["primary", "secondary"],
+		"isAdmin": true,
+		"bought_products": ["234", "241"],
+		"incart": ["order_id1", "order_id2"],
+		"subscribedTo": ["orderid1", "orderid2"],
+		"telemetry": {
+			"viewed_products": ["123", "232"],
+			"activeTimeOnSite": 2000
+		},
+		"referred": ["user_id1", "user_id2"],
+		"referred by": "user_id",
+		"offers": [
+			{ "freetshirtoffer": false },
+			{ "freebottleoffer": false },
+			{ "firstreferraloffer": false }
+		]
+	},
+
+	// Addresses Collection
+	"$Addressschema": {
+		"_id": "234",
+		"schema": 0.1,
+		"receivername": "",
+		"contactno": "",
+		"number": "61/2",
+		"street": "6th lane",
+		"road": "a1",
+		"city": "newyork",
+		"country": "metropolice",
+		"zipcode": "40000",
+		"landmarks": ["opposite to something", "onto something"],
+		"coordinates": "" // use w3 if possible
+	},
+
+	// Products Collection
+	"$Productsschema": {
+		"_id": "345",
+		"schema": 0.1,
+		"name": "brewclassic",
+		"price": "singletime",
+		"description": [],
+		"reviews": [
+			{
+				"user_id": "the review by the specific user"
+			}
+		],
+		"ingredients": [],
+		// "tags": ["spicy","salt","gluten-free"],
+		"imgurls": [{ "mainimg": "url" }, { "extra1": "url" }, { "endorsed": "url" }]
+	},
+
+	// Orders Collection
+	"$Ordersschema": {
+		"_id": "345",
+		"schema": 0.1,
+		"handler_id": [""],
+		"products": [
+			{
+				"product_id": "",
+				"quantity": 4,
+				"sub_status": true,
+				"subs_date": "13th Dec 2021"
+			}
+		],
+		"payment": ["method", "provider"],
+		"address_id": "",
+		"gross_amount": "",
+		"estimated_charges": "",
+		"net_total": "",
+		"display": ""
+	},
+
+	// Page Contents Collection
+	"$Pagesschema": {
+		"Pagedoc1": {
+			"_id": "123",
+			"page": "promotions",
+			"imgUrl": [],
+			"textfills": []
+		},
+		"Pagedoc2": {
+			"_id": "123",
+			"page": "aboutpage",
+			"imgUrl": [],
+			"textfills": []
+		}
+	}
+}
+
+// Below are non relevant fields for now
+
+// Posts Collection
+// "$Postsschema": {
+//   "_id": "123",
+//   "schema": 0.1,
+//   "user_id": "345",
+//   "title": "formposttitle",
+//   "text": "some description",
+//   "tags": [],
+//   "timestamp": "date{}",
+//   "likes": 2,
+//   "comments": {
+//     "_id": "123",
+//     "user_id": "123",
+//     "text": "sometext",
+//     "timestamp": "date{}",
+//     "votes": 9
+//   },
+//   "totalcomments": 76
+// },
+
+// "post_ids": ["id1", "id2"],
+// "comment_ids": ["id1", "id2"],
+
+// {
+//   schema:0.1
+//   name:"sfa",
+//   age:"afd",
+//   products:[]
+// }
+// schema.0.1
+// console.log((document).name)
