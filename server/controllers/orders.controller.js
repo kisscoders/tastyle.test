@@ -1,25 +1,25 @@
-import { Router } from "express";
-import Order from "../models/extra/order.model";
-var express = require("express");
-const router = Router();
-router.use(express.json());
+// import { Router } from "express";
+// import Order from "../models/extra/order.model";
+// var express = require("express");
+// const router = Router();
+// router.use(express.json());
 
-router.route("/").post(async (request, response) => {
-	try {
-		const order = new Order(request.body);
-		await order.save();
-		return response.status(200).json("Order created!");
-	} catch (error) {
-		return response.status(400).send(error);
-	}
-});
+// router.route("/").post(async (request, response) => {
+// 	try {
+// 		const order = new Order(request.body);
+// 		await order.save();
+// 		return response.status(200).json("Order created!");
+// 	} catch (error) {
+// 		return response.status(400).send(error);
+// 	}
+// });
 
-router.route("/").get(async (_, response) => {
-	const orders = await Order.find();
-	return response.status(200).json(orders);
-});
+// router.route("/").get(async (_, response) => {
+// 	const orders = await Order.find();
+// 	return response.status(200).json(orders);
+// });
 
-export default router;
+// export default router;
 // extra stuff
 
 // // @desc    What does this do
