@@ -10,6 +10,7 @@ const getMe = async (req, res) => {
 	res.send(user);
 };
 
+//testing githup
 // @desc    Create new user
 // @route   POST /api/users
 // @access  Private
