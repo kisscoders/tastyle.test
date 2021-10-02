@@ -67,5 +67,6 @@ const getProduct = async (req, res) => {
 		.then((exercise) => res.json(exercise))
 		.catch((err) => res.status(400).json("Error: " + err));
 };
-
+//export crud functions
 export { getAllProducts, getProduct, updateProduct, deleteProduct, addProduct };
+
