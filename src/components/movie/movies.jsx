@@ -104,6 +104,7 @@ class Movies extends Component {
 		};
 	};
 	render() {
+		const { user } = this.props;
 		const { length: movCount } = this.state.movies;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
@@ -121,9 +122,11 @@ class Movies extends Component {
 					/>
 				</div>
 				<div className="">
-					<Link className="btn btn-primary mb-3" to="/movies/new">
-						New Movie
-					</Link>
+					{user && (
+						<Link className="btn btn-primary mb-3" to="/movies/new">
+							New Movie
+						</Link>
+					)}
 					<p>Showing {totalCount} movies in the database</p>
 					<SearchBar value={searchQuery} onChange={this.handleSearch} />
 					<MoviesTable

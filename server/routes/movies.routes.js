@@ -1,6 +1,7 @@
 import { Router } from "express";
 const router = Router();
 import { auth } from "../middleware/auth";
+import { admin } from "../middleware/admin";
 
 import {
 	getMovies, // @route   GET /api/movies
@@ -14,7 +15,7 @@ router.route("/").post(auth, addMovie).get(getMovies);
 router
 	.route("/:id")
 	.put(auth, updateMovie)
-	.delete(auth, deleteMovie)
+	.delete([auth, admin], deleteMovie) // admin required
 	.get(viewMovie);
 
 export default router;

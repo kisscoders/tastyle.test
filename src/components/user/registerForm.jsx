@@ -1,8 +1,7 @@
 import React from "react";
 import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../common/form";
-import { register } from "../../services/userService";
-import auth from "../../services/authService";
+import auth, { register } from "../../services/authService";
 
 class RegisterForm extends Form {
 	state = {

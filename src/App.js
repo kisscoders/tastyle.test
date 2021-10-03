@@ -20,6 +20,7 @@ import Logout from "./components/user/logout";
 import auth from "./services/authService";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import ProtectedRoute from "./components/common/protectedRoute";
 
 class App extends Component {
 	state = {};
@@ -30,10 +31,11 @@ class App extends Component {
 	}
 
 	render() {
+		const { user } = this.state;
 		return (
 			<div>
 				<ToastContainer />
-				<NavBar user={this.state.user} />
+				<NavBar user={user} />
 				<div>
 					<main className="container">
 						<Switch>
@@ -45,7 +47,7 @@ class App extends Component {
 							<Route path="/products/:id" component={ProductDetails} />
 							<Route path="/orders/new" exact component={OrderForm} />
 							<Route path="/orders" exact component={Orders} />
-							<Route path="/movies/:id" component={MovieForm} />
+							<ProtectedRoute path="/movies/:id" component={MovieForm} />
 							<Route
 								path="/products"
 								render={(props) => <Products sortBy="newest" {...props} />}
@@ -54,7 +56,11 @@ class App extends Component {
 							<Route path="/posts/:year?/:month?" component={Posts} />
 							<Route path="/admin" component={Dashboard} />
 							<Redirect from="/messages" to="/posts" />
-							<Route path="/movies" exact component={Movies} />
+							<Route
+								path="/movies"
+								exact
+								render={(props) => <Movies {...props} user={user} />}
+							/>
 							{/* <Route path="/customers" component={Customers} /> */}
 							<Route path="/rentals" component={Rentals} />
 							{/* <Route path="/" exact component={Home} /> */}
