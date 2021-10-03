@@ -3,11 +3,11 @@ import _ from "lodash";
 import bcrypt from "bcrypt";
 import Joi from "joi";
 
-// @desc    Create new user
-// @route   POST /api/users
-// @access  Private
+// @desc    Login and authorization
+// @route   POST /api/users/auth
+// @access  Public
 const postUser = async (req, res) => {
-	const { error } = validate(req.body);
+	const { error } = validateLogin(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	let user = await User.findOne({ email: req.body.email });
@@ -20,7 +20,7 @@ const postUser = async (req, res) => {
 	res.send(token);
 };
 
-function validate(req) {
+function validateLogin(req) {
 	const schema = Joi.object({
 		email: Joi.string().min(5).max(255).required().email(),
 		password: Joi.string().min(5).max(255).required(),

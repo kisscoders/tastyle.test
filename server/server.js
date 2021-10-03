@@ -13,7 +13,7 @@ connectDB(); // connecting to database
 
 // initiating server
 app.listen(port, () => {
-	console.log(`strange.ness from server on ${port}`);
+	console.log(`tastyle server is having fun on ${port}`);
 });
 
 // extra stuff

@@ -7,23 +7,17 @@ const getGenres = async (req, res) => {
 	const genres = await Genre.find().select("-__v").sort("name");
 	return res.status(200).json(genres);
 };
-
+// TODO:
+//?
 // @desc    Create new genre
 // @route   POST /api/genres
 // @access  Private
 const addGenre = async (req, res) => {
 	const { error } = validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
-	try {
-		let genre = new Genre({
-			name: req.body.name,
-		});
-		genre = await genre.save();
-		await genre.save();
-		return res.status(200).json("Genre created!", genre);
-	} catch (error) {
-		return res.status(400).send(error);
-	}
+	let genre = new Genre({ name: req.body.name });
+	genre = await genre.save();
+	res.status(200).json("Genre created!", genre);
 };
 
 // @desc    Update a genre
@@ -36,9 +30,7 @@ const updateGenre = async (req, res) => {
 	const genre = await Genre.findByIdAndUpdate(
 		req.params.id,
 		{ name: req.body.name },
-		{
-			new: true,
-		}
+		{ new: true }
 	);
 
 	if (!genre)

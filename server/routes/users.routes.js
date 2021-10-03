@@ -1,10 +1,11 @@
 import { auth } from "../middleware/auth";
 import { Router } from "express";
 const router = Router();
-import { addUser, getMe } from "../controllers/users.controller";
+import { createUser, getMe, loginUser } from "../controllers/users.controller";
 
 router.route("/me").get(auth, getMe);
-router.route("/").post(addUser);
+router.route("/auth").post(loginUser);
+router.route("/").post(createUser);
 
 export default router;
 
@@ -25,7 +26,6 @@ export default router;
 // router.route("/logout").get(logOut);
 // router.route("/forgotpass").post(forgotPass);
 // // router.route("/me").get(getMe);
-
 
 // router.route("/").post(createUser).get(sayHello);
 // router.route("/me").get(getMe);
