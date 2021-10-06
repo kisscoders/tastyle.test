@@ -16,11 +16,12 @@ import RegisterForm from "./components/user/registerForm";
 import OrderForm from "./components/order/orderForm";
 import Orders from "./components/order/orders";
 import Logout from "./components/user/logout";
+import ProductForm from "./components/product/productForm";
+import ProtectedRoute from "./components/common/protectedRoute";
 
 import auth from "./services/authService";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import ProtectedRoute from "./components/common/protectedRoute";
 
 class App extends Component {
 	state = {};
@@ -44,15 +45,11 @@ class App extends Component {
 							<Route path="/login" component={LoginForm} />
 							<Route path="/logout" component={Logout} />
 							<Route path="/register" component={RegisterForm} />
-							<Route path="/products/:id" component={ProductDetails} />
+							<Route path="/products/:id" exact component={ProductForm} />
+							<Route path="/products/d/:id" component={ProductDetails} />
 							<Route path="/orders/new" exact component={OrderForm} />
 							<Route path="/orders" exact component={Orders} />
 							<ProtectedRoute path="/movies/:id" component={MovieForm} />
-							<Route
-								path="/products"
-								render={(props) => <Products sortBy="newest" {...props} />}
-								// here we are trying to insert custom props to this component while keeping the default props(we used ... the spread operator for that) like history, location & match
-							/>
 							<Route path="/posts/:year?/:month?" component={Posts} />
 							<Route path="/admin" component={Dashboard} />
 							<Redirect from="/messages" to="/posts" />
@@ -60,6 +57,11 @@ class App extends Component {
 								path="/movies"
 								exact
 								render={(props) => <Movies {...props} user={user} />}
+							/>
+							<Route
+								path="/products"
+								exact
+								render={(props) => <Products {...props} user={user} />}
 							/>
 							{/* <Route path="/customers" component={Customers} /> */}
 							<Route path="/rentals" component={Rentals} />

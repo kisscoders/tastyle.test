@@ -1,3 +1,82 @@
+import Order from "../models/order.model";
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+
+// @desc    Create new order
+// @route   POST /api/orders
+// @access  Private
+const addOrder = async (req, res, next) => {
+	const { quantityVar, priceSum, orderType, orderStatus } = req.body;
+
+	const order = await Order.create({
+		product: req.product._id,
+		quantityVar,
+		priceSum,
+		orderType,
+		deliverTo: req.address._id,
+		customer: req.user._id,
+		orderStatus,
+		createdAt: Date.now(),
+	});
+
+	res.status(201).json({
+		success: true,
+		order,
+	});
+};
+const updateOrder = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const deleteOrder = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const viewOrder = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const getAddresses = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+
+const addAddress = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const updateAddress = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const deleteAddress = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+const viewAddress = async (req, res) => {
+	const orders = await Order.find().select("-__v").sort("name");
+	return res.status(200).json(orders);
+};
+
+export {
+	getOrders,
+	addOrder,
+	updateOrder,
+	deleteOrder,
+	viewOrder,
+	getAddresses,
+	addAddress,
+	updateAddress,
+	deleteAddress,
+	viewAddress,
+};
+
 // import { Router } from "express";
 // import Order from "../models/extra/order.model";
 // var express = require("express");
