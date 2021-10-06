@@ -6,6 +6,9 @@ import Joi from "joi";
 // @desc    Get me
 // @route   GET /api/users/me
 // @access  User / Admin
+// TODO: [TSW-22]
+// Find out why getMe is not working
+// Find out the use case of this function
 const getMe = async (req, res) => {
 	const user = await User.findById(req.user._id).select("-password");
 	res.send(user);
@@ -29,7 +32,7 @@ const createUser = async (req, res) => {
 	const token = user.generateAuthToken();
 	res
 		.header("x-auth-token", token)
-		.header("access-control-expose-headers", "x-auth-token")
+		.header("access-control-expose-headers", "x-auth-token") // to make custom headers visible
 		.send(_.pick(user, ["_id", "name", "email"]));
 };
 
@@ -50,6 +53,7 @@ const loginUser = async (req, res) => {
 	res.send(token);
 };
 
+// Using joi to validate login input is as required
 function validateLogin(req) {
 	const schema = Joi.object({
 		email: Joi.string().min(5).max(255).required().email(),
@@ -60,9 +64,11 @@ function validateLogin(req) {
 }
 
 export { createUser, getMe, loginUser };
-// // @desc    Create User
-// // @route   POST /api/users/
-// // @access  Private
+
+// TODO:
+// Need to get the responses from the following function into the create
+// user function to better respond to the situation
+
 // const createUser = (req, res) => {
 // 	console.log(req.body);
 // 	var personInfo = req.body;
@@ -115,9 +121,6 @@ export { createUser, getMe, loginUser };
 // 	}
 // };
 
-// // @desc   	login now
-// // @route   POST /api/users/login
-// // @access  Private
 // const loginNow = (req, res) => {
 // 	console.log(req.body);
 // 	User.findOne({ email: req.body.email }, function (err, data) {
@@ -136,69 +139,6 @@ export { createUser, getMe, loginUser };
 // 	});
 // };
 
-// // @desc   	logout
-// // @route   GET /api/users/logout
-// // @access  Private
-// const logOut = (req, res) => {
-// 	console.log(req.body);
-// 	console.log("logout");
-// 	if (req.session) {
-// 		// delete session object
-// 		req.session.destroy(function (err) {
-// 			if (err) {
-// 				return next(err);
-// 			} else {
-// 				// return res.redirect('/login');
-// 				return res.send("/");
-// 			}
-// 		});
-// 	}
-// };
-
-// // @desc   	forgotpass
-// // @route   POST /api/users/forgotpass
-// // @access  Private
-
-// const forgotPass = (req, res) => {
-// 	console.log(req.body);
-// 	User.findOne({ email: req.body.email }, function (err, data) {
-// 		console.log(data);
-// 		if (!data) {
-// 			res.send({ Success: "This Email Is not regestered!" });
-// 		} else {
-// 			// res.send({"Success":"Success!"});
-// 			if (req.body.password == req.body.passwordConf) {
-// 				data.password = req.body.password;
-// 				data.passwordConf = req.body.passwordConf;
-
-// 				data.save(function (err, Person) {
-// 					if (err) console.log(err);
-// 					else console.log("Success");
-// 					res.send({ Success: "Password changed!" });
-// 				});
-// 			} else {
-// 				res.send({
-// 					Success: "Password does not matched! Both Password should be same.",
-// 				});
-// 			}
-// 		}
-// 	});
-// };
-
-// import User from "../models/user.model";
-// // import _ from "lodash";
-
-// export { sayHello, createUser };
-
-// const auth = require("../middleware/auth");
-// const bcrypt = require("bcrypt");
-
-// import { Router } from "express";
-// import User from "../models/user.model";
-// var express = require("express");
-// const router = Router();
-// router.use(express.json());
-
 // router.route("/").post(async (request, response) => {
 //   try {
 //     const user = new User(request.body);
@@ -213,5 +153,3 @@ export { createUser, getMe, loginUser };
 //   const users = await User.find();
 //   return response.status(200).json(users);
 // });
-
-// export default router;

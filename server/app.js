@@ -8,7 +8,7 @@ app.use(express.json()); // JSON parsing for requests from app
 
 require("./routes/index.routes")(app); // routes index file incoming
 
-export default app; // going to server. byeee
+export default app; // going to server. bye
 
 // extra stuff
 
