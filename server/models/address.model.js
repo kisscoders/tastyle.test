@@ -11,6 +11,7 @@ const addressSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	// Display Name
 	contactNo: {
 		type: String,
 		required: true,
@@ -31,10 +32,6 @@ const addressSchema = new Schema({
 		type: String,
 		required: true,
 		default: "40000",
-	},
-	phoneNo: {
-		type: String,
-		required: true,
 	},
 	landmarks: {
 		type: String,

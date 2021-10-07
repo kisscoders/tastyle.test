@@ -1,14 +1,13 @@
 const Joi = require("joi");
 // Joi.objectId = require("joi-objectid")(Joi);
 import { Schema, model } from "mongoose";
-// import { addressSchema } from "./address.model";
-// import { productSchema } from "./product.model";
+import { addressSchema } from "./address.model";
+import { productSchema } from "./product.model";
 // import { userSchema } from "./user.model";
 
 const orderSchema = new Schema({
 	product: {
-		type: Schema.ObjectId,
-		ref: "Product",
+		type: productSchema,
 		required: true,
 	},
 	quantityVar: {
@@ -25,23 +24,21 @@ const orderSchema = new Schema({
 		default: "onetime",
 	},
 	deliverTo: {
-		type: Schema.ObjectId,
-		ref: "Address",
+		type: addressSchema,
 		required: true,
 	},
-	customer: {
-		type: Schema.ObjectId,
-		ref: "User",
-		required: true,
-	},
+	// customer: {
+	// 	type: userSchema,
+	// 	required: true,
+	// },
 	orderStatus: {
 		type: String,
 		required: true,
-		default: "addressreq",
+		default: "Processing...",
 	},
 	deliveredAt: Date,
 	createdAt: {
-		type: Date,
+		type: String,
 		default: Date.now,
 	},
 	// paymentInfo: {

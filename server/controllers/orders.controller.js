@@ -1,4 +1,7 @@
 import Order from "../models/order.model";
+import Address from "../models/address.model";
+import User from "../models/user.model";
+import Product from "../models/product.model";
 
 // @desc    Get all orders
 // @route   GET /api/orders
@@ -12,56 +15,126 @@ const getOrders = async (req, res) => {
 // @route   POST /api/orders
 // @access  Private
 const addOrder = async (req, res, next) => {
-	const { quantityVar, priceSum, orderType, orderStatus } = req.body;
+	// const { error } = validate(req.body);
+	// if (error) return res.status(400).send(error.details[0].message);
 
-	const order = await Order.create({
-		product: req.product._id,
-		quantityVar,
-		priceSum,
-		orderType,
-		deliverTo: req.address._id,
-		customer: req.user._id,
-		orderStatus,
-		createdAt: Date.now(),
-	});
+	const address = await Address.findById(req.body.addressId);
+	if (!address) return res.status(400).send("Invalid address.");
+	const product = await Product.findById(req.body.productId);
+	if (!product) return res.status(400).send("Invalid product.");
+	// const user = await User.findOne({ email: req.body.email });
+	// if (!user) return res.status(400).send("Invalid user.");
+	// console.log(user);
 
-	res.status(201).json({
-		success: true,
-		order,
+	const order = new Order({
+		product: {
+			_id: product._id,
+			title: product.title,
+			price: product.price,
+		},
+		quantityVar: req.body.quantityVar,
+		priceSum: req.body.priceSum,
+		orderType: req.body.orderType,
+		deliverTo: {
+			_id: address._id,
+			firstName: address.firstName,
+			lastName: address.lastName,
+			contactNo: address.contactNo,
+			addLine1: address.addLine1,
+			addLine2: address.addLine2,
+			city: address.city,
+			zipcode: address.zipcode,
+			landmarks: address.landmarks,
+		},
+		// customer: {
+		// 	name: user.name,
+		// 	email: user.email,
+		// },
+		orderStatus: req.body.orderStatus,
+		deliveredAt: req.body.deliveredAt,
+		createdAt: Date.now,
 	});
+	await order.save();
+
+	res.send(order);
 };
+
 const updateOrder = async (req, res) => {
 	const orders = await Order.find().select("-__v").sort("name");
 	return res.status(200).json(orders);
 };
+
 const deleteOrder = async (req, res) => {
 	const orders = await Order.find().select("-__v").sort("name");
 	return res.status(200).json(orders);
 };
+
 const viewOrder = async (req, res) => {
 	const orders = await Order.find().select("-__v").sort("name");
 	return res.status(200).json(orders);
 };
+
 const getAddresses = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
+	const orders = await Address.find().select("-__v").sort("name");
 	return res.status(200).json(orders);
 };
 
 const addAddress = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
+	let address = new Address({
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		contactNo: req.body.contactNo,
+		addLine1: req.body.addLine1,
+		addLine2: req.body.addLine2,
+		city: req.body.city,
+		zipcode: req.body.zipcode,
+		landmarks: req.body.landmarks,
+	});
+	address = await address.save();
+	res.status(200).json(address);
 };
+
 const updateAddress = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
+	// const { error } = validate(req.body);
+	// if (error) return res.status(400).send(error.details[0].message);
+
+	const address = await Address.findByIdAndUpdate(
+		req.params.id,
+		{
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			contactNo: req.body.contactNo,
+			addLine1: req.body.addLine1,
+			addLine2: req.body.addLine2,
+			city: req.body.city,
+			zipcode: req.body.zipcode,
+			landmarks: req.body.landmarks,
+		},
+		{ new: true }
+	);
+
+	if (!address)
+		return res.status(404).send("The address with the given ID was not found.");
+
+	res.send(address);
 };
+
 const deleteAddress = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
+	const address = await Address.findByIdAndRemove(req.params.id);
+
+	if (!address)
+		return res.status(404).send("The address with the given ID was not found.");
+
+	res.send(address);
 };
+
 const viewAddress = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
+	const address = await Address.findById(req.params.id).select("-__v");
+
+	if (!address)
+		return res.status(404).send("The address with the given ID was not found.");
+
+	res.send(address);
 };
 
 export {

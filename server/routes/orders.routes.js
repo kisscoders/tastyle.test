@@ -16,12 +16,12 @@ import {
 	viewAddress, // @route   GET /api/a/:id
 } from "../controllers/orders.controller";
 
-router.route("/").post(auth, addOrder).get(getOrders);
-router.route("/a/").post(auth, addAddress).get(getAddresses);
+router.route("/").post(addOrder).get(getOrders);
+router.route("/a/").post(addAddress).get(getAddresses);
 router
 	.route("/a/:id")
-	.put(auth, updateAddress)
-	.delete([auth, admin], deleteAddress) // admin required
+	.put(updateAddress)
+	.delete(deleteAddress) // admin required
 	.get(viewAddress);
 router
 	.route("/:id")
