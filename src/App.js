@@ -10,6 +10,7 @@ import MovieForm from "./components/movie/movieForm";
 import ProductDetails from "./components/product/productDetails";
 import NotFound from "./components/layout/notFound";
 import Rentals from "./components/movie/rentals";
+import Home from "./components/home/home";
 import LoginForm from "./components/user/loginForm";
 import Posts from "./components/forum/posts";
 import RegisterForm from "./components/user/registerForm";
@@ -65,8 +66,7 @@ class App extends Component {
 							/>
 							{/* <Route path="/customers" component={Customers} /> */}
 							<Route path="/rentals" component={Rentals} />
-							{/* <Route path="/" exact component={Home} /> */}
-							<Redirect from="/" exact to="/movies" />
+							<Route path="/" exact component={Home} />
 							<Redirect to="/not-found" />
 						</Switch>
 					</main>
