@@ -21,6 +21,14 @@ const productSchema = new Schema({
 		type: String,
 		require: true,
 	},
+	img: {
+		type: String,
+		require: true,
+	},
+	cloudinary_id: {
+		type: String,
+		require: true,
+	},
 });
 
 const Product = model("Product", productSchema);
