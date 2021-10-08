@@ -1,85 +1,147 @@
 import Order from "../models/order.model";
 import Address from "../models/address.model";
-import User from "../models/user.model";
 import Product from "../models/product.model";
+import catchAsyncErrors from "../middleware/catchAsyncErrors";
+
+// @desc    Get current user's orders
+// @route   GET /api/orders/me
+// @access  Private/Admin
+const getMyOrders = catchAsyncErrors(async (req, res) => {
+	const orders = await Order.find({ user: req.user._id });
+
+	res.status(200).json({
+		success: true,
+		orders,
+	});
+});
 
 // @desc    Get all orders
 // @route   GET /api/orders
-// @access  Private/Admin
-const getOrders = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
-};
+// @access  Admin
+const getOrders = catchAsyncErrors(async (req, res) => {
+	const orders = await Order.find();
+
+	// let totalAmount = 0;
+
+	// orders.forEach((order) => {
+	//   totalAmount += order.totalPrice;
+	// });
+
+	res.status(200).json({
+		success: true,
+		//   totalAmount,
+		orders,
+	});
+});
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
-const addOrder = async (req, res, next) => {
-	// const { error } = validate(req.body);
-	// if (error) return res.status(400).send(error.details[0].message);
-
-	const address = await Address.findById(req.body.addressId);
-	if (!address) return res.status(400).send("Invalid address.");
-	const product = await Product.findById(req.body.productId);
-	if (!product) return res.status(400).send("Invalid product.");
-	// const user = await User.findOne({ email: req.body.email });
-	// if (!user) return res.status(400).send("Invalid user.");
-	// console.log(user);
-
+const addOrder = catchAsyncErrors(async (req, res, next) => {
 	const order = new Order({
-		product: {
-			_id: product._id,
-			title: product.title,
-			price: product.price,
-		},
+		product: req.body.productId,
 		quantityVar: req.body.quantityVar,
 		priceSum: req.body.priceSum,
 		orderType: req.body.orderType,
-		deliverTo: {
-			_id: address._id,
-			firstName: address.firstName,
-			lastName: address.lastName,
-			contactNo: address.contactNo,
-			addLine1: address.addLine1,
-			addLine2: address.addLine2,
-			city: address.city,
-			zipcode: address.zipcode,
-			landmarks: address.landmarks,
-		},
-		// customer: {
-		// 	name: user.name,
-		// 	email: user.email,
-		// },
+		deliverTo: req.body.addressId,
+		user: req.user._id,
 		orderStatus: req.body.orderStatus,
-		deliveredAt: req.body.deliveredAt,
-		createdAt: Date.now,
 	});
-	await order.save();
 
-	res.send(order);
-};
+	const orderDoc = await order.save();
+	const orderId = orderDoc._id;
+	const orderDetails = await Order.findById(orderId)
+		.populate("user", "name email")
+		.populate("deliverTo", "contactNo city addLine1")
+		.populate("product", "title price");
 
-const updateOrder = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
-};
+	res.status(201).json({
+		success: true,
+		orderDetails,
+	});
+});
 
-const deleteOrder = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
-};
+// @desc    Update an order
+// @route   POST /api/orders/:id
+// @access  Admin
+const updateOrder = catchAsyncErrors(async (req, res) => {
+	const order = await Order.findById(req.params.id);
 
-const viewOrder = async (req, res) => {
-	const orders = await Order.find().select("-__v").sort("name");
-	return res.status(200).json(orders);
-};
+	if (!order) {
+		return next(new ErrorHander("Order not found with this Id", 404));
+	}
+
+	if (order.orderStatus === "Delivered") {
+		return next(new ErrorHander("You have already delivered this order", 400));
+	}
+
+	// if (req.body.status === "Shipped") {
+	// 	order.orderItems.forEach(async (o) => {
+	// 		await updateStock(o.product, o.quantity);
+	// 	});
+	// }
+	order.orderStatus = req.body.status;
+
+	if (req.body.status === "Delivered") {
+		order.deliveredAt = Date.now();
+	}
+
+	await order.save({ validateBeforeSave: false });
+	res.status(200).json({
+		success: true,
+	});
+});
+
+async function updateStock(id, quantity) {
+	const product = await Product.findById(id);
+
+	product.Stock -= quantity;
+
+	await product.save({ validateBeforeSave: false });
+}
+
+// @desc    Delete an order
+// @route   POST /api/orders/:id
+// @access  Private
+const deleteOrder = catchAsyncErrors(async (req, res) => {
+	const order = await Order.findById(req.params.id);
+
+	if (!order) {
+		return next(new ErrorHander("Order not found with this Id", 404));
+	}
+
+	await order.remove();
+
+	res.status(200).json({
+		success: true,
+	});
+});
+
+// @desc    Get a specific order
+// @route   GET /api/orders/:id
+// @access  Private/Admin
+const viewOrder = catchAsyncErrors(async (req, res) => {
+	const order = await Order.findById(req.params.id)
+		.populate("user", "name email")
+		.populate("deliverTo", "contactNo city addLine1")
+		.populate("product", "title price");
+
+	if (!order) {
+		return next(new ErrorHander("Order not found with this Id", 404));
+	}
+
+	res.status(200).json({
+		success: true,
+		order,
+	});
+});
 
 const getAddresses = async (req, res) => {
-	const orders = await Address.find().select("-__v").sort("name");
+	const orders = await Address.find().select("-__v");
 	return res.status(200).json(orders);
 };
 
-const addAddress = async (req, res) => {
+const addAddress = catchAsyncErrors(async (req, res) => {
 	let address = new Address({
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
@@ -92,12 +154,9 @@ const addAddress = async (req, res) => {
 	});
 	address = await address.save();
 	res.status(200).json(address);
-};
+});
 
 const updateAddress = async (req, res) => {
-	// const { error } = validate(req.body);
-	// if (error) return res.status(400).send(error.details[0].message);
-
 	const address = await Address.findByIdAndUpdate(
 		req.params.id,
 		{
@@ -139,6 +198,7 @@ const viewAddress = async (req, res) => {
 
 export {
 	getOrders,
+	getMyOrders,
 	addOrder,
 	updateOrder,
 	deleteOrder,
@@ -299,7 +359,7 @@ export {
 // })
 
 // // @desc    Get logged in user orders
-// // @route   GET /api/orders/myorders
+// // @route   GET /api/orders/me
 // // @access  Private
 // const getMyOrders = asyncHandler(async (req, res) => {
 //   const orders = await Order.find({ user: req.user._id })

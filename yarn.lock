@@ -6527,6 +6527,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie-parser@npm:^1.4.5":
+  version: 1.4.5
+  resolution: "cookie-parser@npm:1.4.5"
+  dependencies:
+    cookie: 0.4.0
+    cookie-signature: 1.0.6
+  checksum: 09b41e191af8e472229b53468b858a53f64a355b438ecb56a38be2a729b862b8233041e5af102115caebae534d399813ec7270b68a949bba3b987b38555c30b6
+  languageName: node
+  linkType: hard
+
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
@@ -17930,6 +17940,7 @@ resolve@^2.0.0-next.3:
     bcrypt: ^5.0.1
     bootstrap: ^5.1.1
     chalk: ^4.0.0
+    cookie-parser: ^1.4.5
     cors: ^2.8.5
     dotenv: ^10.0.0
     eslint: ^7.32.0

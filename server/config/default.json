@@ -2,5 +2,7 @@
 	"jwtPrivateKey": "secretkey",
 	"db": "mongodb://localhost/tastyletestdb",
 	"serverPort": "1301",
-	"requiresAuth": true
+	"requiresAuth": true,
+	"jwtExpirePeriod": "3h",
+	"cookieExpirePeriod": "3h"
 }

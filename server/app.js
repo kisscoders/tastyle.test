@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express(); // creating express app
 
 app.use(cors()); // using cors to authenticate or something
 app.use(express.json()); // JSON parsing for requests from app
+app.use(cookieParser());
 
 require("./routes/index.routes")(app); // routes index file incoming
 

@@ -1,10 +1,10 @@
 import { Router } from "express";
 const router = Router();
-import { auth } from "../middleware/auth";
-import { admin } from "../middleware/admin";
+import { auth, admin } from "../middleware/auth";
 
 import {
-	getOrders, // @route   GET /api/orders
+	getOrders, // @route   GET /api/orders/
+	getMyOrders, // @route   GET /api/orders/me
 	addOrder, // @route   POST /api/orders
 	updateOrder, // @route   PUT /api/orders/:id
 	deleteOrder, // @route   DELETE /api/orders/:id
@@ -16,8 +16,9 @@ import {
 	viewAddress, // @route   GET /api/a/:id
 } from "../controllers/orders.controller";
 
-router.route("/").post(addOrder).get(getOrders);
-router.route("/a/").post(addAddress).get(getAddresses);
+router.route("/").post(auth, addOrder).get([auth, admin], getOrders);
+router.route("/me").get(auth, getMyOrders);
+router.route("/a/").post(auth, addAddress).get([auth, admin], getAddresses);
 router
 	.route("/a/:id")
 	.put(updateAddress)
@@ -34,7 +35,7 @@ export default router;
 // extra stuff
 
 // router.route("/").post(protect, addOrderItems).get(protect, admin, getOrders);
-// router.route("/myorders").get(protect, getMyOrders);
+// router.route("/me").get(protect, getMyOrders);
 // router.route("/:id").get(protect, getOrderById);
 // router.route("/:id/pay").put(protect, updateOrderToPaid);
 // router.route("/:id/deliver").put(protect, admin, updateOrderToDelivered);

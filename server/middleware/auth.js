@@ -1,22 +1,46 @@
 import jwt from "jsonwebtoken";
 import { authStatus, jwtSecretKey } from "../config/config";
+import { User } from "../models/user.model";
+import ErrorHander from "../utils/errorhander";
 
 const auth = async function (req, res, next) {
 	if (!authStatus) return next();
-
 	const token = req.header("x-auth-token");
-	if (!token) return res.status(401).send("Access denied. No token provided.");
+	// const { token } = req.cookies;
 
-	try {
-		const decoded = jwt.verify(token, jwtSecretKey);
-		req.user = decoded;
-		next();
-	} catch (ex) {
-		res.status(400).send("Invalid token.");
+	if (!token) {
+		return next(new ErrorHander("Please Login to access this resource", 401));
 	}
+
+	const decodedData = jwt.verify(token, jwtSecretKey);
+
+	req.user = decodedData;
+	// req.user = await User.findById(decodedData._id);
+	next();
+
+	// const token = req.header("x-auth-token");
+	// if (!token) return res.status(401).send("Access denied. No token provided.");
+
+	// try {
+	// 	const decoded = jwt.verify(token, jwtSecretKey);
+	// 	req.user = decoded;
+	// 	next();
+	// } catch (ex) {
+	// 	res.status(400).send("Invalid token.");
+	// }
 };
 
-export { auth };
+const admin = function (req, res, next) {
+	// 401 Unauthorized
+	// 403 Forbidden
+	if (!authStatus) return next();
+
+	if (!req.user.role === "admin") return res.status(403).send("Access denied.");
+
+	next();
+};
+
+export { auth, admin };
 
 // extra stuff
 
