@@ -1,9 +1,6 @@
 const Joi = require("joi");
 // Joi.objectId = require("joi-objectid")(Joi);
 import { Schema, model } from "mongoose";
-// import { addressSchema } from "./address.model";
-// import { productSchema } from "./product.model";
-// import { userSchema } from "./user.model";
 
 const orderSchema = new Schema({
 	product: {
@@ -22,6 +19,10 @@ const orderSchema = new Schema({
 	orderType: {
 		type: String,
 		required: true,
+		enum: {
+			values: ["onetime", "subscription"],
+			message: "{VALUE} is not supported",
+		},
 		default: "onetime",
 	},
 	deliverTo: {
@@ -29,7 +30,7 @@ const orderSchema = new Schema({
 		ref: "Address",
 		required: true,
 	},
-	customer: {
+	user: {
 		type: Schema.ObjectId,
 		ref: "User",
 		required: true,
@@ -37,11 +38,15 @@ const orderSchema = new Schema({
 	orderStatus: {
 		type: String,
 		required: true,
-		default: "addressreq",
+		enum: {
+			values: ["Processing...", "On the way", "Delivered"],
+			message: "{VALUE} is not supported",
+		},
+		default: "Processing...",
 	},
 	deliveredAt: Date,
 	createdAt: {
-		type: Date,
+		type: String,
 		default: Date.now,
 	},
 	// paymentInfo: {

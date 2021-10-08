@@ -1,69 +1,333 @@
 import { User, validate } from "../models/user.model";
-import _ from "lodash";
-import bcrypt from "bcrypt";
-import Joi from "joi";
 
-// @desc    Get me
-// @route   GET /api/users/me
-// @access  User / Admin
-// TODO: [TSW-22]
-// Find out why getMe is not working
-// Find out the use case of this function
-const getMe = async (req, res) => {
-	const user = await User.findById(req.user._id).select("-password");
-	res.send(user);
-};
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import Joi from "joi";
+import { sendToken } from "../utils/jwtToken";
+import ErrorHander from "../utils/errorhander";
+import catchAsyncErrors from "../middleware/catchAsyncErrors";
+// const sendEmail = require("../utils/sendEmail");
 
 // @desc    Create new user
 // @route   POST /api/users
 // @access  Public
-const createUser = async (req, res) => {
+const createUser = catchAsyncErrors(async (req, res, next) => {
 	const { error } = validate(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
 
-	let user = await User.findOne({ email: req.body.email });
-	if (user) return res.status(400).send("User already registered.");
+	// const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+	//   folder: "avatars",
+	//   width: 150,
+	//   crop: "scale",
+	// });
 
-	user = new User(_.pick(req.body, ["name", "email", "password"]));
-	const salt = await bcrypt.genSalt(10);
-	user.password = await bcrypt.hash(user.password, salt);
-	await user.save();
+	const { name, email, password } = req.body;
 
-	const token = user.generateAuthToken();
-	res
-		.header("x-auth-token", token)
-		.header("access-control-expose-headers", "x-auth-token") // to make custom headers visible
-		.send(_.pick(user, ["_id", "name", "email"]));
-};
+	const user = await User.create({
+		name,
+		email,
+		password,
+		//   avatar: {
+		// 	public_id: myCloud.public_id,
+		// 	url: myCloud.secure_url,
+		//   },
+	});
+	// 	const salt = await bcrypt.genSalt(10);
+	// 	user.password = await bcrypt.hash(user.password, salt);
+	sendToken(user, 201, res);
+});
 
 // @desc    Login and authorization
 // @route   POST /api/users/auth
 // @access  Public
-const loginUser = async (req, res) => {
-	const { error } = validateLogin(req.body);
-	if (error) return res.status(400).send(error.details[0].message);
+const loginUser = async (req, res, next) => {
+	const { email, password } = req.body;
 
-	let user = await User.findOne({ email: req.body.email });
-	if (!user) return res.status(400).send("Invalid email or password.");
+	// checking if user has given password and email both
+	if (!email || !password) {
+		return next(new ErrorHander("Please Enter Email & Password", 400));
+	}
 
-	const validPassword = await bcrypt.compare(req.body.password, user.password);
-	if (!validPassword) return res.status(400).send("Invalid email or password.");
+	const user = await User.findOne({ email }).select("+password");
 
-	const token = user.generateAuthToken();
-	res.send(token);
+	if (!user) {
+		return next(new ErrorHander("Invalid Email", 401));
+	}
+
+	const isPasswordMatched = await user.comparePassword(password);
+
+	if (!isPasswordMatched) {
+		return next(new ErrorHander("Invalid Password", 401));
+	}
+
+	sendToken(user, 200, res);
 };
 
-// Using joi to validate login input is as required
-function validateLogin(req) {
-	const schema = Joi.object({
-		email: Joi.string().min(5).max(255).required().email(),
-		password: Joi.string().min(5).max(255).required(),
+// @desc    Logout
+// @route   POST /api/users/logout
+// @access  Private
+const logoutUser = catchAsyncErrors(async (req, res, next) => {
+	res.cookie("token", null, {
+		expires: new Date(Date.now()),
+		httpOnly: true,
 	});
 
-	return schema.validate(req);
-}
+	res.status(200).json({
+		success: true,
+		message: "Logged Out",
+	});
+});
 
-export { createUser, getMe, loginUser };
+// @desc    Get me
+// @route   GET /api/users/me
+// @access  User / Admin
+const getMe = catchAsyncErrors(async (req, res) => {
+	const user = await User.findById(req.user._id).select("-password");
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+// @desc    Get a user's detail by id
+// @route   GET /api/users/:id
+// @access  Admin
+const getUserDetail = catchAsyncErrors(async (req, res) => {
+	const user = await User.findById(req.user.id).select("-password");
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+// @desc    Forgot password request
+// @route   POST /api/users/pass/forgot
+// @access  Public
+const forgotPassword = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findOne({ email: req.body.email });
+
+	if (!user) {
+		return next(new ErrorHander("User not found", 404));
+	}
+
+	// Get ResetPassword Token
+	const resetToken = user.getResetPasswordToken();
+
+	await user.save({ validateBeforeSave: false });
+
+	const resetPasswordUrl = `${req.protocol}://${req.get(
+		"host"
+	)}/password/reset/${resetToken}`;
+
+	const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
+
+	try {
+		await sendEmail({
+			email: user.email,
+			subject: `tastyle password recovery service`,
+			message,
+		});
+
+		res.status(200).json({
+			success: true,
+			message: `Email sent to ${user.email} successfully`,
+		});
+	} catch (error) {
+		user.resetPasswordToken = undefined;
+		user.resetPasswordExpire = undefined;
+
+		await user.save({ validateBeforeSave: false });
+
+		return next(new ErrorHander(error.message, 500));
+	}
+});
+
+// @desc    Reset password
+// @route   POST /api/users/pass/reset
+// @access  Public
+const resetPassword = catchAsyncErrors(async (req, res, next) => {
+	// creating token hash
+	const resetPasswordToken = crypto
+		.createHash("sha256")
+		.update(req.params.token)
+		.digest("hex");
+
+	const user = await User.findOne({
+		resetPasswordToken,
+		resetPasswordExpire: { $gt: Date.now() },
+	});
+
+	if (!user) {
+		return next(
+			new ErrorHander("Reset Password Token is invalid or has been expired", 400)
+		);
+	}
+
+	if (req.body.password !== req.body.confirmPassword) {
+		return next(new ErrorHander("Password does not password", 400));
+	}
+
+	user.password = req.body.password;
+	user.resetPasswordToken = undefined;
+	user.resetPasswordExpire = undefined;
+
+	await user.save();
+
+	sendToken(user, 200, res);
+});
+
+// @desc    Updating Password
+// @route   POST /api/users/pass/:id
+// @access  Private
+const updatePass = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.user.id).select("+password");
+
+	const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+
+	if (!isPasswordMatched) {
+		return next(new ErrorHander("Old password is incorrect", 400));
+	}
+
+	if (req.body.newPassword !== req.body.confirmPassword) {
+		return next(new ErrorHander("Passwords do not match!", 400));
+	}
+
+	user.password = req.body.newPassword;
+
+	await user.save();
+
+	sendToken(user, 200, res);
+});
+
+// @desc    Updating Profile
+// @route   POST /api/users/profile/:id
+// @access  Private
+const updateProfile = catchAsyncErrors(async (req, res, next) => {
+	const newUserData = {
+		name: req.body.name,
+		email: req.body.email,
+	};
+
+	//   if (req.body.avatar !== "") {
+	// 	const user = await User.findById(req.user.id);
+
+	// 	const imageId = user.avatar.public_id;
+
+	// 	await cloudinary.v2.uploader.destroy(imageId);
+
+	// 	const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+	// 	  folder: "avatars",
+	// 	  width: 150,
+	// 	  crop: "scale",
+	// 	});
+
+	// 	newUserData.avatar = {
+	// 	  public_id: myCloud.public_id,
+	// 	  url: myCloud.secure_url,
+	// 	};
+	//   }
+
+	const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+		new: true,
+		runValidators: true,
+		useFindAndModify: false,
+	});
+
+	res.status(200).json({
+		success: true,
+		user,
+	});
+});
+
+// @desc    Get a list of all users
+// @route   GET /api/users/
+// @access  Admin
+const getAllUser = catchAsyncErrors(async (req, res, next) => {
+	const users = await User.find();
+
+	res.status(200).json({
+		success: true,
+		users,
+	});
+});
+
+// Get single user (admin)
+//   const getSingleUser = catchAsyncErrors(async (req, res, next) => {
+// 	const user = await User.findById(req.params.id);
+
+// 	if (!user) {
+// 	  return next(
+// 		new ErrorHander(`User does not exist with Id: ${req.params.id}`)
+// 	  );
+// 	}
+
+// 	res.status(200).json({
+// 	  success: true,
+// 	  user,
+// 	});
+//   });
+
+// @desc    Update User Role
+// @route   POST /api/users/role/:id
+// @access  Admin
+const updateUserRole = catchAsyncErrors(async (req, res, next) => {
+	const newUserData = {
+		name: req.body.name,
+		email: req.body.email,
+		role: req.body.role,
+	};
+
+	await User.findByIdAndUpdate(req.params.id, newUserData, {
+		new: true,
+		runValidators: true,
+		useFindAndModify: false,
+	});
+
+	res.status(200).json({
+		success: true,
+	});
+});
+
+// @desc    Delete User
+// @route   DELETE /api/users/:id
+// @access  Admin
+const deleteUser = catchAsyncErrors(async (req, res, next) => {
+	const user = await User.findById(req.params.id);
+
+	if (!user) {
+		return next(
+			new ErrorHander(`User does not exist with Id: ${req.params.id}`, 400)
+		);
+	}
+
+	// const imageId = user.avatar.public_id;
+
+	// await cloudinary.v2.uploader.destroy(imageId);
+
+	await user.remove();
+
+	res.status(200).json({
+		success: true,
+		message: "User Deleted Successfully",
+	});
+});
+
+export {
+	createUser,
+	loginUser,
+	logoutUser,
+	getMe,
+	updatePass,
+	updateProfile,
+	updateUserRole,
+	forgotPassword,
+	resetPassword,
+	deleteUser,
+	getAllUser,
+	getUserDetail,
+};
 
 // TODO:
 // Need to get the responses from the following function into the create
