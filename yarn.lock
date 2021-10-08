@@ -6242,6 +6242,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cloudinary-core@npm:^2.10.2":
+  version: 2.11.4
+  resolution: "cloudinary-core@npm:2.11.4"
+  peerDependencies:
+    lodash: ">=4.0"
+  checksum: 1cc8847e6e697d6f8f9a8c4fd9255d332432305c0d2f2c1e6e6cd26219dec8431ed12dd43e354df73a240b9a240ce7a930184a4c1d9e94af66cec35c0fccd994
+  languageName: node
+  linkType: hard
+
+"cloudinary@npm:^1.27.0":
+  version: 1.27.0
+  resolution: "cloudinary@npm:1.27.0"
+  dependencies:
+    cloudinary-core: ^2.10.2
+    core-js: 3.6.5
+    lodash: ^4.17.11
+    q: ^1.5.1
+  checksum: 84a5ca690ee0250b2fa7be692bf7708933438b11037b10ee773c6d8ca1931871b5eb9b94705a29c5a222145b6b64e70d389e2035f3e7d12f7b088d935dcbecff
+  languageName: node
+  linkType: hard
+
 "clsx@npm:^1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
@@ -6596,6 +6617,13 @@ __metadata:
   version: 3.18.1
   resolution: "core-js-pure@npm:3.18.1"
   checksum: a299bee71e15227823e116ca5bf4c5d0cca8577ce35cc8758dfc17058bcbfee343493c0701b67478bb1362e072246ab1b20675e7c09a273f1310fa08d85cad8c
+  languageName: node
+  linkType: hard
+
+"core-js@npm:3.6.5":
+  version: 3.6.5
+  resolution: "core-js@npm:3.6.5"
+  checksum: b7fcf92f888bfe40f3f005e3f729e66aa49a3a9a797e8fb4d09d429c6abcd505781b2c03836858f0dc0159249d4b7a035fc763052c9c34adbc93b6f8a6a86305
   languageName: node
   linkType: hard
 
@@ -15429,7 +15457,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"q@npm:^1.1.2":
+"q@npm:^1.1.2, q@npm:^1.5.1":
   version: 1.5.1
   resolution: "q@npm:1.5.1"
   checksum: 147baa93c805bc1200ed698bdf9c72e9e42c05f96d007e33a558b5fdfd63e5ea130e99313f28efc1783e90e6bdb4e48b67a36fcc026b7b09202437ae88a1fb12
@@ -17940,6 +17968,7 @@ resolve@^2.0.0-next.3:
     bcrypt: ^5.0.1
     bootstrap: ^5.1.1
     chalk: ^4.0.0
+    cloudinary: ^1.27.0
     cookie-parser: ^1.4.5
     cors: ^2.8.5
     dotenv: ^10.0.0
