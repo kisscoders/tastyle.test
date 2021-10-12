@@ -1,7 +1,7 @@
 // import bcrypt from "bcrypt";
 // import Joi from "joi";
 import crypto from "crypto";
-import { User } from "../models/user.model";
+import User from "../models/user.model";
 import { sendToken } from "../utils/jwtToken";
 import ErrorHander from "../middleware/errorhander";
 import catchAsyncErrors from "../middleware/error";

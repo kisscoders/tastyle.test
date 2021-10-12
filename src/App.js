@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 
 import NavBar from "./components/layout/navBar";
 import Products from "./components/product/products";
-import Dashboard from "./components/layout/dashboard";
+import Dashboard from "./components/dashboard/dashboard";
 import Movies from "./components/movie/movies";
 import MovieForm from "./components/movie/movieForm";
 import ProductDetails from "./components/product/productDetails";
@@ -48,13 +48,14 @@ class App extends Component {
 						<Route path="/register" component={RegisterForm} />
 						<Route path="/products/:id" exact component={ProductForm} />
 						<Route path="/products/d/:id" component={ProductDetails} />
-						<Route path="/orders/new" exact component={OrderForm} />
+						{/* <Route path="/orders/new" exact component={OrderForm} /> */}
 						<Route path="/orders/:id" exact component={OrderForm} />
 						<Route path="/orders" exact component={Orders} />
 						<ProtectedRoute path="/movies/:id" component={MovieForm} />
 						<Route path="/posts/:year?/:month?" component={Posts} />
 						<Route path="/dash" component={Dashboard} />
 						<Redirect from="/messages" to="/posts" />
+						<Redirect from="/home" to="/" />
 						<Route
 							path="/movies"
 							exact
@@ -78,35 +79,3 @@ class App extends Component {
 }
 
 export default App;
-
-// get more info about react router from reacttraining docs
-// {
-/* <div>
-<p>{!data ? "Loading..." : data}</p>
-<button className="App-link" onClick={getUsers}>
-  Click me!
-</button>
-{users && (
-  <ul>
-    {users.map((user) => (
-      <li key={user.name}>{`${user.name}, ${user.age} years old`}</li>
-    ))}
-  </ul>
-)}
-</div> */
-// }
-
-// const [data, setData] = React.useState(null);
-// const [users, setUsers] = useState();
-
-// const getUsers = () => {
-//   fetch("/api/users")
-//     .then((res) => res.json())
-//     .then(setUsers);
-// };
-
-// React.useEffect(() => {
-//   fetch("/api")
-//     .then((res) => res.json())
-//     .then((data) => setData(data.message));
-// }, []);

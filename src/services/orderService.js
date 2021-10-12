@@ -2,6 +2,7 @@ import http from "./httpService";
 import { apiUrl } from "../config.json";
 
 const apiEndpoint = apiUrl + "/orders";
+const addApiEndpoint = apiEndpoint + "/a";
 
 function orderUrl(id) {
 	return `${apiEndpoint}/${id}`;
@@ -12,6 +13,20 @@ export async function getOrders() {
 		data: { orders },
 	} = await http.get(apiEndpoint);
 	return orders;
+}
+
+export async function getMyOrders() {
+	const {
+		data: { orders },
+	} = await http.get(apiEndpoint + "/me");
+	return orders;
+}
+
+export async function getMyAddresses() {
+	const {
+		data: { addresses },
+	} = await http.get(addApiEndpoint + "/me");
+	return addresses;
 }
 export async function getOrder(orderId) {
 	const {

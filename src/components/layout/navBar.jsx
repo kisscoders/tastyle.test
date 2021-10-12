@@ -7,7 +7,7 @@ const NavBar = ({ user }) => {
 	return (
 		<Navbar bg="dark" variant="dark" expand="lg">
 			<Container fluid>
-				<Navbar.Brand href="#">tastyle</Navbar.Brand>
+				<Navbar.Brand href="/">tastyle</Navbar.Brand>
 				<Navbar.Toggle aria-controls="navbarScroll" />
 				<Navbar.Collapse id="navbarScroll">
 					<Nav
@@ -16,7 +16,6 @@ const NavBar = ({ user }) => {
 						navbarScroll
 					>
 						<Nav.Link href="/products">Products</Nav.Link>
-						<Nav.Link href="/orders">Orders</Nav.Link>
 					</Nav>
 
 					{!user && (
@@ -33,7 +32,7 @@ const NavBar = ({ user }) => {
 								variant="dark"
 								id="navbarScrollingDropdown"
 							>
-								<NavDropdown.Item href="/me">Profile</NavDropdown.Item>
+								<NavDropdown.Item href="/dash#profile">Profile</NavDropdown.Item>
 								<NavDropdown.Item href="/dash">Dashboard</NavDropdown.Item>
 								<NavDropdown.Divider />
 								<NavDropdown.Item href="#">Hi!</NavDropdown.Item>
@@ -50,47 +49,3 @@ const NavBar = ({ user }) => {
 };
 
 export default NavBar;
-
-// <nav className="navbar navbar-expand-sm navbar-light bg-light">
-// 	<Stack direction="horizontal" gap={3}>
-// 		<Link className="navbar-brand me-auto" to="/">
-// 			tastyle
-// 		</Link>
-// 		<NavLink className="nav-item nav-link" to="/products">
-// 			Products
-// 		</NavLink>
-// 		<NavLink className="nav-item nav-link" to="/orders">
-// 			Orders
-// 		</NavLink>
-// 		<Form.Control className="me-auto" placeholder="Add your item here..." />
-// 		<Button variant="secondary">Submit</Button>
-// 		<div className="vr" />
-// 		<Button variant="outline-danger">Reset</Button>
-// 		{!user && (
-// 			<React.Fragment>
-// 				<NavLink className="nav-item nav-link" to="/login">
-// 					Login
-// 				</NavLink>
-// 				<NavLink className="nav-item nav-link" to="/register">
-// 					Register
-// 				</NavLink>
-// 			</React.Fragment>
-// 		)}
-// 		{user && (
-// 			<React.Fragment>
-// 				<Dropdown as={ButtonGroup}>
-// 					<Button variant="primary" href="/me">
-// 						{user.name}
-// 					</Button>
-
-// 					<Dropdown.Toggle split variant="primary" id="dropdown-split-basic" />
-
-// 					<Dropdown.Menu>
-// 						<Dropdown.Item href="/admin">Dash</Dropdown.Item>
-// 						<Dropdown.Item href="/logout">Logout</Dropdown.Item>
-// 					</Dropdown.Menu>
-// 				</Dropdown>
-// 			</React.Fragment>
-// 		)}
-// 	</Stack>
-// </nav>

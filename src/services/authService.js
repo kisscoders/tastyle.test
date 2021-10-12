@@ -5,6 +5,8 @@ import { apiUrl } from "../config.json";
 const apiEndpoint = apiUrl + "/users";
 const loginEndpoint = apiUrl + "/users/auth";
 const tokenKey = "token";
+// const currentUser = getAllUsers();
+// console.log(currentUser);
 
 http.setJwt(getJwt());
 
@@ -37,6 +39,13 @@ export function getCurrentUser() {
 	} catch (ex) {
 		return null;
 	}
+}
+
+export async function getAllUsers() {
+	const {
+		data: { users },
+	} = await http.get(apiEndpoint);
+	return users;
 }
 
 export function getJwt() {

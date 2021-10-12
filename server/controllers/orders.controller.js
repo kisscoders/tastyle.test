@@ -7,11 +7,27 @@ import catchAsyncErrors from "../middleware/error";
 // @route   GET /api/orders/me
 // @access  Private/Admin
 const getMyOrders = catchAsyncErrors(async (req, res) => {
-	const orders = await Order.find({ user: req.user._id });
+	const orders = await Order.find({ user: req.user._id })
+		.populate("user", "name email")
+		.populate("deliverTo", "contactNo city addLine1")
+		.populate("product", "title price");
 
 	res.status(200).json({
 		success: true,
 		orders,
+	});
+});
+
+// @desc    Get current user's addresses
+// @route   GET /api/orders/a/me
+// @access  Private/Admin
+const getMyAddresses = catchAsyncErrors(async (req, res) => {
+	const addresses = await Address.find({ user: req.user._id }).select(
+		"-user -__v"
+	);
+	res.status(200).json({
+		success: true,
+		addresses,
 	});
 });
 
@@ -138,10 +154,13 @@ const viewOrder = catchAsyncErrors(async (req, res) => {
 	});
 });
 
-const getAddresses = async (req, res) => {
-	const orders = await Address.find().select("-__v");
-	return res.status(200).json(orders);
-};
+const getAddresses = catchAsyncErrors(async (req, res) => {
+	const addresses = await Address.find().select("-__v");
+	res.status(200).json({
+		success: true,
+		addresses,
+	});
+});
 
 const addAddress = catchAsyncErrors(async (req, res) => {
 	let address = new Address({
@@ -210,6 +229,7 @@ export {
 	updateAddress,
 	deleteAddress,
 	viewAddress,
+	getMyAddresses,
 };
 
 // import { Router } from "express";

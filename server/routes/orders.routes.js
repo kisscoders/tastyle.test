@@ -14,11 +14,13 @@ import {
 	updateAddress, // @route   PUT /api/a/:id
 	deleteAddress, // @route   DELETE /api/a/:id
 	viewAddress, // @route   GET /api/a/:id
+	getMyAddresses,
 } from "../controllers/orders.controller";
 
 router.route("/").post(auth, addOrder).get([auth, admin], getOrders);
 router.route("/me").get(auth, getMyOrders);
 router.route("/a/").post(auth, addAddress).get([auth, admin], getAddresses);
+router.route("/a/me").get(auth, getMyAddresses);
 router
 	.route("/a/:id")
 	.put(updateAddress)

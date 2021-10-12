@@ -3,6 +3,11 @@ Joi.objectId = require("joi-objectid")(Joi);
 import { Schema, model } from "mongoose";
 
 const addressSchema = new Schema({
+	user: {
+		type: Schema.ObjectId,
+		ref: "User",
+		required: true,
+	},
 	firstName: {
 		type: String,
 		required: true,
