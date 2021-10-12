@@ -2,16 +2,16 @@ import React from "react";
 // import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../common/form";
 import { toast } from "react-toastify";
-// import { getMovie, saveMovie } from "../../services/movieService";
-// import { getGenres } from "../../services/genreService";
-
+import { addOrder, getOrder } from "../../services/orderService";
 class OrderForm extends Form {
 	state = {
 		data: {
-			productId: "",
+			productName: "",
+			user: "",
 			quantityVar: "",
 			price: "",
 			orderType: "",
+			orderStatus: "",
 		},
 		errors: {},
 	};
@@ -37,39 +37,41 @@ class OrderForm extends Form {
 	// 	this.setState({ genres });
 	// }
 
-	// async populateMovies() {
-	// 	try {
-	// 		const movieId = this.props.match.params.id;
-	// 		if (movieId === "new") return;
+	async populateOrder() {
+		try {
+			const orderId = this.props.match.params.id;
+			if (orderId === "new") return;
 
-	// 		const { data: movie } = await getMovie(movieId);
-	// 		this.setState({
-	// 			data: this.mapToViewModel(movie),
-	// 		});
-	// 	} catch (error) {
-	// 		if (error.response && error.response.status === 404)
-	// 			this.props.history.replace("/not-found");
-	// 		toast.error("What can I say get the backend ready");
-	// 	}
-	// }
+			const order = await getOrder(orderId);
+			this.setState({
+				data: this.mapToViewModel(order),
+			});
+		} catch (error) {
+			if (error.response && error.response.status === 404)
+				this.props.history.replace("/not-found");
+			toast.error("What can I say get the backend ready");
+		}
+	}
 
-	// async componentDidMount() {
-	// 	await this.populateGenres();
-	// 	await this.populateMovies();
-	// }
+	async componentDidMount() {
+		// await this.populateGenres();
+		await this.populateOrder();
+	}
 
-	// mapToViewModel(movie) {
-	// 	return {
-	// 		_id: movie._id,
-	// 		title: movie.title,
-	// 		genreId: movie.genre._id,
-	// 		numberInStock: movie.numberInStock,
-	// 		dailyRentalRate: movie.dailyRentalRate,
-	// 	};
-	// }
+	mapToViewModel(order) {
+		return {
+			_id: order._id,
+			productName: order.product.title,
+			user: order.user.name,
+			quantityVar: order.quantityVar,
+			price: order.priceSum,
+			orderType: order.orderType,
+			orderStatus: order.orderStatus,
+		};
+	}
 
 	doSubmit = async () => {
-		// await saveMovie(this.state.data);
+		await addOrder(this.state.data);
 		// Call the server
 		this.props.history.push("/orders");
 		// let changedTitle = this.state.data.title;
@@ -82,12 +84,12 @@ class OrderForm extends Form {
 			<div>
 				<h1>Order Form</h1>
 				<form onSubmit={this.handleSubmit}>
-					{this.renderInput("productId", "Product")}
+					{this.renderInput("productName", "Product")}
+					{this.renderInput("user", "Customer")}
 					{this.renderInput("price", "Price")}
 					{this.renderInput("quantityVar", "Quantity")}
-					{this.renderInput("product", "Product")}
 					{/* {this.renderSelect("isSubs", "Subscription", "Do you want to subscribe?")} */}
-					{this.renderInput("deliverTo", "Delivery Address")}
+					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
 					{this.renderInput("orderStatus", "We are currently")}
 					{this.renderButton("Order")}
 				</form>

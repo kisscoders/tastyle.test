@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-const Joi = require("joi");
+// const Joi = require("joi");
 import { jwtSecretKey, jwtExpire } from "../config/config";
 
 const userSchema = new Schema({
@@ -60,11 +60,11 @@ userSchema.methods.generateAuthToken = function () {
 			_id: this._id,
 			name: this.name,
 			email: this.email,
-			isAdmin: this.isAdmin,
+			role: this.role,
 		},
 		jwtSecretKey,
 		{
-			expiresIn: jwtExpire,
+			// expiresIn: jwtExpire,
 		}
 	);
 	return token;
@@ -91,16 +91,16 @@ userSchema.methods.getResetPasswordToken = function () {
 	return resetToken;
 };
 
-function validate(user) {
-	const schema = Joi.object({
-		name: Joi.string().min(2).max(50).required(),
-		email: Joi.string().min(5).max(255).required().email(),
-		password: Joi.string().min(5).max(255).required(),
-	});
+// function validate(user) {
+// 	const schema = Joi.object({
+// 		name: Joi.string().min(2).max(50).required(),
+// 		email: Joi.string().min(5).max(255).required().email(),
+// 		password: Joi.string().min(5).max(255).required(),
+// 	});
 
-	return schema.validate(user);
-}
+// 	return schema.validate(user);
+// }
 
 const User = model("User", userSchema);
-export { validate, userSchema, User };
+export { userSchema, User };
 export default model("User", userSchema);

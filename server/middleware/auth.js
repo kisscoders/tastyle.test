@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { authStatus, jwtSecretKey } from "../config/config";
-import { User } from "../models/user.model";
-import ErrorHander from "../utils/errorhander";
+import ErrorHander from "../middleware/errorhander";
 
 const auth = async function (req, res, next) {
 	if (!authStatus) return next();
@@ -15,19 +14,7 @@ const auth = async function (req, res, next) {
 	const decodedData = jwt.verify(token, jwtSecretKey);
 
 	req.user = decodedData;
-	// req.user = await User.findById(decodedData._id);
 	next();
-
-	// const token = req.header("x-auth-token");
-	// if (!token) return res.status(401).send("Access denied. No token provided.");
-
-	// try {
-	// 	const decoded = jwt.verify(token, jwtSecretKey);
-	// 	req.user = decoded;
-	// 	next();
-	// } catch (ex) {
-	// 	res.status(400).send("Invalid token.");
-	// }
 };
 
 const admin = function (req, res, next) {

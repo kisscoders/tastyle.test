@@ -1,7 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import { auth } from "../middleware/auth";
-import { admin } from "../middleware/admin";
+import { auth, admin } from "../middleware/auth";
 
 import {
 	getMovies, // @route   GET /api/movies

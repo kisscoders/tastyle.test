@@ -13,10 +13,9 @@ const sendToken = (user, statusCode, res) => {
 
 	res
 		.status(statusCode)
-		.header("x-auth-token", token)
 		.header("access-control-expose-headers", "x-auth-token") // to make custom headers visible
+		.header("x-auth-token", token)
 		.cookie("token", token)
 		.json({ success: true, user, token });
-	// .json({ success: true, details: _.pick(user, ["_id", "name", "email"]) });
 };
 export { sendToken };

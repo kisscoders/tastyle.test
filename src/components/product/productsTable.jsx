@@ -52,7 +52,7 @@ class ProductsTable extends Component {
 	constructor() {
 		super();
 		const user = authService.getCurrentUser();
-		if (user && user.isAdmin) this.columns.push(this.deleteColumn);
+		if (user && user.role === "admin") this.columns.push(this.deleteColumn);
 	}
 
 	render() {

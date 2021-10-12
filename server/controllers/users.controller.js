@@ -1,19 +1,18 @@
-import { User, validate } from "../models/user.model";
-
-import bcrypt from "bcrypt";
+// import bcrypt from "bcrypt";
+// import Joi from "joi";
 import crypto from "crypto";
-import Joi from "joi";
+import { User } from "../models/user.model";
 import { sendToken } from "../utils/jwtToken";
-import ErrorHander from "../utils/errorhander";
-import catchAsyncErrors from "../middleware/catchAsyncErrors";
+import ErrorHander from "../middleware/errorhander";
+import catchAsyncErrors from "../middleware/error";
 // const sendEmail = require("../utils/sendEmail");
 
 // @desc    Create new user
 // @route   POST /api/users
 // @access  Public
-const createUser = catchAsyncErrors(async (req, res, next) => {
-	const { error } = validate(req.body);
-	if (error) return res.status(400).send(error.details[0].message);
+const createUser = catchAsyncErrors(async (req, res) => {
+	// const { error } = validate(req.body);
+	// if (error) return res.status(400).send(error.details[0].message);
 
 	// const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
 	//   folder: "avatars",

@@ -2,18 +2,17 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deleteMovie, getMovies } from "../../services/movieService";
-import { getGenres } from "../../services/genreService";
+import { deleteOrder, getOrders } from "../../services/orderService";
+// import { getGenres } from "../../services/genreService";
 import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
-import ListGroup from "../common/listGroup";
+// import ListGroup from "../common/listGroup";
 import OrdersTable from "./ordersTable";
 import SearchBar from "../common/searchBar";
 
 class Orders extends Component {
 	state = {
-		movies: [],
-		genres: [],
+		orders: [],
 		currentPage: 1,
 		pageSize: 4,
 		searchQuery: "",
@@ -22,11 +21,11 @@ class Orders extends Component {
 	};
 
 	async componentDidMount() {
-		const { data } = await getGenres();
-		const genres = [{ _id: "", name: "All Genres" }, ...data];
-
-		const { data: movies } = await getMovies();
-		this.setState({ movies, genres });
+		// const { data } = await getGenres();
+		// const genres = [{ _id: "", name: "All Genres" }, ...data];
+		const orders = await getOrders();
+		this.setState({ orders });
+		// console.log(orders);
 	}
 
 	handleDelete = async (order) => {
@@ -34,7 +33,7 @@ class Orders extends Component {
 		const orders = originalOrders.filter((m) => m._id !== order._id);
 		this.setState({ orders });
 		try {
-			await deleteMovie(order._id);
+			await deleteOrder(order._id);
 		} catch (error) {
 			if (error.response && error.response.status === 404) {
 				toast.error("This order has already been deleted");
@@ -44,12 +43,12 @@ class Orders extends Component {
 	};
 
 	handleLike = (movie) => {
-		console.log(this.state.movies);
-		const movies = [...this.state.movies];
-		const index = movies.indexOf(movie);
-		movies[index] = { ...movies[index] };
-		movies[index].liked = !movies[index].liked;
-		this.setState({ movies });
+		console.log(this.state.orders);
+		const orders = [...this.state.orders];
+		const index = orders.indexOf(movie);
+		orders[index] = { ...orders[index] };
+		orders[index].liked = !orders[index].liked;
+		this.setState({ orders });
 	};
 
 	handlePageChange = (page) => {
@@ -64,13 +63,13 @@ class Orders extends Component {
 		});
 	};
 
-	handleGenreSelect = (genre) => {
-		this.setState({
-			selectedGenre: genre,
-			searchQuery: "",
-			currentPage: 1,
-		});
-	};
+	// handleGenreSelect = (genre) => {
+	// 	this.setState({
+	// 		selectedGenre: genre,
+	// 		searchQuery: "",
+	// 		currentPage: 1,
+	// 	});
+	// };
 
 	handleSort = (sortColumn) => {
 		this.setState({ sortColumn });
@@ -81,46 +80,46 @@ class Orders extends Component {
 			pageSize,
 			currentPage,
 			sortColumn,
-			selectedGenre,
+			// selectedGenre,
 			searchQuery,
-			movies: allMovies,
+			orders: allOrders,
 		} = this.state;
 
-		let filtered = allMovies;
+		let filtered = allOrders;
 		if (searchQuery)
-			filtered = allMovies.filter((m) =>
-				m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+			filtered = allOrders.filter((o) =>
+				o.title.toLowerCase().startsWith(searchQuery.toLowerCase())
 			);
-		else if (selectedGenre && selectedGenre._id)
-			filtered = allMovies.filter((m) => m.genre._id === selectedGenre._id);
+		// else if (selectedGenre && selectedGenre._id)
+		// 	filtered = allOrders.filter((o) => o.genre._id === selectedGenre._id);
 
 		const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-		const movies = paginate(sorted, currentPage, pageSize);
+		const orders = paginate(sorted, currentPage, pageSize);
 
 		return {
 			totalCount: filtered.length,
-			data: movies,
+			data: orders,
 		};
 	};
 
 	render() {
-		const { length: movCount } = this.state.movies;
+		const { length: orderCount } = this.state.orders;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
-		if (movCount === 0) return <p>There are no orders in the database.</p>;
+		if (orderCount === 0) return <p>There are no orders in the database.</p>;
 
-		const { totalCount, data: movies } = this.getPagedData();
+		const { totalCount, data: orders } = this.getPagedData();
 
 		return (
 			<div className="container-fluid mt-4">
-				<div className="">
+				{/* <div className="">
 					<ListGroup
 						items={this.state.genres}
 						selectedItem={this.state.selectedGenre}
 						onItemSelect={this.handleGenreSelect}
 					/>
-				</div>
+				</div> */}
 				<div className="">
 					<Link className="btn btn-primary mb-3" to="/orders/new">
 						New Order
@@ -128,7 +127,7 @@ class Orders extends Component {
 					<p>Showing {totalCount} orders from the database</p>
 					<SearchBar value={searchQuery} onChange={this.handleSearch} />
 					<OrdersTable
-						movies={movies}
+						orders={orders}
 						sortColumn={sortColumn}
 						onLike={this.handleLike}
 						onDelete={this.handleDelete}

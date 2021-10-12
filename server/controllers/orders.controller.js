@@ -1,7 +1,7 @@
 import Order from "../models/order.model";
 import Address from "../models/address.model";
 import Product from "../models/product.model";
-import catchAsyncErrors from "../middleware/catchAsyncErrors";
+import catchAsyncErrors from "../middleware/error";
 
 // @desc    Get current user's orders
 // @route   GET /api/orders/me
@@ -19,8 +19,10 @@ const getMyOrders = catchAsyncErrors(async (req, res) => {
 // @route   GET /api/orders
 // @access  Admin
 const getOrders = catchAsyncErrors(async (req, res) => {
-	const orders = await Order.find();
-
+	const orders = await Order.find()
+		.populate("user", "name email")
+		.populate("deliverTo", "contactNo city addLine1")
+		.populate("product", "title price");
 	// let totalAmount = 0;
 
 	// orders.forEach((order) => {
