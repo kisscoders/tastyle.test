@@ -45,7 +45,7 @@ class App extends Component {
 						<Route path="/not-found" component={NotFound} />
 						<Route path="/login" component={LoginForm} />
 						<Route path="/logout" component={Logout} />
-						<Route path="/register" component={RegisterForm} />
+						<Route path="/users/:id" component={RegisterForm} />
 						<Route path="/products/:id" exact component={ProductForm} />
 						<Route path="/products/d/:id" component={ProductDetails} />
 						{/* <Route path="/orders/new" exact component={OrderForm} /> */}

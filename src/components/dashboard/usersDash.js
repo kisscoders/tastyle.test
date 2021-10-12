@@ -2,50 +2,70 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { deleteOrder, getMyOrders } from "../../services/orderService";
-// import { getGenres } from "../../services/genreService";
+import { getAllUsers, deleteUser } from "../../services/authService";
 import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
-// import ListGroup from "../common/listGroup";
-import OrdersTable from "../order/ordersTable";
 import SearchBar from "../common/searchBar";
+import Table from "../common/table";
 
 class UsersDash extends Component {
 	state = {
-		orders: [],
+		users: [],
 		currentPage: 1,
 		pageSize: 4,
 		searchQuery: "",
-		selectedGenre: null,
 		sortColumn: { path: "title", order: "asc" },
 	};
 
+	columns = [
+		{
+			path: "name",
+			label: "Name",
+			content: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link>,
+		},
+		{ path: "email", label: "Email" },
+		{ path: "role", label: "Role" },
+		{
+			key: "delete",
+			content: (user) => (
+				<button
+					onClick={() => this.handleDelete(user)}
+					className="btn btn-danger btn-sm"
+				>
+					Delete
+				</button>
+			),
+		},
+	];
+
 	async componentDidMount() {
-		const orders = await getMyOrders();
-		this.setState({ orders });
+		// const { data } = await getGenres();
+		// const genres = [{ _id: "", name: "All Genres" }, ...data];
+		const users = await getAllUsers();
+		this.setState({ users });
 	}
 
-	handleDelete = async (order) => {
-		const originalOrders = this.state.orders;
-		const orders = originalOrders.filter((m) => m._id !== order._id);
-		this.setState({ orders });
+	handleDelete = async (user) => {
+		const originalUsers = this.state.users;
+		const users = originalUsers.filter((m) => m._id !== user._id);
+		this.setState({ users });
 		try {
-			await deleteOrder(order._id);
+			await deleteUser(user._id);
 		} catch (error) {
 			if (error.response && error.response.status === 404) {
-				toast.error("This order has already been deleted");
-				this.setState({ orders: originalOrders });
+				toast.error("This user has already been deleted");
+				this.setState({ users: originalUsers });
 			}
 		}
 	};
 
-	handleLike = (movie) => {
-		console.log(this.state.orders);
-		const orders = [...this.state.orders];
-		const index = orders.indexOf(movie);
-		orders[index] = { ...orders[index] };
-		orders[index].liked = !orders[index].liked;
-		this.setState({ orders });
+	handleLike = (user) => {
+		console.log(this.state.users);
+		const users = [...this.state.users];
+		const index = users.indexOf(user);
+		users[index] = { ...users[index] };
+		users[index].liked = !users[index].liked;
+		this.setState({ users });
 	};
 
 	handlePageChange = (page) => {
@@ -79,34 +99,39 @@ class UsersDash extends Component {
 			sortColumn,
 			// selectedGenre,
 			searchQuery,
-			orders: allOrders,
+			users: allUsers,
 		} = this.state;
 
-		let filtered = allOrders;
+		let filtered = allUsers;
 		if (searchQuery)
-			filtered = allOrders.filter((o) =>
+			filtered = allUsers.filter((o) =>
 				o.title.toLowerCase().startsWith(searchQuery.toLowerCase())
 			);
 		// else if (selectedGenre && selectedGenre._id)
-		// 	filtered = allOrders.filter((o) => o.genre._id === selectedGenre._id);
+		// 	filtered = allusers.filter((o) => o.genre._id === selectedGenre._id);
 
 		const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-		const orders = paginate(sorted, currentPage, pageSize);
+		const users = paginate(sorted, currentPage, pageSize);
 
 		return {
 			totalCount: filtered.length,
-			data: orders,
+			data: users,
 		};
 	};
 
+	// constructor() {
+	// 	super();
+	// 	const user = authService.getCurrentUser();
+	// 	if (user && user.role === "admin") this.columns.push(this.deleteColumn);
+	// }
 	render() {
-		const { length: orderCount } = this.state.orders;
+		const { length: orderCount } = this.state.users;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
-		if (orderCount === 0) return <p>There are no orders in the database.</p>;
+		if (orderCount === 0) return <p>There are no users in the database.</p>;
 
-		const { totalCount, data: orders } = this.getPagedData();
+		const { totalCount, data: users } = this.getPagedData();
 
 		return (
 			<div className="container-fluid mt-4">
@@ -117,18 +142,19 @@ class UsersDash extends Component {
 						onItemSelect={this.handleGenreSelect}
 					/>
 				</div> */}
-				<div className="">
-					<Link className="btn btn-primary mb-3" to="/orders/new">
-						New Order
+				<div>
+					<Link className="btn btn-primary mb-3" to="/register">
+						New User
 					</Link>
-					<p>Showing {totalCount} orders from the database</p>
+					<p>Showing {totalCount} users from the database</p>
 					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<OrdersTable
-						orders={orders}
+					<Table
+						columns={this.columns}
+						data={users}
 						sortColumn={sortColumn}
+						onSort={this.handleSort}
 						onLike={this.handleLike}
 						onDelete={this.handleDelete}
-						onSort={this.handleSort}
 					/>
 					<Pagination
 						itemsCount={totalCount}

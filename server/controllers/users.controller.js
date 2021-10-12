@@ -93,7 +93,7 @@ const getMe = catchAsyncErrors(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Admin
 const getUserDetail = catchAsyncErrors(async (req, res) => {
-	const user = await User.findById(req.user.id).select("-password");
+	const user = await User.findById(req.params.id).select("-password");
 
 	res.status(200).json({
 		success: true,

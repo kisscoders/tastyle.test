@@ -7,6 +7,9 @@ const addApiEndpoint = apiEndpoint + "/a";
 function orderUrl(id) {
 	return `${apiEndpoint}/${id}`;
 }
+function addressUrl(id) {
+	return `${addApiEndpoint}/${id}`;
+}
 
 export async function getOrders() {
 	const {
@@ -47,4 +50,8 @@ export function addOrder(order) {
 
 export function deleteOrder(orderId) {
 	return http.delete(orderUrl(orderId));
+}
+
+export function deleteAddress(addId) {
+	return http.delete(addressUrl(addId));
 }

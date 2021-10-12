@@ -10,6 +10,10 @@ const tokenKey = "token";
 
 http.setJwt(getJwt());
 
+function userUrl(id) {
+	return `${apiEndpoint}/${id}`;
+}
+
 export async function login(email, password) {
 	const { data } = await http.post(loginEndpoint, { email, password });
 	const { token: jwt } = data;
@@ -48,8 +52,20 @@ export async function getAllUsers() {
 	return users;
 }
 
+export async function getUserById(userId) {
+	const {
+		data: { user },
+	} = await http.get(userUrl(userId));
+	console.log(user);
+	return user;
+}
+
 export function getJwt() {
 	return localStorage.getItem(tokenKey);
+}
+
+export function deleteUser(userId) {
+	return http.delete(userUrl(userId));
 }
 
 export default {
@@ -58,4 +74,6 @@ export default {
 	getCurrentUser,
 	loginWithJwt,
 	getJwt,
+	register,
+	getUserById,
 };

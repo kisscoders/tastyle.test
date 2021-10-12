@@ -1,15 +1,13 @@
 import React from "react";
 // import { Route } from "react-router-dom";
 import { Tab, Row, Col, ListGroup, Container } from "react-bootstrap";
-// import Users from "../admin/users";
-// import Posts from "../admin/posts";
-// import SideBar from "./sidebar";
 import authService from "../../services/authService";
+import AddressBook from "./addressBook";
 import OrdersDash from "./ordersDash";
 import ProductsDash from "./productsDash";
 import ProfileDash from "./profileDash";
 import PurchasesDash from "./purchasesDash";
-import UserDash from "./usersDash";
+import UsersDash from "./usersDash";
 
 const Dashboard = () => {
 	const user = authService.getCurrentUser();
@@ -57,6 +55,12 @@ const Dashboard = () => {
 							</Tab.Pane>
 							<Tab.Pane eventKey="#purchases">
 								<PurchasesDash />
+							</Tab.Pane>
+							<Tab.Pane eventKey="#address">
+								<AddressBook />
+							</Tab.Pane>
+							<Tab.Pane eventKey="#users">
+								<UsersDash />
 							</Tab.Pane>
 						</Tab.Content>
 					</Col>

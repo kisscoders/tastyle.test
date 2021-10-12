@@ -21,7 +21,7 @@ const NavBar = ({ user }) => {
 					{!user && (
 						<Nav className="d-flex">
 							<Nav.Link href="/login">Login</Nav.Link>
-							<Nav.Link href="/register">Signup</Nav.Link>
+							<Nav.Link href="/users/new">Signup</Nav.Link>
 						</Nav>
 					)}
 

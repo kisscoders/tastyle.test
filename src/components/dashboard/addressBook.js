@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getMyAddresses } from "../../services/addresseservice";
+import { getMyAddresses, deleteAddress } from "../../services/orderService";
 import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
 import SearchBar from "../common/searchBar";
-import authService from "../../services/authService";
 import Table from "../common/table";
+import Like from "../common/like";
 
 class AddressBook extends Component {
 	state = {
@@ -18,6 +18,7 @@ class AddressBook extends Component {
 		selectedGenre: null,
 		sortColumn: { path: "title", order: "asc" },
 	};
+
 	columns = [
 		{
 			path: "firstName",
@@ -36,6 +37,17 @@ class AddressBook extends Component {
 				<Like liked={address.liked} onClick={() => this.props.onLike(address)} />
 			),
 		},
+		{
+			key: "delete",
+			content: (order) => (
+				<button
+					onClick={() => this.props.onDelete(order)}
+					className="btn btn-danger btn-sm"
+				>
+					Delete
+				</button>
+			),
+		},
 	];
 
 	async componentDidMount() {
@@ -45,15 +57,15 @@ class AddressBook extends Component {
 		this.setState({ addresses });
 	}
 
-	handleDelete = async (order) => {
+	handleDelete = async (address) => {
 		const originaladdresses = this.state.addresses;
-		const addresses = originaladdresses.filter((m) => m._id !== order._id);
+		const addresses = originaladdresses.filter((m) => m._id !== address._id);
 		this.setState({ addresses });
 		try {
-			await deleteOrder(order._id);
+			await deleteAddress(address._id);
 		} catch (error) {
 			if (error.response && error.response.status === 404) {
-				toast.error("This order has already been deleted");
+				toast.error("This address has already been deleted");
 				this.setState({ addresses: originaladdresses });
 			}
 		}
@@ -120,11 +132,11 @@ class AddressBook extends Component {
 		};
 	};
 
-	constructor() {
-		super();
-		const user = authService.getCurrentUser();
-		if (user && user.role === "admin") this.columns.push(this.deleteColumn);
-	}
+	// constructor() {
+	// 	super();
+	// 	const user = authService.getCurrentUser();
+	// 	if (user && user.role === "admin") this.columns.push(this.deleteColumn);
+	// }
 	render() {
 		const { length: orderCount } = this.state.addresses;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
@@ -142,9 +154,9 @@ class AddressBook extends Component {
 						onItemSelect={this.handleGenreSelect}
 					/>
 				</div> */}
-				<div className="">
+				<div>
 					<Link className="btn btn-primary mb-3" to="/addresses/new">
-						New Order
+						New Address
 					</Link>
 					<p>Showing {totalCount} addresses from the database</p>
 					<SearchBar value={searchQuery} onChange={this.handleSearch} />
