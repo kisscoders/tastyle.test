@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import { Link, NavLink } from "react-router-dom";
-// import Nav from "react-bootstrap/Nav";
 import { Button, Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import authService from "../../services/authService";
 
-const NavBar = ({ user }) => {
+const NavBar = () => {
+	const user = authService.getCurrentUser();
 	return (
 		<Navbar bg="dark" variant="dark" expand="lg">
 			<Container fluid>
-				<Navbar.Brand href="/">tastyle</Navbar.Brand>
+				<Navbar.Brand as={Link} to="/">
+					tastyle
+				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="navbarScroll" />
 				<Navbar.Collapse id="navbarScroll">
 					<Nav
@@ -16,15 +18,19 @@ const NavBar = ({ user }) => {
 						style={{ maxHeight: "100px" }}
 						navbarScroll
 					>
-						{/* <Nav.Link href="/products">Products</Nav.Link> */}
-						<Nav.Link as={Link} to="/list"></Nav.Link>
-						{/* <Nav.Link href="/list">Products</Nav.Link> */}
+						<Nav.Link as={Link} to="/list">
+							Products
+						</Nav.Link>
 					</Nav>
 
 					{!user && (
 						<Nav className="d-flex">
-							<Nav.Link href="/login">Login</Nav.Link>
-							<Nav.Link href="/users/new">Signup</Nav.Link>
+							<Nav.Link as={Link} to="/login">
+								Login
+							</Nav.Link>
+							<Nav.Link as={Link} to="/users/new">
+								Signup
+							</Nav.Link>
 						</Nav>
 					)}
 
@@ -35,12 +41,18 @@ const NavBar = ({ user }) => {
 								variant="dark"
 								id="navbarScrollingDropdown"
 							>
-								<NavDropdown.Item href="/dash#profile">Profile</NavDropdown.Item>
-								<NavDropdown.Item href="/dash">Dashboard</NavDropdown.Item>
+								<NavDropdown.Item as={Link} to="/dash">
+									Profile
+								</NavDropdown.Item>
+								<NavDropdown.Item as={Link} to="/dash">
+									Dashboard
+								</NavDropdown.Item>
 								<NavDropdown.Divider />
-								<NavDropdown.Item href="#">Hi!</NavDropdown.Item>
+								<NavDropdown.Item as={Link} to="/#">
+									Hi!
+								</NavDropdown.Item>
 							</NavDropdown>
-							<Button variant="outline-danger" href="/logout">
+							<Button variant="outline-danger" as={Link} to="/logout">
 								Logout
 							</Button>
 						</div>
