@@ -143,7 +143,7 @@ class UsersDash extends Component {
 					/>
 				</div> */}
 				<div>
-					<Link className="btn btn-primary mb-3" to="/register">
+					<Link className="btn btn-primary mb-3" to="/users/new">
 						New User
 					</Link>
 					<p>Showing {totalCount} users from the database</p>

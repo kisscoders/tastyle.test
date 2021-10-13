@@ -9,6 +9,7 @@ class ProductDetails extends Component {
 			price: "",
 			category: "",
 			description: "",
+			img: "",
 		},
 	};
 
@@ -39,6 +40,7 @@ class ProductDetails extends Component {
 			category: product.category,
 			price: product.price,
 			description: product.description,
+			img: product.img,
 		};
 	}
 
@@ -64,15 +66,15 @@ class ProductDetails extends Component {
 		return data[name];
 	}
 
-	addOne = (val) => {
-		if (val && val >= 0) val = val++;
-		console.log(val);
-	};
+	// addOne = (val) => {
+	// 	if (val && val >= 0) val = val++;
+	// 	console.log(val);
+	// };
 
-	subOne = (val) => {
-		if (val && val >= 0) val = val--;
-		console.log(val);
-	};
+	// subOne = (val) => {
+	// 	if (val && val >= 0) val = val--;
+	// 	console.log(val);
+	// };
 
 	render() {
 		return (
@@ -81,6 +83,7 @@ class ProductDetails extends Component {
 				<h4>Category: {this.renderField("category")}</h4>
 				<h4>Price: {this.renderField("price")}</h4>
 				<h4>Description: {this.renderField("description")}</h4>
+				<img src={this.renderField("img")} />
 				<button onClick={this.handleShop} className="btn btn-primary mt-2">
 					Shop Now
 				</button>

@@ -18,14 +18,15 @@ import {
 // 	.delete(auth, deleteProduct)
 // 	.get(getProduct);
 router.route("/").post(upload.single("image"), addProduct).get(getAllProducts);
-router.route("/:id").put(upload.single("image"), updateProduct);
-router.route("/:id").delete(upload.single("image"), deleteProduct);
-// router.put("/:id", upload.single("image"), async (req, res)
 router
 	.route("/:id")
-	.put(updateProduct)
-	.delete(deleteProduct)
+	.put(upload.single("image"), updateProduct)
+	.delete(upload.single("image"), deleteProduct)
 	.get(getProduct);
-
+// // router.put("/:id", upload.single("image"), async (req, res)
+// router
+// 	.route("/:id")
+// 	.put(updateProduct)
+// 	.delete(deleteProduct)
 
 export default router;

@@ -2,17 +2,26 @@ import React from "react";
 // import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../common/form";
 import { toast } from "react-toastify";
-import { addOrder, getOrder } from "../../services/orderService";
+import {
+	addOrder,
+	getMyAddresses,
+	getOrder,
+} from "../../services/orderService";
+import { getProducts } from "../../services/productService";
+import authService from "../../services/authService";
 class OrderForm extends Form {
 	state = {
 		data: {
 			productName: "",
+			productId: "",
 			user: "",
 			quantityVar: "",
 			price: "",
 			orderType: "",
 			orderStatus: "",
 		},
+		addresses: [],
+		products: [],
 		errors: {},
 	};
 
@@ -32,10 +41,14 @@ class OrderForm extends Form {
 		// 	.label("Daily Rental Rate"),
 	};
 
-	// async populateGenres() {
-	// 	const { data: genres } = await getGenres();
-	// 	this.setState({ genres });
-	// }
+	async populateAddresses() {
+		const { data: addresses } = await getMyAddresses();
+		this.setState({ addresses });
+	}
+	async populateProducts() {
+		const { data: products } = await getProducts();
+		this.setState({ products });
+	}
 
 	async populateOrder() {
 		try {
@@ -54,15 +67,18 @@ class OrderForm extends Form {
 	}
 
 	async componentDidMount() {
-		// await this.populateGenres();
+		await this.populateAddresses();
+		await this.populateProducts();
 		await this.populateOrder();
 	}
 
 	mapToViewModel(order) {
+		const user = authService.getCurrentUser();
 		return {
 			_id: order._id,
-			productName: order.product.title,
-			user: order.user.name,
+			productId: order.productId,
+			deliverTo: order.addressId,
+			user: user.name,
 			quantityVar: order.quantityVar,
 			price: order.priceSum,
 			orderType: order.orderType,
@@ -88,7 +104,12 @@ class OrderForm extends Form {
 					{this.renderInput("user", "Customer")}
 					{this.renderInput("price", "Price")}
 					{this.renderInput("quantityVar", "Quantity")}
-					{/* {this.renderSelect("isSubs", "Subscription", "Do you want to subscribe?")} */}
+					{this.renderSelect(
+						"productId",
+						"Product",
+						"What's your favorite?",
+						this.state.products
+					)}
 					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
 					{this.renderInput("orderStatus", "We are currently")}
 					{this.renderButton("Order")}

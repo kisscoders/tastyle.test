@@ -16,6 +16,7 @@ const NavBar = ({ user }) => {
 						navbarScroll
 					>
 						<Nav.Link href="/products">Products</Nav.Link>
+						<Nav.Link href="/list">Products Grid</Nav.Link>
 					</Nav>
 
 					{!user && (

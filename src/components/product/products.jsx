@@ -147,11 +147,11 @@ class Products extends Component {
 					/>
 				</div> */}
 				<div className="">
-					{user && (
+					{/* {user && (
 						<Link className="btn btn-primary mb-3" to="/products/new">
 							New Product
 						</Link>
-					)}
+					)} */}
 					<p>Showing {totalCount} products in the database</p>
 					<SearchBar value={searchQuery} onChange={this.handleSearch} />
 					<ProductsTable

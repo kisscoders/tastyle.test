@@ -1,4 +1,5 @@
 import "dotenv/config";
+const cloudinary = require("cloudinary").v2;
 import { connect } from "mongoose";
 import {
 	db,
@@ -7,6 +8,9 @@ import {
 	requiresAuth,
 	jwtExpirePeriod,
 	cookieExpirePeriod,
+	cloudApiKey,
+	cloudApiSecret,
+	cloudName,
 } from "./default.json";
 
 export const port = process.env.PORT || serverPort;
@@ -15,6 +19,16 @@ export const jwtSecretKey = process.env.JWT_KEY || jwtPrivateKey;
 export const authStatus = process.env.REQ_AUTH || requiresAuth;
 export const jwtExpire = process.env.JWT_EXPIRE || jwtExpirePeriod;
 export const cookieExpire = process.env.COOKIE_EXPIRE || cookieExpirePeriod;
+const cloud_name = process.env.CLOUD_NAME || cloudName;
+const api_key = process.env.API_KEY || cloudApiKey;
+const api_secret = process.env.API_SECRET || cloudApiSecret;
+
+// cloudinary congifuration
+cloudinary.config({
+	cloud_name: cloud_name,
+	api_key: api_key,
+	api_secret: api_secret,
+});
 
 // connecting to mongodb via mongoose
 const connectDB = async () => {
@@ -34,7 +48,7 @@ const connectDB = async () => {
 };
 
 export default connectDB;
-
+export { cloudinary };
 // extra stuff
 
 // const config = require('config');

@@ -6386,6 +6386,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cloudinary-core@npm:^2.11.3":
+  version: 2.12.0
+  resolution: "cloudinary-core@npm:2.12.0"
+  peerDependencies:
+    lodash: ">=4.0"
+  checksum: f885371574648cc1ba71dc6ab104bbaa9a27fbe4bd03734e9b74d61a091c747e3c95ebb9f194f574506bfcfcbecc1c1b07ab7525479755a066d87e80072c5841
+  languageName: node
+  linkType: hard
+
+"cloudinary-react@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "cloudinary-react@npm:1.7.0"
+  dependencies:
+    cloudinary-core: ^2.11.3
+    prop-types: ^15.6.2
+  peerDependencies:
+    react: ^16.3.3 || ^17.0.0
+  checksum: b6bdbad57f0a9a671f89a150e7a4759382824020777e4a71ef6e651994ba50c860560c5b147c6eaa5695023b3a9e6fdf974d2841dd297e93f3b5737507b5cecd
+  languageName: node
+  linkType: hard
+
 "cloudinary@npm:^1.27.0":
   version: 1.27.0
   resolution: "cloudinary@npm:1.27.0"
@@ -18242,6 +18263,7 @@ resolve@^2.0.0-next.3:
     bootstrap: ^5.1.1
     chalk: ^4.0.0
     cloudinary: ^1.27.0
+    cloudinary-react: ^1.7.0
     cookie-parser: ^1.4.5
     cors: ^2.8.5
     dotenv: ^10.0.0

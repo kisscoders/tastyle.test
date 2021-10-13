@@ -3,55 +3,20 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import { deleteProduct, getProducts } from "../../services/productService";
-// import { getGenres } from "../../services/genreService";
 import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
-// import ListGroup from "../common/listGroup";
 import ProductsTable from "../product/productsTable";
 import SearchBar from "../common/searchBar";
-
-// class Products extends Component {
-// 	state = {
-// 		products: [
-// 			{ id: 1, name: "tastyle classic v1" },
-// 			{ id: 2, name: "tastyle black v1" },
-// 			{ id: 3, name: "tastyle drop" },
-// 		],
-// 	};
-
-// 	render() {
-// 		const { products } = this.state;
-// 		return (
-// 			<div>
-// 				<h1>Products</h1>
-// 				<ul>
-// 					{products.map((product) => (
-// 						<li key={product.id}>
-// 							<Link to={`/products/${product.id}`}>{product.name}</Link>
-// 						</li>
-// 					))}
-// 				</ul>
-// 			</div>
-// 		);
-// 	}
-// }
-
-// export default Products;
 class ProductsDash extends Component {
 	state = {
 		prodcts: [],
-		// genres: [],
 		currentPage: 1,
 		pageSize: 4,
 		searchQuery: "",
-		// selectedGenre: null,
 		sortColumn: { path: "title", order: "asc" },
 	};
 
 	async componentDidMount() {
-		// const { data } = await getGenres();
-		// const genres = [{ _id: "", name: "All Genres" }, ...data];
-
 		const { data: prodcts } = await getProducts();
 		this.setState({ prodcts });
 	}
@@ -90,15 +55,6 @@ class ProductsDash extends Component {
 			currentPage: 1,
 		});
 	};
-
-	// handleGenreSelect = (genre) => {
-	// 	this.setState({
-	// 		selectedGenre: genre,
-	// 		searchQuery: "",
-	// 		currentPage: 1,
-	// 	});
-	// };
-
 	handleSort = (sortColumn) => {
 		this.setState({ sortColumn });
 	};
@@ -118,8 +74,6 @@ class ProductsDash extends Component {
 			filtered = allProducts.filter((m) =>
 				m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
 			);
-		// else if (selectedGenre && selectedGenre._id)
-		// 	filtered = allProducts.filter((m) => m.genre._id === selectedGenre._id);
 
 		const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
@@ -130,6 +84,7 @@ class ProductsDash extends Component {
 			data: prodcts,
 		};
 	};
+
 	render() {
 		const { user } = this.props;
 		const { length: prodCount } = this.state.prodcts;
@@ -141,35 +96,26 @@ class ProductsDash extends Component {
 
 		return (
 			<div className="container-fluid mt-4">
-				{/* <div className="">
-					<ListGroup
-						items={this.state.genres}
-						selectedItem={this.state.selectedGenre}
-						onItemSelect={this.handleGenreSelect}
-					/>
-				</div> */}
-				<div className="">
-					{user && (
-						<Link className="btn btn-primary mb-3" to="/products/new">
-							New Product
-						</Link>
-					)}
-					<p>Showing {totalCount} products in the database</p>
-					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<ProductsTable
-						products={prodcts}
-						sortColumn={sortColumn}
-						onLike={this.handleLike}
-						onDelete={this.handleDelete}
-						onSort={this.handleSort}
-					/>
-					<Pagination
-						itemsCount={totalCount}
-						pageSize={pageSize}
-						currentPage={currentPage}
-						onPageChange={this.handlePageChange}
-					/>
-				</div>
+				{user && (
+					<Link className="btn btn-primary mb-3" to="/products/new">
+						New Product
+					</Link>
+				)}
+				<p>Showing {totalCount} products in the database</p>
+				<SearchBar value={searchQuery} onChange={this.handleSearch} />
+				<ProductsTable
+					products={prodcts}
+					sortColumn={sortColumn}
+					onLike={this.handleLike}
+					onDelete={this.handleDelete}
+					onSort={this.handleSort}
+				/>
+				<Pagination
+					itemsCount={totalCount}
+					pageSize={pageSize}
+					currentPage={currentPage}
+					onPageChange={this.handlePageChange}
+				/>
 			</div>
 		);
 	}

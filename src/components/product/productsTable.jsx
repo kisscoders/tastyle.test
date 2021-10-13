@@ -16,17 +16,21 @@ class ProductsTable extends Component {
 		{ path: "price", label: "Price" },
 		{ path: "category", label: "Category" },
 		{ path: "description", label: "Description" },
+		{ path: "img", label: "Image" },
+		// { path: "cloudinary_id", label: "cloudinary" },
+		// {
+		// 	key: "like",
+		// 	content: (product) => (
+		// 		<Like liked={product.liked} onClick={() => this.props.onLike(product)} />
+		// 	),
+		// },
 		{
-			key: "like",
-			content: (product) => (
-				<Like liked={product.liked} onClick={() => this.props.onLike(product)} />
-			),
+			key: "image",
+			content: (product) => <image src={product.img} />,
 		},
 		{
-			key: "Description",
-			content: (product) => (
-				<Link to={`/products/d/${product._id}`}>Description</Link>
-			),
+			key: "Des",
+			content: (product) => <Link to={`/products/d/${product._id}`}>Buy Now</Link>,
 		},
 	];
 

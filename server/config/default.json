@@ -4,5 +4,8 @@
 	"serverPort": "1301",
 	"requiresAuth": true,
 	"jwtExpirePeriod": "3h",
-	"cookieExpirePeriod": "3h"
+	"cookieExpirePeriod": "3h",
+	"cloudName": "tastylemedia",
+	"cloudApiKey": "334584786546533",
+	"cloudApiSecret": "nctPxTgZxzlYdheAZDiCF-1w7S8"
 }

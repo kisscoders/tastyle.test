@@ -24,6 +24,7 @@ import auth from "./services/authService";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { Container } from "react-bootstrap";
+import ProductsGrid from "./components/product/productsList";
 
 class App extends Component {
 	state = {};
@@ -66,8 +67,8 @@ class App extends Component {
 							exact
 							render={(props) => <Products {...props} user={user} />}
 						/>
+						<Route path="/list" component={ProductsGrid} />
 						{/* <Route path="/customers" component={Customers} /> */}
-						<Route path="/rentals" component={Rentals} />
 						<Route path="/" exact component={Home} />
 						{/* <Redirect from="/" exact to="/movies" /> */}
 						<Redirect to="/not-found" />
