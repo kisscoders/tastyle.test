@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import { deleteProduct, getProducts } from "../../services/productService";
@@ -129,7 +129,7 @@ class Products extends Component {
 		};
 	};
 	render() {
-		const { user } = this.props;
+		// const { user } = this.props;
 		const { length: prodCount } = this.state.prodcts;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 

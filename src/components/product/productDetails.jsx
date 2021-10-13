@@ -83,7 +83,7 @@ class ProductDetails extends Component {
 				<h4>Category: {this.renderField("category")}</h4>
 				<h4>Price: {this.renderField("price")}</h4>
 				<h4>Description: {this.renderField("description")}</h4>
-				<img src={this.renderField("img")} />
+				<img alt="" src={this.renderField("img")} />
 				<button onClick={this.handleShop} className="btn btn-primary mt-2">
 					Shop Now
 				</button>

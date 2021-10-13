@@ -9,7 +9,7 @@ import Movies from "./components/movie/movies";
 import MovieForm from "./components/movie/movieForm";
 import ProductDetails from "./components/product/productDetails";
 import NotFound from "./components/layout/notFound";
-import Rentals from "./components/movie/rentals";
+// import Rentals from "./components/movie/rentals";
 import LoginForm from "./components/user/loginForm";
 import Posts from "./components/forum/posts";
 import RegisterForm from "./components/user/registerForm";

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 // import { Link, NavLink } from "react-router-dom";
 // import Nav from "react-bootstrap/Nav";
 import { Button, Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
@@ -16,7 +17,8 @@ const NavBar = ({ user }) => {
 						navbarScroll
 					>
 						{/* <Nav.Link href="/products">Products</Nav.Link> */}
-						<Nav.Link href="/list">Products</Nav.Link>
+						<Nav.Link as={Link} to="/list"></Nav.Link>
+						{/* <Nav.Link href="/list">Products</Nav.Link> */}
 					</Nav>
 
 					{!user && (

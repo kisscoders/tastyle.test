@@ -67,7 +67,7 @@ class ProductsGrid extends Component {
 						<Col>
 							<Card key={item._id} border="primary" style={{ width: "18rem" }}>
 								<Card.Header>{item.title}</Card.Header>
-								<Card.Img variant="top" src={item.img} />
+								<Card.Img variant="top" alt="" src={item.img} />
 								<Card.Body>
 									<Card.Title>{item.category}</Card.Title>
 									<Card.Text>{item.description}</Card.Text>
