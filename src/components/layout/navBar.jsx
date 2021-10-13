@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import authService from "../../services/authService";
 
-const NavBar = () => {
+export default function NavBar() {
 	const user = authService.getCurrentUser();
 	return (
 		<Navbar bg="dark" variant="dark" expand="lg">
@@ -61,6 +61,4 @@ const NavBar = () => {
 			</Container>
 		</Navbar>
 	);
-};
-
-export default NavBar;
+}
