@@ -145,7 +145,8 @@ const viewOrder = catchAsyncErrors(async (req, res) => {
 		.populate("product", "title price");
 
 	if (!order) {
-		return next(new ErrorHander("Order not found with this Id", 404));
+		return;
+		// return next(new ErrorHander("Order not found with this Id", 404));
 	}
 
 	res.status(200).json({
