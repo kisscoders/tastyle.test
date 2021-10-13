@@ -15,8 +15,8 @@ const NavBar = ({ user }) => {
 						style={{ maxHeight: "100px" }}
 						navbarScroll
 					>
-						<Nav.Link href="/products">Products</Nav.Link>
-						<Nav.Link href="/list">Products Grid</Nav.Link>
+						{/* <Nav.Link href="/products">Products</Nav.Link> */}
+						<Nav.Link href="/list">Products</Nav.Link>
 					</Nav>
 
 					{!user && (
