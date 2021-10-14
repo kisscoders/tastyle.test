@@ -4,13 +4,14 @@ import { toast } from "react-toastify";
 import authService from "../../services/authService";
 import Input from "../common/input";
 import { Button } from "../common/buttons";
+import { ClassCard, CardHeader } from "../layout/card";
+import { Card } from "react-bootstrap";
 
 class ProfileDash extends Component {
 	state = {
 		data: {
-			userName: "",
+			name: "",
 			email: "",
-			role: "",
 		},
 		errors: {},
 	};
@@ -25,14 +26,24 @@ class ProfileDash extends Component {
 		return errors;
 	};
 
-	validateProperty = ({ name, value }) => {
-		const obj = { [name]: value };
-		const schema = { [name]: this.schema[name] };
-		const { error } = Joi.validate(obj, schema);
-		return error ? error.details[0].message : null;
-	};
+	// validateProperty = ({ name, value }) => {
+	// 	const obj = { [name]: value };
+	// 	const schema = { [name]: this.schema[name] };
+	// 	const { error } = Joi.validate(obj, schema);
+	// 	return error ? error.details[0].message : null;
+	// };
 
 	handleSubmit = (e) => {
+		e.preventDefault();
+
+		const errors = this.validate();
+		this.setState({ errors: errors || {} });
+		if (errors) return;
+
+		this.doSubmit();
+	};
+
+	handlePassChange = (e) => {
 		e.preventDefault();
 
 		const errors = this.validate();
@@ -53,27 +64,15 @@ class ProfileDash extends Component {
 
 		this.setState({ data, errors });
 	};
+
 	schema = {
-		// _id: Joi.string(),
-		// name: Joi.string().required().label("Name"),
-		// isSubs: Joi.string().required().label("Subscription"),
-		// numberInStock: Joi.number()
-		// 	.min(0)
-		// 	.max(100)
-		// 	.required()
-		// 	.label("Number in Stock"),
-		// dailyRentalRate: Joi.number()
-		// 	.min(0)
-		// 	.max(10)
-		// 	.required()
-		// 	.label("Daily Rental Rate"),
+		_id: Joi.string(),
+		email: Joi.string().email().required().label("Email"),
+		name: Joi.string().required().label("Name"),
 	};
+
 	renderButton(label) {
-		return (
-			<Button disabled={this.validate()} className="mt-2">
-				{label}
-			</Button>
-		);
+		return <Button disabled={this.validate()}>{label}</Button>;
 	}
 
 	renderInput(name, label, type = "text") {
@@ -96,9 +95,11 @@ class ProfileDash extends Component {
 				data: this.mapToViewModel(user),
 			});
 		} catch (error) {
-			if (error.response && error.response.status === 404)
+			if (error.response && error.response.status === 404) {
 				this.props.history.replace("/not-found");
-			toast.error("What can I say get the backend ready");
+			}
+			console.log(error);
+			toast.error("Something Happened");
 		}
 	}
 
@@ -109,39 +110,53 @@ class ProfileDash extends Component {
 	mapToViewModel(user) {
 		return {
 			_id: user._id,
-			userName: user.name,
+			name: user.name,
 			email: user.email,
-			role: user.role,
 		};
 	}
+
+	doSubmit = async () => {
+		try {
+			const response = await authService.register(this.state.data);
+			authService.loginWithJwt(response.headers["x-auth-token"]);
+			window.location = "/";
+		} catch (ex) {
+			if (ex.response && ex.response.status === 400) {
+				const errors = { ...this.state.errors };
+				errors.username = ex.response.data;
+				this.setState({ errors });
+			}
+		}
+	};
 
 	render() {
 		return (
 			<div>
-				<form>
-					<h1>Update user info</h1>
-					{this.renderInput("userName", "Name")}
-					{this.renderInput("email", "Email")}
-					{/* {this.renderSelect("isSubs", "Subscription", "Do you want to subscribe?")} */}
-					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
-					{this.renderButton("Save")}
-				</form>
-				<form>
-					<h1>Reset Password</h1>
-
-					{this.renderInput("userName", "Name")}
-					{this.renderInput("email", "Email")}
-					{/* {this.renderSelect("isSubs", "Subscription", "Do you want to subscribe?")} */}
-					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
-					{this.renderButton("Save")}
-				</form>
-				<form>
-					{this.renderInput("userName", "Name")}
-					{this.renderInput("email", "Email")}
-					{/* {this.renderSelect("isSubs", "Subscription", "Do you want to subscribe?")} */}
-					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
-					{this.renderButton("Save")}
-				</form>
+				<ClassCard className="mb-4">
+					<CardHeader as="h4" className="mx-3 px-0">
+						Your Info
+					</CardHeader>
+					<Card.Body>
+						<form onSubmit={this.handleSubmit}>
+							{this.renderInput("name", "Name")}
+							{this.renderInput("email", "Email")}
+							{this.renderButton("Save")}
+						</form>
+					</Card.Body>
+				</ClassCard>
+				<ClassCard>
+					<CardHeader as="h4" className="mx-3 px-0">
+						Change Password
+					</CardHeader>
+					<Card.Body>
+						<form onSubmit={this.handlePassChange}>
+							{this.renderInput("currentPass", "Current Password")}
+							{this.renderInput("newPass", "New Password")}
+							{this.renderInput("confPass", "Confirm Password")}
+							{this.renderButton("Update")}
+						</form>
+					</Card.Body>
+				</ClassCard>
 			</div>
 		);
 	}

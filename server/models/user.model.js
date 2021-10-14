@@ -19,16 +19,16 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	// avatar: {
-	// 	public_id: {
-	// 		type: String,
-	// 		required: true,
-	// 	},
-	// 	url: {
-	// 		type: String,
-	// 		required: true,
-	// 	},
-	// },
+	avatar: {
+		public_id: {
+			type: String,
+			required: true,
+		},
+		url: {
+			type: String,
+			required: true,
+		},
+	},
 	role: {
 		type: String,
 		enum: {

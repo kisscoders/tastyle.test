@@ -1,6 +1,6 @@
 import Product from "../models/product.model";
-import { cloudinary } from "../config/config";
-// const upload = require("../utils/multer");
+import cloudinary from "../utils/cloudinary";
+
 import catchAsyncErrors from "../middleware/error";
 import ErrorHander from "../middleware/errorhander";
 
@@ -112,5 +112,6 @@ const getProduct = async (req, res) => {
 		.then((product) => res.json(product))
 		.catch((err) => res.status(400).json("Error: " + err));
 };
+
 //export crud functions
 export { getAllProducts, getProduct, updateProduct, deleteProduct, addProduct };

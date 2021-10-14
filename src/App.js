@@ -13,7 +13,7 @@ import Orders from "./components/order/orders";
 import Logout from "./components/user/logout";
 import ProductForm from "./components/product/productForm";
 // import ProtectedRoute from "./components/common/protectedRoute";
-import Home from "./components/home/home";
+import Home from "./views/home";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";

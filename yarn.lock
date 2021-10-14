@@ -13240,6 +13240,15 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"multer-storage-cloudinary@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "multer-storage-cloudinary@npm:4.0.0"
+  peerDependencies:
+    cloudinary: ^1.21.0
+  checksum: 6ee42f6932f3e9bde9912222c549e7305e655e0f56976a513ba8f129014834d65809adb6fbabba94006d8a39e706f3a9e5efbd7b041e28d5d25b8fc56b53cf78
+  languageName: node
+  linkType: hard
+
 "multer@npm:^1.4.3":
   version: 1.4.3
   resolution: "multer@npm:1.4.3"
@@ -18388,6 +18397,7 @@ resolve@^2.0.0-next.3:
     lodash: ^4.17.21
     mongoose: ^5.9.15
     multer: ^1.4.3
+    multer-storage-cloudinary: ^4.0.0
     node-gyp: ^8.2.0
     nodemon: ^2.0.13
     prettier: ^2.4.1

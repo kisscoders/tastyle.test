@@ -5,6 +5,7 @@ import User from "../models/user.model";
 import { sendToken } from "../utils/jwtToken";
 import ErrorHander from "../middleware/errorhander";
 import catchAsyncErrors from "../middleware/error";
+import cloudinary from "../utils/cloudinary";
 // const sendEmail = require("../utils/sendEmail");
 
 // @desc    Create new user
@@ -14,11 +15,7 @@ const createUser = catchAsyncErrors(async (req, res) => {
 	// const { error } = validate(req.body);
 	// if (error) return res.status(400).send(error.details[0].message);
 
-	// const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-	//   folder: "avatars",
-	//   width: 150,
-	//   crop: "scale",
-	// });
+	const result = await cloudinary.uploader.upload(req.file.path);
 
 	const { name, email, password } = req.body;
 
@@ -26,10 +23,10 @@ const createUser = catchAsyncErrors(async (req, res) => {
 		name,
 		email,
 		password,
-		//   avatar: {
-		// 	public_id: myCloud.public_id,
-		// 	url: myCloud.secure_url,
-		//   },
+		avatar: {
+			public_id: result.public_id,
+			url: result.secure_url,
+		},
 	});
 	// 	const salt = await bcrypt.genSalt(10);
 	// 	user.password = await bcrypt.hash(user.password, salt);
@@ -65,17 +62,17 @@ const loginUser = async (req, res, next) => {
 // @desc    Logout
 // @route   POST /api/users/logout
 // @access  Private
-const logoutUser = catchAsyncErrors(async (req, res, next) => {
-	res.cookie("token", null, {
-		expires: new Date(Date.now()),
-		httpOnly: true,
-	});
+// const logoutUser = catchAsyncErrors(async (req, res, next) => {
+// 	res.cookie("token", null, {
+// 		expires: new Date(Date.now()),
+// 		httpOnly: true,
+// 	});
 
-	res.status(200).json({
-		success: true,
-		message: "Logged Out",
-	});
-});
+// 	res.status(200).json({
+// 		success: true,
+// 		message: "Logged Out",
+// 	});
+// });
 
 // @desc    Get me
 // @route   GET /api/users/me
@@ -209,24 +206,24 @@ const updateProfile = catchAsyncErrors(async (req, res, next) => {
 		email: req.body.email,
 	};
 
-	//   if (req.body.avatar !== "") {
-	// 	const user = await User.findById(req.user.id);
+	if (req.body.avatar !== "") {
+		const user = await User.findById(req.user.id);
 
-	// 	const imageId = user.avatar.public_id;
+		const imageId = user.avatar.public_id;
 
-	// 	await cloudinary.v2.uploader.destroy(imageId);
+		await cloudinary.v2.uploader.destroy(imageId);
 
-	// 	const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-	// 	  folder: "avatars",
-	// 	  width: 150,
-	// 	  crop: "scale",
-	// 	});
+		const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+			folder: "avatars",
+			width: 150,
+			crop: "scale",
+		});
 
-	// 	newUserData.avatar = {
-	// 	  public_id: myCloud.public_id,
-	// 	  url: myCloud.secure_url,
-	// 	};
-	//   }
+		newUserData.avatar = {
+			public_id: myCloud.public_id,
+			url: myCloud.secure_url,
+		};
+	}
 
 	const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
 		new: true,
@@ -316,7 +313,6 @@ const deleteUser = catchAsyncErrors(async (req, res, next) => {
 export {
 	createUser,
 	loginUser,
-	logoutUser,
 	updatePass,
 	updateProfile,
 	updateUserRole,

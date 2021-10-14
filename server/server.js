@@ -1,5 +1,6 @@
 import app from "./app"; // express related stuff moved here
-import connectDB, { port } from "./config/config"; // port and mongoose connect here
+import { port } from "./config/config"; // port and mongoose connect here
+import connectDB from "./utils/mongDB"; // port and mongoose connect here
 // import express from "express";
 
 // const app = express(); // creating express app

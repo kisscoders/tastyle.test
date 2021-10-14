@@ -1,7 +1,9 @@
 import { Router } from "express";
 const router = Router();
-const upload = require("../utils/multer");
 import { auth } from "../middleware/auth";
+import { productsUpload } from "../utils/multer";
+
+const upload = productsUpload;
 
 import {
 	getAllProducts,

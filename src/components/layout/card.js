@@ -15,8 +15,8 @@ export const ClassCard = styled(Card)`
 `;
 
 export const CardHeader = styled(Card.Header)`
-	padding: 0.25em;
-	margin: 0.25em;
+	padding: 0 1em;
+	margin: 0.5em 0.5em 0 0.5em;
 	background-color: #fff;
 	font-size: 2rem;
 `;

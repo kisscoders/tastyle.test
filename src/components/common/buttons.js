@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import styled from "styled-components";
 
 export const Button = styled.button`
@@ -11,7 +11,8 @@ export const Button = styled.button`
 	border: 1px solid blue;
 	color: blue;
 	padding: 0.5625rem 1rem;
-	font-size: 0.8rem;
+	margin: 0.5rem 0;
+	font-size: 0.9rem;
 	line-height: 1.125;
 	border-radius: 0.3rem;
 	transition: all 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
