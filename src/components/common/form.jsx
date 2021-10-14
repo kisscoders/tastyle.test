@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
 import SelectInput from "./selectInput";
-
+import { Button } from "../common/buttons";
 class Form extends Component {
 	state = {
 		data: {},
@@ -50,9 +50,9 @@ class Form extends Component {
 
 	renderButton(label) {
 		return (
-			<button disabled={this.validate()} className="btn btn-primary mt-2">
+			<Button disabled={this.validate()} className="mt-2">
 				{label}
-			</button>
+			</Button>
 		);
 	}
 

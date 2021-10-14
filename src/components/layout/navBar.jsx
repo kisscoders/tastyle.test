@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import authService from "../../services/authService";
 
 export default function NavBar() {
@@ -21,40 +21,45 @@ export default function NavBar() {
 						<Nav.Link as={Link} to="/list">
 							Products
 						</Nav.Link>
+						<Nav.Link as={Link} to="/card">
+							Card
+						</Nav.Link>
 					</Nav>
 
 					{!user && (
-						<Nav className="d-flex">
+						<Nav className="d-flex pe-1">
 							<Nav.Link as={Link} to="/login">
 								Login
 							</Nav.Link>
-							<Nav.Link as={Link} to="/users/new">
+							<Nav.Link as={Link} to="/signup">
 								Signup
 							</Nav.Link>
 						</Nav>
 					)}
 
 					{user && (
-						<div className="d-flex">
+						<div className="d-flex text-white bg-dark">
 							<NavDropdown
+								className="pe-1 text-white"
 								title={user.name}
-								variant="dark"
-								id="navbarScrollingDropdown"
+								menuVariant="dark"
+								drop="start"
+								// align="left"
 							>
-								<NavDropdown.Item as={Link} to="/dash">
+								{/* <NavDropdown.Item as={Link} to="/dash">
 									Profile
-								</NavDropdown.Item>
+								</NavDropdown.Item> */}
 								<NavDropdown.Item as={Link} to="/dash">
 									Dashboard
 								</NavDropdown.Item>
 								<NavDropdown.Divider />
-								<NavDropdown.Item as={Link} to="/#">
-									Hi!
+								<NavDropdown.Item as={Link} to="/logout">
+									Logout
 								</NavDropdown.Item>
 							</NavDropdown>
-							<Button variant="outline-danger" as={Link} to="/logout">
+							{/* <Button variant="outline-danger" as={Link} to="/logout">
 								Logout
-							</Button>
+							</Button> */}
 						</div>
 					)}
 				</Navbar.Collapse>

@@ -1,18 +1,25 @@
 import { admin, auth } from "../middleware/auth";
 import { Router } from "express";
-const router = Router();
+import { avatarsUpload } from "../utils/multer";
+
 import {
 	createUser,
 	loginUser,
-	getMe,
 	getAllUser,
 	deleteUser,
 	getUserDetail,
+	updateProfile,
 } from "../controllers/users.controller";
 
-router.route("/me").get(auth, getMe);
+const upload = avatarsUpload;
+const router = Router();
+
 router.route("/auth").post(loginUser);
-router.route("/").post(createUser).get([auth, admin], getAllUser);
+router
+	.route("/")
+	.post(upload.single("avatar"), createUser)
+	.get([auth, admin], getAllUser);
+router.route("/updateprofile").post(auth, updateProfile);
 router
 	.route("/:id")
 	.get([auth, admin], getUserDetail)
