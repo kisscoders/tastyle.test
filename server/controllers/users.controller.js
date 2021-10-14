@@ -80,14 +80,14 @@ const logoutUser = catchAsyncErrors(async (req, res, next) => {
 // @desc    Get me
 // @route   GET /api/users/me
 // @access  User / Admin
-const getMe = catchAsyncErrors(async (req, res) => {
-	const user = await User.findById(req.user._id).select("-password");
+// const getMe = catchAsyncErrors(async (req, res) => {
+// 	const user = await User.findById(req.user._id).select("-password");
 
-	res.status(200).json({
-		success: true,
-		user,
-	});
-});
+// 	res.status(200).json({
+// 		success: true,
+// 		user,
+// 	});
+// });
 
 // @desc    Get a user's detail by id
 // @route   GET /api/users/:id
@@ -317,7 +317,6 @@ export {
 	createUser,
 	loginUser,
 	logoutUser,
-	getMe,
 	updatePass,
 	updateProfile,
 	updateUserRole,
