@@ -1,14 +1,6 @@
 import app from "./app"; // express related stuff moved here
-import { port } from "./config/config"; // port and mongoose connect here
-import connectDB from "./utils/mongDB"; // port and mongoose connect here
-// import express from "express";
-
-// const app = express(); // creating express app
-
-// app.use(cors()); // using cors to authenticate or something
-// app.use(express.json()); // JSON parsing for requests from app
-
-// require("./routes/index.routes")(app); // routes index file incoming
+import { port } from "./config/config"; // port here
+import connectDB from "./utils/mongDB"; // mongoose connect here
 
 connectDB(); // connecting to database
 

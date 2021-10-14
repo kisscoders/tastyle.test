@@ -38,10 +38,10 @@ export default function NavBar() {
 					)}
 
 					{user && (
-						<div className="d-flex text-white bg-dark">
+						<div className="d-flex bg-dark text-white">
 							<NavDropdown
-								className="pe-1 text-white"
-								title={user.name}
+								className="pe-1 "
+								title={<span className="text-white my-auto">{user.name}</span>}
 								menuVariant="dark"
 								drop="start"
 								// align="left"
@@ -57,6 +57,14 @@ export default function NavBar() {
 									Logout
 								</NavDropdown.Item>
 							</NavDropdown>
+							<div className="m-auto me-3">
+								<img
+									className="rounded-circle"
+									src={user.avatar.url}
+									alt="profile"
+									width="30"
+								/>
+							</div>
 							{/* <Button variant="outline-danger" as={Link} to="/logout">
 								Logout
 							</Button> */}

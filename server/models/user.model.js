@@ -61,6 +61,7 @@ userSchema.methods.generateAuthToken = function () {
 			name: this.name,
 			email: this.email,
 			role: this.role,
+			avatar: this.avatar,
 		},
 		jwtSecretKey,
 		{

@@ -19,7 +19,9 @@ router
 	.route("/")
 	.post(upload.single("avatar"), createUser)
 	.get([auth, admin], getAllUser);
-router.route("/updateprofile").post(auth, updateProfile);
+router
+	.route("/updateprofile")
+	.post(auth, upload.single("avatar"), updateProfile);
 router
 	.route("/:id")
 	.get([auth, admin], getUserDetail)

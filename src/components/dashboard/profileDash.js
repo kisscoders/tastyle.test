@@ -5,13 +5,16 @@ import authService from "../../services/authService";
 import Input from "../common/input";
 import { Button } from "../common/buttons";
 import { ClassCard, CardHeader } from "../layout/card";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
+import FileInput from "../common/fileInput";
 
 class ProfileDash extends Component {
 	state = {
+		avatarFile: null,
 		data: {
 			name: "",
 			email: "",
+			avatarurl: "",
 		},
 		errors: {},
 	};
@@ -36,9 +39,9 @@ class ProfileDash extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault();
 
-		const errors = this.validate();
-		this.setState({ errors: errors || {} });
-		if (errors) return;
+		// const errors = this.validate();
+		// this.setState({ errors: errors || {} });
+		// if (errors) return;
 
 		this.doSubmit();
 	};
@@ -51,6 +54,50 @@ class ProfileDash extends Component {
 		if (errors) return;
 
 		this.doSubmit();
+	};
+
+	handleAvatar = (e) => {
+		e.preventDefault();
+
+		const errors = this.validate();
+		this.setState({ errors: errors || {} });
+		if (errors) return;
+
+		this.doSubmit();
+	};
+
+	handleUpload = async (e) => {
+		e.preventDefault();
+		await this.doUpload();
+		const data = authService.getCurrentUser();
+		console.log(data);
+		this.setState({ data });
+		await this.populateFields();
+	};
+
+	doUpload = async () => {
+		try {
+			const avatar = new FormData();
+			avatar.append("avatar", this.state.avatarFile);
+			await authService.updateProf(avatar);
+		} catch (ex) {
+			if (ex.response && ex.response.status === 400) {
+				const errors = { ...this.state.errors };
+				errors.username = ex.response.data;
+				this.setState({ errors });
+			}
+		}
+	};
+
+	handleFileStats = (e) => {
+		e.preventDefault();
+		const file = e.target.files[0];
+		console.log(file);
+		this.setState({
+			avatarFile: file,
+			loaded: 0,
+		});
+		console.log(this.state);
 	};
 
 	handleChange = ({ currentTarget: input }) => {
@@ -112,6 +159,7 @@ class ProfileDash extends Component {
 			_id: user._id,
 			name: user.name,
 			email: user.email,
+			avatarurl: user.avatar.url,
 		};
 	}
 
@@ -130,34 +178,61 @@ class ProfileDash extends Component {
 	};
 
 	render() {
+		const { data, avatarFile } = this.state;
+		const doc = {};
+		if (avatarFile && avatarFile.name) {
+			doc.text = avatarFile.name;
+		} else doc.text = "Choose avatar";
+		doc.style1 = avatarFile ? "" : "d-none";
 		return (
-			<div>
-				<ClassCard className="mb-4">
-					<CardHeader as="h4" className="mx-3 px-0">
-						Your Info
-					</CardHeader>
-					<Card.Body>
-						<form onSubmit={this.handleSubmit}>
-							{this.renderInput("name", "Name")}
-							{this.renderInput("email", "Email")}
-							{this.renderButton("Save")}
-						</form>
-					</Card.Body>
-				</ClassCard>
-				<ClassCard>
-					<CardHeader as="h4" className="mx-3 px-0">
-						Change Password
-					</CardHeader>
-					<Card.Body>
-						<form onSubmit={this.handlePassChange}>
-							{this.renderInput("currentPass", "Current Password")}
-							{this.renderInput("newPass", "New Password")}
-							{this.renderInput("confPass", "Confirm Password")}
-							{this.renderButton("Update")}
-						</form>
-					</Card.Body>
-				</ClassCard>
-			</div>
+			<Row>
+				<Col sm={5}>
+					<ClassCard className="m-0">
+						<div className="my-3 mx-auto">
+							<img
+								className="rounded-circle mt-3 border border-4 border-primary"
+								src={data.avatarurl}
+								alt="profile"
+								width="140"
+							/>
+						</div>
+						<Card.Body className="mx-auto text-center">
+							<h3>{data.name}</h3>
+							{FileInput(doc.text, this.handleFileStats)}
+							<Button onClick={this.handleUpload} className={doc.style1}>
+								Upload
+							</Button>
+						</Card.Body>
+					</ClassCard>
+				</Col>
+				<Col sm={7}>
+					<ClassCard className="m-0">
+						<CardHeader as="h4" className="mx-3 px-0">
+							Account Info
+						</CardHeader>
+						<Card.Body>
+							<form onSubmit={this.handleSubmit}>
+								{this.renderInput("name", "Name")}
+								{this.renderInput("email", "Email")}
+								{this.renderButton("Save")}
+							</form>
+						</Card.Body>
+					</ClassCard>
+					<ClassCard className="mx-0 mt-4">
+						<CardHeader as="h4" className="mx-3 px-0">
+							Change Password
+						</CardHeader>
+						<Card.Body>
+							<form onSubmit={this.handlePassChange}>
+								{this.renderInput("currentPass", "Current Password")}
+								{this.renderInput("newPass", "New Password")}
+								{this.renderInput("confPass", "Confirm Password")}
+								{this.renderButton("Update")}
+							</form>
+						</Card.Body>
+					</ClassCard>
+				</Col>
+			</Row>
 		);
 	}
 }

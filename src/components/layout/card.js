@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Card } from "react-bootstrap";
 import { Button } from "../common/buttons";
+import FileInput from "../common/fileInput";
 
 export const ClassCard = styled(Card)`
 	padding: 0.5em;
@@ -15,8 +16,15 @@ export const ClassCard = styled(Card)`
 `;
 
 export const CardHeader = styled(Card.Header)`
-	padding: 0 1em;
-	margin: 0.5em 0.5em 0 0.5em;
+	padding: 0.5em;
+	margin: 0 0.5em 0 0;
+	background-color: #fff;
+	font-size: 2rem;
+`;
+
+export const Input = styled.input`
+	padding: 0.5em;
+	margin: 0 0.5em 0 0;
 	background-color: #fff;
 	font-size: 2rem;
 `;
@@ -31,6 +39,7 @@ function ClassicCard() {
 					With supporting text below as a natural lead-in to additional content.
 				</Card.Text>
 				<Button>Go somewhere</Button>
+				<FileInput />
 			</Card.Body>
 		</ClassCard>
 	);

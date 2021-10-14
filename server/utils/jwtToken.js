@@ -11,11 +11,13 @@ const sendToken = (user, statusCode, res) => {
 	// 	httpOnly: true,
 	// };
 
+	const { name, email, avatar, role } = user;
+
 	res
 		.status(statusCode)
 		.header("access-control-expose-headers", "x-auth-token") // to make custom headers visible
 		.header("x-auth-token", token)
 		.cookie("token", token)
-		.json({ success: true, user, token });
+		.json({ success: true, name, email, avatar, role, token });
 };
 export { sendToken };

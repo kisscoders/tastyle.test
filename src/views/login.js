@@ -2,30 +2,28 @@ import React from "react";
 import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../components/common/form";
 import authService from "../services/authService";
+import { Redirect } from "react-router-dom";
 import { CardHeader, ClassCard } from "../components/layout/card";
 import { Card } from "react-bootstrap";
 
-class SignupForm extends Form {
+class LoginPage extends Form {
 	state = {
-		data: {
-			username: "",
-			password: "",
-			name: "",
-		},
+		data: { username: "", password: "" },
 		errors: {},
 	};
 
 	schema = {
-		username: Joi.string().email().required().label("Username"),
-		password: Joi.string().min(5).required().label("Password"),
-		name: Joi.string().required().label("Name"),
+		username: Joi.string().required().label("Username"),
+		password: Joi.string().required().label("Password"),
 	};
 
 	doSubmit = async () => {
 		try {
-			const response = await authService.register(this.state.data);
-			authService.loginWithJwt(response.headers["x-auth-token"]);
-			window.location = "/";
+			const { data } = this.state;
+			await authService.login(data.username, data.password);
+
+			const { state } = this.props.location;
+			window.location = state ? state.from.pathname : "/";
 		} catch (ex) {
 			if (ex.response && ex.response.status === 400) {
 				const errors = { ...this.state.errors };
@@ -36,16 +34,16 @@ class SignupForm extends Form {
 	};
 
 	render() {
+		if (authService.getCurrentUser()) return <Redirect to="/" />;
 		return (
 			<div className="justify-content-md-center row">
 				<ClassCard className="col col-lg-6">
-					<CardHeader as="h2">Register</CardHeader>
+					<CardHeader as="h2">Login</CardHeader>
 					<Card.Body>
 						<form onSubmit={this.handleSubmit}>
-							{this.renderInput("name", "Name")}
 							{this.renderInput("username", "Username")}
 							{this.renderInput("password", "Password", "password")}
-							{this.renderButton("Register")}
+							{this.renderButton("Login")}
 						</form>
 					</Card.Body>
 				</ClassCard>
@@ -54,4 +52,4 @@ class SignupForm extends Form {
 	}
 }
 
-export default SignupForm;
+export default LoginPage;

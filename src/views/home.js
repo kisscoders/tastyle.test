@@ -20,7 +20,7 @@ const Home = () => {
 						alt="Card image"
 					/>
 					<br />
-					<div class="d-grid mx-auto mt-4">
+					<div className="d-grid mx-auto mt-4">
 						<Button className="mx-auto">Explore</Button>
 					</div>
 				</Card.Body>

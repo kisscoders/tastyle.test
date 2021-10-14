@@ -8,8 +8,10 @@ import ProfileDash from "../components/dashboard/profileDash";
 import PurchasesDash from "../components/dashboard/purchasesDash";
 import UsersDash from "../components/dashboard/usersDash";
 import { CardHeader, ClassCard } from "../components/layout/card";
+import { Redirect } from "react-router-dom";
 
 const Dashboard = () => {
+	if (!authService.getCurrentUser()) return <Redirect to="/" />;
 	const user = authService.getCurrentUser();
 	return (
 		<ClassCard>

@@ -8,8 +8,8 @@ export const Button = styled.button`
 	vertical-align: middle;
 	background-color: white;
 	${"" /* font-weight: 400; */}
-	border: 1px solid blue;
-	color: blue;
+	border: 1px solid #007bff;
+	color: #007bff;
 	padding: 0.5625rem 1rem;
 	margin: 0.5rem 0;
 	font-size: 0.9rem;

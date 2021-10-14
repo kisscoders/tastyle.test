@@ -4,7 +4,9 @@ import { apiUrl } from "../config.json";
 
 const apiEndpoint = apiUrl + "/users";
 const loginEndpoint = apiUrl + "/users/auth";
+const updateEndpoint = apiUrl + "/users/updateprofile";
 const tokenKey = "token";
+
 // const currentUser = getAllUsers();
 // console.log(currentUser);
 
@@ -28,9 +30,21 @@ export function register(user) {
 	});
 }
 
+export async function updateProf(user) {
+	const { data } = await http.post(updateEndpoint, user);
+	const { token: jwt } = data;
+	localStorage.setItem(tokenKey, jwt);
+	return data;
+}
+
 export function loginWithJwt(jwt) {
 	localStorage.setItem(tokenKey, jwt);
 }
+
+// export function updateJwt(jwt) {
+// 	localStorage.removeItem(tokenKey);
+// 	localStorage.setItem(tokenKey, jwt);
+// }
 
 export function logout() {
 	localStorage.removeItem(tokenKey);
@@ -76,4 +90,5 @@ export default {
 	getJwt,
 	register,
 	getUserById,
+	updateProf,
 };

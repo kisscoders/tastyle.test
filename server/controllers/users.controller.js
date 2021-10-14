@@ -14,18 +14,25 @@ import cloudinary from "../utils/cloudinary";
 const createUser = catchAsyncErrors(async (req, res) => {
 	// const { error } = validate(req.body);
 	// if (error) return res.status(400).send(error.details[0].message);
-
-	const result = await cloudinary.uploader.upload(req.file.path);
+	const handle = { result: { public_id: null, secure_url: null } };
+	if (req.file) {
+		handle.result = await cloudinary.uploader.upload(req.file.path);
+	} else if (!req.file) {
+		handle.result.public_id = "lvj7owv0jefrj2gboika";
+		handle.result.secure_url =
+			"https://res.cloudinary.com/tastylemedia/image/upload/v1634204374/lvj7owv0jefrj2gboika.jpg";
+	}
 
 	const { name, email, password } = req.body;
+	const { public_id, secure_url } = handle.result;
 
 	const user = await User.create({
 		name,
 		email,
 		password,
 		avatar: {
-			public_id: result.public_id,
-			url: result.secure_url,
+			public_id,
+			url: secure_url,
 		},
 	});
 	// 	const salt = await bcrypt.genSalt(10);
@@ -201,40 +208,60 @@ const updatePass = catchAsyncErrors(async (req, res, next) => {
 // @route   POST /api/users/profile/:id
 // @access  Private
 const updateProfile = catchAsyncErrors(async (req, res, next) => {
-	const newUserData = {
-		name: req.body.name,
-		email: req.body.email,
-	};
+	const { _id: id, name, email } = req.user;
+	const result = { img: null };
+	const newUserData = { name, email };
 
-	if (req.body.avatar !== "") {
-		const user = await User.findById(req.user.id);
-
-		const imageId = user.avatar.public_id;
-
-		await cloudinary.v2.uploader.destroy(imageId);
-
-		const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-			folder: "avatars",
-			width: 150,
-			crop: "scale",
-		});
-
+	if (req.file) {
+		result.img = await cloudinary.uploader.upload(req.file.path);
+		const { public_id, secure_url } = result.img;
 		newUserData.avatar = {
-			public_id: myCloud.public_id,
-			url: myCloud.secure_url,
+			public_id,
+			url: secure_url,
 		};
+	} else {
+		console.log(req);
+		res.send(req);
 	}
 
-	const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
-		new: true,
-		runValidators: true,
-		useFindAndModify: false,
-	});
+	if (
+		req.body.name !== undefined &&
+		req.body.name !== name &&
+		req.body.name !== ""
+	) {
+		const newName = req.body.name;
+		newUserData.name = newName;
+	}
+	// else if (!req.body.name) {
+	// 	const newName = req.user.name;
+	// 	newUserData.name = newName;
+	// }
 
-	res.status(200).json({
-		success: true,
-		user,
-	});
+	if (
+		req.body.email !== undefined &&
+		req.body.email !== email &&
+		req.body.email !== ""
+	) {
+		const newEmail = req.body.email;
+		newUserData.email = newEmail;
+	}
+	// else if (!req.body.email) {
+	// 	const newEmail = req.user.email;
+	// 	newUserData.email = newEmail;
+	// }
+
+	try {
+		const user = await User.findByIdAndUpdate(id, newUserData, {
+			new: true,
+			runValidators: true,
+			useFindAndModify: false,
+		});
+
+		sendToken(user, 200, res);
+	} catch (error) {
+		console.log(error);
+		res.send(error);
+	}
 });
 
 // @desc    Get a list of all users

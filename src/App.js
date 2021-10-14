@@ -6,8 +6,8 @@ import NavBar from "./components/layout/navBar";
 import Dashboard from "./views/dashboard";
 import ProductDetails from "./components/product/productDetails";
 import NotFound from "./components/layout/notFound";
-import LoginForm from "./components/user/loginForm";
-import SignupForm from "./views/signup";
+import LoginPage from "./views/login";
+import SignupPage from "./views/signup";
 import OrderForm from "./components/order/orderForm";
 import Orders from "./components/order/orders";
 import Logout from "./components/user/logout";
@@ -32,9 +32,9 @@ export default function App() {
 					<Route path="/not-found" component={NotFound} />
 					<Route path="/card" component={ClassicCard} />
 
-					<Route path="/login" exact component={LoginForm} />
+					<Route path="/login" exact component={LoginPage} />
 					<Route path="/logout" exact component={Logout} />
-					<Route path="/signup" exact component={SignupForm} />
+					<Route path="/signup" exact component={SignupPage} />
 
 					<Route path="/products/d/:id" component={ProductDetails} />
 					<Route path="/products/:id" exact component={ProductForm} />
