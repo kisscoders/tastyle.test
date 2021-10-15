@@ -7,230 +7,230 @@ import catchAsyncErrors from "../middleware/error";
 // @route   GET /api/orders/me
 // @access  Private/Admin
 const getMyOrders = catchAsyncErrors(async (req, res) => {
-	const orders = await Order.find({ user: req.user._id })
-		.populate("user", "name email")
-		.populate("deliverTo", "contactNo city addLine1")
-		.populate("product", "title price");
+  const orders = await Order.find({ user: req.user._id })
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
 
-	res.status(200).json({
-		success: true,
-		orders,
-	});
+  res.status(200).json({
+    success: true,
+    orders,
+  });
 });
 
 // @desc    Get current user's addresses
 // @route   GET /api/orders/a/me
 // @access  Private/Admin
 const getMyAddresses = catchAsyncErrors(async (req, res) => {
-	const addresses = await Address.find({ user: req.user._id }).select(
-		"-user -__v"
-	);
-	res.status(200).json({
-		success: true,
-		addresses,
-	});
+  const addresses = await Address.find({ user: req.user._id }).select(
+    "-user -__v"
+  );
+  res.status(200).json({
+    success: true,
+    addresses,
+  });
 });
 
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Admin
 const getOrders = catchAsyncErrors(async (req, res) => {
-	const orders = await Order.find()
-		.populate("user", "name email")
-		.populate("deliverTo", "contactNo city addLine1")
-		.populate("product", "title price");
-	// let totalAmount = 0;
+  const orders = await Order.find()
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
+  // let totalAmount = 0;
 
-	// orders.forEach((order) => {
-	//   totalAmount += order.totalPrice;
-	// });
+  // orders.forEach((order) => {
+  //   totalAmount += order.totalPrice;
+  // });
 
-	res.status(200).json({
-		success: true,
-		//   totalAmount,
-		orders,
-	});
+  res.status(200).json({
+    success: true,
+    //   totalAmount,
+    orders,
+  });
 });
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 const addOrder = catchAsyncErrors(async (req, res, next) => {
-	const order = new Order({
-		product: req.body.productId,
-		quantityVar: req.body.quantityVar,
-		priceSum: req.body.priceSum,
-		orderType: req.body.orderType,
-		deliverTo: req.body.addressId,
-		user: req.user._id,
-		orderStatus: req.body.orderStatus,
-	});
+  const order = new Order({
+    product: req.body.productId,
+    quantityVar: req.body.quantityVar,
+    priceSum: req.body.priceSum,
+    orderType: req.body.orderType,
+    deliverTo: req.body.addressId,
+    user: req.user._id,
+    orderStatus: req.body.orderStatus,
+  });
 
-	const orderDoc = await order.save();
-	const orderId = orderDoc._id;
-	const orderDetails = await Order.findById(orderId)
-		.populate("user", "name email")
-		.populate("deliverTo", "contactNo city addLine1")
-		.populate("product", "title price");
+  const orderDoc = await order.save();
+  const orderId = orderDoc._id;
+  const orderDetails = await Order.findById(orderId)
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
 
-	res.status(201).json({
-		success: true,
-		orderDetails,
-	});
+  res.status(201).json({
+    success: true,
+    orderDetails,
+  });
 });
 
 // @desc    Update an order
 // @route   POST /api/orders/:id
 // @access  Admin
 const updateOrder = catchAsyncErrors(async (req, res) => {
-	const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
-	if (!order) {
-		return next(new ErrorHander("Order not found with this Id", 404));
-	}
+  if (!order) {
+    return next(new ErrorHander("Order not found with this Id", 404));
+  }
 
-	if (order.orderStatus === "Delivered") {
-		return next(new ErrorHander("You have already delivered this order", 400));
-	}
+  if (order.orderStatus === "Delivered") {
+    return next(new ErrorHander("You have already delivered this order", 400));
+  }
 
-	// if (req.body.status === "Shipped") {
-	// 	order.orderItems.forEach(async (o) => {
-	// 		await updateStock(o.product, o.quantity);
-	// 	});
-	// }
-	order.orderStatus = req.body.status;
+  // if (req.body.status === "Shipped") {
+  // 	order.orderItems.forEach(async (o) => {
+  // 		await updateStock(o.product, o.quantity);
+  // 	});
+  // }
+  order.orderStatus = req.body.status;
 
-	if (req.body.status === "Delivered") {
-		order.deliveredAt = Date.now();
-	}
+  if (req.body.status === "Delivered") {
+    order.deliveredAt = Date.now();
+  }
 
-	await order.save({ validateBeforeSave: false });
-	res.status(200).json({
-		success: true,
-	});
+  await order.save({ validateBeforeSave: false });
+  res.status(200).json({
+    success: true,
+  });
 });
 
 async function updateStock(id, quantity) {
-	const product = await Product.findById(id);
+  const product = await Product.findById(id);
 
-	product.Stock -= quantity;
+  product.Stock -= quantity;
 
-	await product.save({ validateBeforeSave: false });
+  await product.save({ validateBeforeSave: false });
 }
 
 // @desc    Delete an order
 // @route   POST /api/orders/:id
 // @access  Private
 const deleteOrder = catchAsyncErrors(async (req, res) => {
-	const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id);
 
-	if (!order) {
-		return next(new ErrorHander("Order not found with this Id", 404));
-	}
+  if (!order) {
+    return next(new ErrorHander("Order not found with this Id", 404));
+  }
 
-	await order.remove();
+  await order.remove();
 
-	res.status(200).json({
-		success: true,
-	});
+  res.status(200).json({
+    success: true,
+  });
 });
 
 // @desc    Get a specific order
 // @route   GET /api/orders/:id
 // @access  Private/Admin
 const viewOrder = catchAsyncErrors(async (req, res) => {
-	const order = await Order.findById(req.params.id)
-		.populate("user", "name email")
-		.populate("deliverTo", "contactNo city addLine1")
-		.populate("product", "title price");
+  const order = await Order.findById(req.params.id)
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
 
-	if (!order) {
-		return;
-		// return next(new ErrorHander("Order not found with this Id", 404));
-	}
+  if (!order) {
+    return;
+    // return next(new ErrorHander("Order not found with this Id", 404));
+  }
 
-	res.status(200).json({
-		success: true,
-		order,
-	});
+  res.status(200).json({
+    success: true,
+    order,
+  });
 });
 
 const getAddresses = catchAsyncErrors(async (req, res) => {
-	const addresses = await Address.find().select("-__v");
-	res.status(200).json({
-		success: true,
-		addresses,
-	});
+  const addresses = await Address.find().select("-__v");
+  res.status(200).json({
+    success: true,
+    addresses,
+  });
 });
 
 const addAddress = catchAsyncErrors(async (req, res) => {
-	let address = new Address({
-		user: req.user._id,
-		nickName: req.body.nickName,
-		contactNo: req.body.contactNo,
-		addLine1: req.body.addLine1,
-		addLine2: req.body.addLine2,
-		city: req.body.city,
-		zipcode: req.body.zipcode,
-		landmarks: req.body.landmarks,
-	});
-	address = await address.save();
-	res.status(200).json(address);
+  let address = new Address({
+    user: req.user._id,
+    nickName: req.body.nickName,
+    contactNo: req.body.contactNo,
+    addLine1: req.body.addLine1,
+    addLine2: req.body.addLine2,
+    city: req.body.city,
+    zipcode: req.body.zipcode,
+    landmarks: req.body.landmarks,
+  });
+  address = await address.save();
+  res.status(200).json(address);
 });
 
 const updateAddress = async (req, res) => {
-	const address = await Address.findByIdAndUpdate(
-		req.params.id,
-		{
-			user: req.user._id,
-			nickName: req.body.nickName,
-			contactNo: req.body.contactNo,
-			addLine1: req.body.addLine1,
-			addLine2: req.body.addLine2,
-			city: req.body.city,
-			zipcode: req.body.zipcode,
-			landmarks: req.body.landmarks,
-		},
-		{ new: true }
-	);
+  const address = await Address.findByIdAndUpdate(
+    req.params.id,
+    {
+      user: req.user._id,
+      nickName: req.body.nickName,
+      contactNo: req.body.contactNo,
+      addLine1: req.body.addLine1,
+      addLine2: req.body.addLine2,
+      city: req.body.city,
+      zipcode: req.body.zipcode,
+      landmarks: req.body.landmarks,
+    },
+    { new: true }
+  );
 
-	if (!address)
-		return res.status(404).send("The address with the given ID was not found.");
+  if (!address)
+    return res.status(404).send("The address with the given ID was not found.");
 
-	res.send(address);
+  res.send(address);
 };
 
 const deleteAddress = async (req, res) => {
-	const address = await Address.findByIdAndRemove(req.params.id);
+  const address = await Address.findByIdAndRemove(req.params.id);
 
-	if (!address)
-		return res.status(404).send("The address with the given ID was not found.");
+  if (!address)
+    return res.status(404).send("The address with the given ID was not found.");
 
-	res.send(address);
+  res.send(address);
 };
 
 const viewAddress = async (req, res) => {
-	const address = await Address.findById(req.params.id).select("-__v");
+  const address = await Address.findById(req.params.id).select("-__v");
 
-	if (!address)
-		return res.status(404).send("The address with the given ID was not found.");
+  if (!address)
+    return res.status(404).send("The address with the given ID was not found.");
 
-	res.send(address);
+  res.send(address);
 };
 
 export {
-	getOrders,
-	getMyOrders,
-	addOrder,
-	updateOrder,
-	deleteOrder,
-	viewOrder,
-	getAddresses,
-	addAddress,
-	updateAddress,
-	deleteAddress,
-	viewAddress,
-	getMyAddresses,
+  getOrders,
+  getMyOrders,
+  addOrder,
+  updateOrder,
+  deleteOrder,
+  viewOrder,
+  getAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  viewAddress,
+  getMyAddresses,
 };
 
 // import { Router } from "express";

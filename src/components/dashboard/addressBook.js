@@ -1,41 +1,75 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import { getMyAddresses, deleteAddress } from "../../services/orderService";
+import {
+  getMyAddresses,
+  deleteAddress,
+  saveAddress,
+  getAddress,
+} from "../../services/orderService";
 import { paginate } from "../../utils/paginate";
 
-import Pagination from "../common/pagination";
-import Table from "../common/table";
 import { TextInput } from "../common/inputs";
 import { Button } from "../common/buttons";
 import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import AddressCard from "../common/addressCard";
 
 const AddressBook = () => {
   const [addresses, setAddresses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [sortColumn, setSortColumn] = useState({ path: "title", order: "asc" });
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    nickName: "",
+    contactNo: "",
+    addLine1: "",
+    addLine2: "",
+    city: "",
+    zipcode: "",
+    landmarks: "",
+  });
   const [errors, setErrors] = useState({});
 
-  const columns = [
-    { path: "firstName", label: "Name" },
-    { path: "contactNo", label: "Contact" },
-    { path: "city", label: "City" },
-    { path: "zipcode", label: "Zip" },
-  ];
+  // const schema = {
+  //   _id: Joi.string(),
+  //   title: Joi.string().required().label("Title"),
+  //   genreId: Joi.string().required().label("Genre"),
+  //   numberInStock: Joi.number()
+  //     .min(0)
+  //     .max(100)
+  //     .required()
+  //     .label("Number in Stock"),
+  //   dailyRentalRate: Joi.number()
+  //     .min(0)
+  //     .max(10)
+  //     .required()
+  //     .label("Daily Rental Rate"),
+  // };
 
   useEffect(() => {
-    populateAddresses();
+    getData();
     toast("addressbook useEffect executed!");
     addresses.filter((o) => {
       console.log(o);
     });
   }, []);
 
-  const populateAddresses = async () => {
+  const getData = async () => {
     const getaddresses = await getMyAddresses();
     setAddresses(getaddresses);
+  };
+
+  const mapToViewModel = (data) => {
+    return {
+      _id: data._id,
+      nickName: data.nickName,
+      contactNo: data.contactNo,
+      addLine1: data.addLine1,
+      addLine2: data.addLine2,
+      city: data.city,
+      zipcode: data.zipcode,
+      landmarks: data.landmarks,
+    };
   };
 
   const handleDelete = async (address) => {
@@ -44,12 +78,48 @@ const AddressBook = () => {
     setAddresses(filter);
     try {
       await deleteAddress(address._id);
-    } catch (e) {
-      if (e.response && e.response.status === 404) {
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
         toast.error("This address has already been deleted");
         setAddresses(backup);
       }
     }
+  };
+  const handleEdit = (address) => {
+    populateForm(address);
+    console.log(address._id);
+  };
+
+  const populateForm = (address) => {
+    const found = addresses.find((o) => {
+      if (o._id === address._id) return true;
+    });
+    const mapped = mapToViewModel(found);
+    setData(mapped);
+    // let filtered = addresses.filter((o) => {
+    //   console.log(o);
+    //   o._id == address.id;
+    // });
+    console.log(mapped);
+    // try {
+    //   const { data: address } = await getAddress(id);
+    //   console.log(address);
+    //   // setData(mapToViewModel(address));
+    // } catch (error) {
+    //   if (error.response && error.response.status === 404)
+    //     // this.props.history.replace("/not-found");
+    //     toast.error("error ocurred on populating");
+    // }
+  };
+
+  const handleClicked = (page) => {
+    setCurrentPage(page);
+  };
+
+  const doSubmit = async () => {
+    console.log(data);
+    await saveAddress(data);
+    toast("Updated");
   };
 
   const handlePageChange = (page) => {
@@ -72,6 +142,27 @@ const AddressBook = () => {
     };
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // const err = validate();
+    // setErrors(err || {});
+    // if (err) return;
+
+    doSubmit();
+    getData();
+  };
+
+  const handleChange = ({ currentTarget: input }) => {
+    // const errorMessage = this.validateProperty(input);
+    // if (errorMessage) errors[input.name] = errorMessage;
+    // else delete errors[input.name];
+    const type = { ...data };
+    type[input.name] = input.value;
+
+    setData(type);
+  };
+
   const renderInput = (name, label, type = "text") => {
     return (
       <TextInput
@@ -79,7 +170,7 @@ const AddressBook = () => {
         name={name}
         value={data[name]}
         label={label}
-        //   onChange={handleChange}
+        onChange={handleChange}
         error={errors[name]}
       />
     );
@@ -102,43 +193,42 @@ const AddressBook = () => {
             </CardHeader1>
           </Card1>
         ) : (
-          <Card1>
-            <CardHeader1 as="h6">
-              {totalCount === 1 ? (
-                <>You've added an address!</>
-              ) : (
-                <>You've added {totalCount} addresses. Have Fun!!!</>
-              )}
-            </CardHeader1>
-            <CardBody1>
-              <Table
+          <div>
+            {/* <Table
                 columns={columns}
                 data={displayData}
                 sortColumn={sortColumn}
                 onSort={handleSort}
                 onDelete={handleDelete}
-              />
-              <Pagination
+              /> */}
+            <AddressCard
+              data={displayData}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              clicked={handleClicked}
+            />
+            {/* <Pagination
                 itemsCount={totalCount}
                 pageSize={pageSize}
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
-              />
-            </CardBody1>
-          </Card1>
+              /> */}
+          </div>
         )}
       </div>
       <div className="col col-6">
         <Card1>
-          <CardHeader1 as="h5">Add an Address</CardHeader1>
+          {/* <CardHeader1 as="h5">Add an Address</CardHeader1> */}
           <CardBody1>
-            <form>
-              {renderInput("productName", "Pla")}
-              {renderInput("user", "Customer")}
-              {renderInput("price", "Price")}
-              {renderInput("quantityVar", "Quantity")}
-              {renderInput("orderStatus", "We are currently")}
-              {renderButton("Add")}
+            <form onSubmit={handleSubmit}>
+              {renderInput("nickName", "What do we call you?")}
+              {renderInput("contactNo", "Contact Number")}
+              {renderInput("addLine1", "Address Line 1")}
+              {renderInput("addLine2", "Address Line 2")}
+              {renderInput("city", "City")}
+              {renderInput("zipcode", "Zip Code")}
+              {renderInput("landmarks", "Landmarks")}
+              {renderButton("Save")}
             </form>
           </CardBody1>
         </Card1>

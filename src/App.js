@@ -14,8 +14,7 @@ import Logout from "./components/user/logout";
 import ProductForm from "./components/product/productForm";
 // import ProtectedRoute from "./components/common/protectedRoute";
 import Home from "./views/home";
-import TestPage from "./views/test";
-import ABTest from "./components/dashboard/addressBook";
+// import TestPage from "./views/test";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -33,7 +32,7 @@ export default function App() {
         <Switch>
           {/* Put the more specific routes before the less specific ones */}
           <Route path="/not-found" component={NotFound} />
-          <Route path="/test" component={TestPage} />
+          {/* <Route path="/test" component={TestPage} /> */}
 
           <Route path="/login" exact component={LoginPage} />
           <Route path="/logout" exact component={Logout} />
