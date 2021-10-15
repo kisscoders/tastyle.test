@@ -23,9 +23,9 @@ router.route("/a/").post(auth, addAddress).get([auth, admin], getAddresses);
 router.route("/a/me").get(auth, getMyAddresses);
 router
 	.route("/a/:id")
-	.put(updateAddress)
-	.delete(deleteAddress) // admin required
-	.get(viewAddress);
+	.put(auth, updateAddress)
+	.delete(auth, deleteAddress) // admin required
+	.get(auth, viewAddress);
 router
 	.route("/:id")
 	.put(auth, updateOrder)

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
-import Input from "./input";
+import { Input } from "./inputs";
 import SelectInput from "./selectInput";
 import { Button } from "../common/buttons";
 class Form extends Component {

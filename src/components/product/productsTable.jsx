@@ -15,8 +15,8 @@ class ProductsTable extends Component {
 		},
 		{ path: "price", label: "Price" },
 		{ path: "category", label: "Category" },
-		{ path: "description", label: "Description" },
-		{ path: "img", label: "Image" },
+		// { path: "description", label: "Description" },
+		// { path: "img", label: "Image" },
 		// { path: "cloudinary_id", label: "cloudinary" },
 		// {
 		// 	key: "like",
@@ -24,14 +24,14 @@ class ProductsTable extends Component {
 		// 		<Like liked={product.liked} onClick={() => this.props.onLike(product)} />
 		// 	),
 		// },
-		{
-			key: "image",
-			content: (product) => <image src={product.img} />,
-		},
-		{
-			key: "Des",
-			content: (product) => <Link to={`/products/d/${product._id}`}>Buy Now</Link>,
-		},
+		// {
+		// 	key: "image",
+		// 	content: (product) => <image src={product.img} />,
+		// },
+		// {
+		// 	key: "Des",
+		// 	content: (product) => <Link to={`/products/d/${product._id}`}>Buy Now</Link>,
+		// },
 	];
 
 	deleteColumn = {

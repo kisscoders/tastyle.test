@@ -9,6 +9,7 @@ import { paginate } from "../../utils/paginate";
 // import ListGroup from "../common/listGroup";
 import OrdersTable from "../order/ordersTable";
 import SearchBar from "../common/searchBar";
+import { Button } from "../common/buttons";
 
 class OrdersDash extends Component {
 	state = {
@@ -112,34 +113,33 @@ class OrdersDash extends Component {
 		const { totalCount, data: orders } = this.getPagedData();
 
 		return (
-			<div className="container-fluid mt-4">
-				{/* <div className="">
-					<ListGroup
-						items={this.state.genres}
-						selectedItem={this.state.selectedGenre}
-						onItemSelect={this.handleGenreSelect}
-					/>
-				</div> */}
-				<div className="">
-					<Link className="btn btn-primary mb-3" to="/orders/new">
-						New Order
-					</Link>
-					<p>Showing {totalCount} orders from the database</p>
-					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<OrdersTable
-						orders={orders}
-						sortColumn={sortColumn}
-						onLike={this.handleLike}
-						onDelete={this.handleDelete}
-						onSort={this.handleSort}
-					/>
-					<Pagination
-						itemsCount={totalCount}
-						pageSize={pageSize}
-						currentPage={currentPage}
-						onPageChange={this.handlePageChange}
-					/>
-				</div>
+			// {/* <div className="">
+			// 	<ListGroup
+			// 		items={this.state.genres}
+			// 		selectedItem={this.state.selectedGenre}
+			// 		onItemSelect={this.handleGenreSelect}
+			// 	/>
+			// </div> */}
+
+			<div className="">
+				<Button as={Link} className="m-0 mb-3" to="/orders/new">
+					New Order
+				</Button>
+				<p>Showing {totalCount} orders from the database</p>
+				<SearchBar value={searchQuery} onChange={this.handleSearch} />
+				<OrdersTable
+					orders={orders}
+					sortColumn={sortColumn}
+					onLike={this.handleLike}
+					onDelete={this.handleDelete}
+					onSort={this.handleSort}
+				/>
+				<Pagination
+					itemsCount={totalCount}
+					pageSize={pageSize}
+					currentPage={currentPage}
+					onPageChange={this.handlePageChange}
+				/>
 			</div>
 		);
 	}

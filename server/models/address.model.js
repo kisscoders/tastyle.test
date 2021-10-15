@@ -8,13 +8,8 @@ const addressSchema = new Schema({
 		ref: "User",
 		required: true,
 	},
-	firstName: {
+	nickName: {
 		type: String,
-		required: true,
-	},
-	lastName: {
-		type: String,
-		required: true,
 	},
 	// Display Name
 	contactNo: {
@@ -35,7 +30,6 @@ const addressSchema = new Schema({
 	},
 	zipcode: {
 		type: String,
-		required: true,
 		default: "40000",
 	},
 	landmarks: {

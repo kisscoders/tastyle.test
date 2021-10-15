@@ -165,8 +165,8 @@ const getAddresses = catchAsyncErrors(async (req, res) => {
 
 const addAddress = catchAsyncErrors(async (req, res) => {
 	let address = new Address({
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
+		user: req.user._id,
+		nickName: req.body.nickName,
 		contactNo: req.body.contactNo,
 		addLine1: req.body.addLine1,
 		addLine2: req.body.addLine2,
@@ -182,8 +182,8 @@ const updateAddress = async (req, res) => {
 	const address = await Address.findByIdAndUpdate(
 		req.params.id,
 		{
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
+			user: req.user._id,
+			nickName: req.body.nickName,
 			contactNo: req.body.contactNo,
 			addLine1: req.body.addLine1,
 			addLine2: req.body.addLine2,

@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import { toast } from "react-toastify";
 import authService from "../../services/authService";
-import Input from "../common/input";
+import { Input } from "../common/inputs";
 import { Button } from "../common/buttons";
-import { ClassCard, CardHeader } from "../layout/card";
-import { Card, Col, Row } from "react-bootstrap";
-import FileInput from "../common/fileInput";
+import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import { Col, Row } from "react-bootstrap";
+import FileInput from "../common/inputs/fileInput";
 
 class ProfileDash extends Component {
 	state = {
@@ -70,6 +70,7 @@ class ProfileDash extends Component {
 		e.preventDefault();
 		await this.doUpload();
 		const data = authService.getCurrentUser();
+		this.setState({ avatarFile: null });
 		console.log(data);
 		this.setState({ data });
 		await this.populateFields();
@@ -187,7 +188,7 @@ class ProfileDash extends Component {
 		return (
 			<Row>
 				<Col sm={5}>
-					<ClassCard className="m-0">
+					<Card1 className="m-0 bg-primary bg-opacity-10">
 						<div className="my-3 mx-auto">
 							<img
 								className="rounded-circle mt-3 border border-4 border-primary"
@@ -196,41 +197,41 @@ class ProfileDash extends Component {
 								width="140"
 							/>
 						</div>
-						<Card.Body className="mx-auto text-center">
+						<CardBody1 className="mx-auto text-center">
 							<h3>{data.name}</h3>
 							{FileInput(doc.text, this.handleFileStats)}
 							<Button onClick={this.handleUpload} className={doc.style1}>
 								Upload
 							</Button>
-						</Card.Body>
-					</ClassCard>
+						</CardBody1>
+					</Card1>
 				</Col>
 				<Col sm={7}>
-					<ClassCard className="m-0">
-						<CardHeader as="h4" className="mx-3 px-0">
+					<Card1 className="m-0">
+						<CardHeader1 as="h4" className="mx-3 px-0">
 							Account Info
-						</CardHeader>
-						<Card.Body>
+						</CardHeader1>
+						<CardBody1>
 							<form onSubmit={this.handleSubmit}>
 								{this.renderInput("name", "Name")}
 								{this.renderInput("email", "Email")}
 								{this.renderButton("Save")}
 							</form>
-						</Card.Body>
-					</ClassCard>
-					<ClassCard className="mx-0 mt-4">
-						<CardHeader as="h4" className="mx-3 px-0">
+						</CardBody1>
+					</Card1>
+					<Card1 className="mx-0 mt-4">
+						<CardHeader1 as="h4" className="mx-3 px-0">
 							Change Password
-						</CardHeader>
-						<Card.Body>
+						</CardHeader1>
+						<CardBody1>
 							<form onSubmit={this.handlePassChange}>
 								{this.renderInput("currentPass", "Current Password")}
 								{this.renderInput("newPass", "New Password")}
 								{this.renderInput("confPass", "Confirm Password")}
 								{this.renderButton("Update")}
 							</form>
-						</Card.Body>
-					</ClassCard>
+						</CardBody1>
+					</Card1>
 				</Col>
 			</Row>
 		);

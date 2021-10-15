@@ -2,19 +2,21 @@
 import styled from "styled-components";
 
 export const Button = styled.button`
+	text-decoration: none;
 	display: inline-block;
 	text-align: center;
 	white-space: nowrap;
 	vertical-align: middle;
 	background-color: white;
-	${"" /* font-weight: 400; */}
-	border: 1px solid #007bff;
+	font-weight: 500;
+	border: 1.5px solid #007bff;
 	color: #007bff;
 	padding: 0.5625rem 1rem;
 	margin: 0.5rem 0;
 	font-size: 0.9rem;
 	line-height: 1.125;
 	border-radius: 0.3rem;
+	cursor: pointer;
 	transition: all 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
 	&:hover {
 		color: #fff;

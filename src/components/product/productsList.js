@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import { getProducts } from "../../services/productService";
-import { Card, Row, Col } from "react-bootstrap";
-import { Container } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
+import {
+	Card1,
+	CardBody1,
+	CardHeader1,
+	CardImg1,
+	CardText1,
+	CardTitle1,
+} from "../common/cards";
 
 class ProductsGrid extends Component {
 	// columns = [
@@ -61,23 +68,21 @@ class ProductsGrid extends Component {
 		const { products } = this.state;
 
 		return (
-			<Container>
-				<Row md={"auto"} className="g-4">
-					{products.map((item) => (
-						<Col>
-							<Card key={item._id} border="primary" style={{ width: "18rem" }}>
-								<Card.Header>{item.title}</Card.Header>
-								<Card.Img variant="top" alt="" src={item.img} />
-								<Card.Body>
-									<Card.Title>{item.category}</Card.Title>
-									<Card.Text>{item.description}</Card.Text>
-									<Card.Text>Buy Now</Card.Text>
-								</Card.Body>
-							</Card>
-						</Col>
-					))}
-				</Row>
-			</Container>
+			<Row md={"auto"} className="g-4">
+				{products.map((item) => (
+					<Col key={item._id}>
+						<Card1 key={item._id} border="primary" style={{ width: "18rem" }}>
+							<CardHeader1 key={item._id}>{item.title}</CardHeader1>
+							<CardImg1 key={item._id} variant="top" alt="" src={item.img} />
+							<CardBody1 key={item._id}>
+								<CardTitle1 key={item._id}>{item.category}</CardTitle1>
+								<CardText1 key={item._id}>{item.description}</CardText1>
+								<CardText1 key={item._id}>Buy Now</CardText1>
+							</CardBody1>
+						</Card1>
+					</Col>
+				))}
+			</Row>
 		);
 	}
 }

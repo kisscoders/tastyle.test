@@ -3,12 +3,13 @@ import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deleteOrder, getMyOrders } from "../../services/orderService";
-// import { getGenres } from "../../services/genreService";
 import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
 // import ListGroup from "../common/listGroup";
-import OrdersTable from "../order/ordersTable";
+import Table from "../common/table";
 import SearchBar from "../common/searchBar";
+import { Button } from "../common/buttons";
+import authService from "../../services/authService";
 
 class PurchasesDash extends Component {
 	state = {
@@ -39,14 +40,14 @@ class PurchasesDash extends Component {
 		}
 	};
 
-	handleLike = (movie) => {
-		console.log(this.state.orders);
-		const orders = [...this.state.orders];
-		const index = orders.indexOf(movie);
-		orders[index] = { ...orders[index] };
-		orders[index].liked = !orders[index].liked;
-		this.setState({ orders });
-	};
+	// handleLike = (movie) => {
+	// 	console.log(this.state.orders);
+	// 	const orders = [...this.state.orders];
+	// 	const index = orders.indexOf(movie);
+	// 	orders[index] = { ...orders[index] };
+	// 	orders[index].liked = !orders[index].liked;
+	// 	this.setState({ orders });
+	// };
 
 	handlePageChange = (page) => {
 		this.setState({ currentPage: page });
@@ -58,6 +59,32 @@ class PurchasesDash extends Component {
 			selectedGenre: null,
 			currentPage: 1,
 		});
+	};
+
+	columns = [
+		{
+			path: "product.title",
+			label: "Product",
+			// content: (order) => (
+			// 	<Link to={`/orders/${order._id}`}>{order.product.title}</Link>
+			// ),
+		},
+		// { path: "user.name", label: "Customer" },
+		{ path: "priceSum", label: "Price" },
+		{ path: "orderType", label: "Type" },
+		{ path: "orderStatus", label: "Status" },
+	];
+
+	deleteColumn = {
+		key: "delete",
+		content: (order) => (
+			<button
+				onClick={() => this.props.onDelete(order)}
+				className="btn btn-danger btn-sm"
+			>
+				Cancel
+			</button>
+		),
 	};
 
 	// handleGenreSelect = (genre) => {
@@ -99,44 +126,51 @@ class PurchasesDash extends Component {
 			data: orders,
 		};
 	};
+	constructor() {
+		super();
+		const user = authService.getCurrentUser();
+		if (user && user.role === "admin") this.columns.push(this.deleteColumn);
+	}
 
 	render() {
 		const { length: orderCount } = this.state.orders;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
-		if (orderCount === 0) return <p>There are no orders in the database.</p>;
-
 		const { totalCount, data: orders } = this.getPagedData();
 
 		return (
-			<div className="container-fluid mt-4">
-				{/* <div className="">
-					<ListGroup
-						items={this.state.genres}
-						selectedItem={this.state.selectedGenre}
-						onItemSelect={this.handleGenreSelect}
-					/>
-				</div> */}
-				<div className="">
-					<Link className="btn btn-primary mb-3" to="/orders/new">
-						New Order
-					</Link>
-					<p>Showing {totalCount} orders from the database</p>
-					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<OrdersTable
-						orders={orders}
-						sortColumn={sortColumn}
-						onLike={this.handleLike}
-						onDelete={this.handleDelete}
-						onSort={this.handleSort}
-					/>
-					<Pagination
-						itemsCount={totalCount}
-						pageSize={pageSize}
-						currentPage={currentPage}
-						onPageChange={this.handlePageChange}
-					/>
-				</div>
+			// {/* <div className="">
+			// 	<ListGroup
+			// 		items={this.state.genres}
+			// 		selectedItem={this.state.selectedGenre}
+			// 		onItemSelect={this.handleGenreSelect}
+			// 	/>
+			// </div> */}
+			<div className="">
+				<Button as={Link} className="m-0 mb-3" to="/orders/new">
+					New Order
+				</Button>
+				{orderCount === 0 ? (
+					<p>It seems you haven't made any Purchases ?</p>
+				) : (
+					<div>
+						<p>You've made {totalCount} Purchases. Horray!!!</p>
+						<SearchBar value={searchQuery} onChange={this.handleSearch} />
+						<Table
+							columns={this.columns}
+							data={orders}
+							sortColumn={sortColumn}
+							onDelete={this.handleDelete}
+							onSort={this.handleSort}
+						/>
+						<Pagination
+							itemsCount={totalCount}
+							pageSize={pageSize}
+							currentPage={currentPage}
+							onPageChange={this.handlePageChange}
+						/>
+					</div>
+				)}
 			</div>
 		);
 	}

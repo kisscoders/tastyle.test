@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-// import { Card } from "react-bootstrap";
-// import { Button } from "../common/buttons";
 
 export const Label = styled.label`
 	display: inline-block;
@@ -27,27 +25,15 @@ export const Label = styled.label`
 	}
 `;
 
-function FileInput(text, func) {
+const FileInput = (displaytext, onChangeFunc) => {
 	return (
-		<div className="m">
-			<input
-				type="file"
-				name="file"
-				id="file"
-				className="d-none"
-				onChange={func}
-			/>
-			{/* <label for="file">
-				<span>Choose a file…</span>
-			</label> */}
+		<div className="">
+			<input type="file" id="file" className="d-none" onChange={onChangeFunc} />
 			<Label htmlFor="file">
-				<span>{text}</span>
+				<span>{displaytext}</span>
 			</Label>
 		</div>
 	);
-}
+};
 
-// {
-// 	/* <input type="file" name="file" id="" onChange={this.handleFileStats} />; */
-// }
 export default FileInput;

@@ -3,8 +3,7 @@ import Joi from "joi-browser"; // a pretty sweet library for doing validation st
 import Form from "../components/common/form";
 import authService from "../services/authService";
 import { Redirect } from "react-router-dom";
-import { CardHeader, ClassCard } from "../components/layout/card";
-import { Card } from "react-bootstrap";
+import { Card1, CardBody1, CardHeader1 } from "../components/common/cards";
 
 class LoginPage extends Form {
 	state = {
@@ -37,16 +36,16 @@ class LoginPage extends Form {
 		if (authService.getCurrentUser()) return <Redirect to="/" />;
 		return (
 			<div className="justify-content-md-center row">
-				<ClassCard className="col col-lg-6">
-					<CardHeader as="h2">Login</CardHeader>
-					<Card.Body>
+				<Card1 className="col col-lg-6">
+					<CardHeader1 as="h2">Login</CardHeader1>
+					<CardBody1>
 						<form onSubmit={this.handleSubmit}>
 							{this.renderInput("username", "Username")}
 							{this.renderInput("password", "Password", "password")}
 							{this.renderButton("Login")}
 						</form>
-					</Card.Body>
-				</ClassCard>
+					</CardBody1>
+				</Card1>
 			</div>
 		);
 	}

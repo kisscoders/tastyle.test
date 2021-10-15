@@ -9,6 +9,7 @@ import {
 } from "../../services/orderService";
 import { getProducts } from "../../services/productService";
 import authService from "../../services/authService";
+import { Card1, CardBody1, CardHeader1 } from "../common/cards";
 class OrderForm extends Form {
 	state = {
 		data: {
@@ -98,22 +99,26 @@ class OrderForm extends Form {
 	render() {
 		return (
 			<div>
-				<h1>Order Form</h1>
-				<form onSubmit={this.handleSubmit}>
-					{this.renderInput("productName", "Product")}
-					{this.renderInput("user", "Customer")}
-					{this.renderInput("price", "Price")}
-					{this.renderInput("quantityVar", "Quantity")}
-					{this.renderSelect(
-						"productId",
-						"Product",
-						"What's your favorite?",
-						this.state.products
-					)}
-					{/* {this.renderInput("deliverTo", "Delivery Address")} */}
-					{this.renderInput("orderStatus", "We are currently")}
-					{this.renderButton("Order")}
-				</form>
+				<Card1>
+					<CardHeader1 as="h5">Order Form</CardHeader1>
+					<CardBody1>
+						<form onSubmit={this.handleSubmit}>
+							{this.renderInput("productName", "Product")}
+							{this.renderInput("user", "Customer")}
+							{this.renderInput("price", "Price")}
+							{this.renderInput("quantityVar", "Quantity")}
+							{this.renderSelect(
+								"productId",
+								"Product",
+								"What's your favorite?",
+								this.state.products
+							)}
+							{/* {this.renderInput("deliverTo", "Delivery Address")} */}
+							{this.renderInput("orderStatus", "We are currently")}
+							{this.renderButton("Order")}
+						</form>
+					</CardBody1>
+				</Card1>
 			</div>
 		);
 	}
