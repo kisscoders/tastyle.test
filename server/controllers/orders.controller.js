@@ -166,7 +166,8 @@ const getAddresses = catchAsyncErrors(async (req, res) => {
 const addAddress = catchAsyncErrors(async (req, res) => {
   let address = new Address({
     user: req.user._id,
-    nickName: req.body.nickName,
+    displayName: req.body.nickName,
+    addressName: req.body.addName,
     contactNo: req.body.contactNo,
     addLine1: req.body.addLine1,
     addLine2: req.body.addLine2,
@@ -183,7 +184,8 @@ const updateAddress = async (req, res) => {
     req.params.id,
     {
       user: req.user._id,
-      nickName: req.body.nickName,
+      displayName: req.body.nickName,
+      addressName: req.body.addName,
       contactNo: req.body.contactNo,
       addLine1: req.body.addLine1,
       addLine2: req.body.addLine2,

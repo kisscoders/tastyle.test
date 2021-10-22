@@ -13,12 +13,14 @@ import { Card1, CardBody1, CardHeader1 } from "../common/cards";
 class OrderForm extends Form {
   state = {
     data: {
-      productName: "",
+      product: "",
       productId: "",
       user: "",
       quantityVar: "",
       price: "",
       orderType: "",
+      deliverTo: "",
+      addressId: "",
       orderStatus: "",
     },
     addresses: [],
@@ -44,10 +46,12 @@ class OrderForm extends Form {
 
   async populateAddresses() {
     const { data: addresses } = await getMyAddresses();
+    console.log(addresses);
     this.setState({ addresses });
   }
   async populateProducts() {
     const { data: products } = await getProducts();
+    console.log(products);
     this.setState({ products });
   }
 
@@ -57,6 +61,7 @@ class OrderForm extends Form {
       if (orderId === "new") return;
 
       const order = await getOrder(orderId);
+      console.log(order);
       this.setState({
         data: this.mapToViewModel(order),
       });
@@ -77,12 +82,14 @@ class OrderForm extends Form {
     const user = authService.getCurrentUser();
     return {
       _id: order._id,
-      productId: order.productId,
-      deliverTo: order.addressId,
+      productId: order.product._id,
+      product: order.product.title,
       user: user.name,
       quantityVar: order.quantityVar,
       price: order.priceSum,
       orderType: order.orderType,
+      deliverTo: order.deliverTo.contactNo,
+      addressId: order.deliverTo._id,
       orderStatus: order.orderStatus,
     };
   }
@@ -103,7 +110,7 @@ class OrderForm extends Form {
           <CardHeader1 as="h5">Order Form</CardHeader1>
           <CardBody1>
             <form onSubmit={this.handleSubmit}>
-              {this.renderInput("productName", "Product")}
+              {this.renderInput("product", "Product")}
               {this.renderInput("user", "Customer")}
               {this.renderInput("price", "Price")}
               {this.renderInput("quantityVar", "Quantity")}
@@ -113,7 +120,13 @@ class OrderForm extends Form {
                 "What's your favorite?",
                 this.state.products
               )}
-              {/* {this.renderInput("deliverTo", "Delivery Address")} */}
+              {/* {this.renderSelect(
+                "addressId",
+                "Address",
+                "Where you want it?",
+                this.state.addresses
+              )} */}
+              {this.renderInput("orderType", "Do you want it repeatedly?")}
               {this.renderInput("orderStatus", "We are currently")}
               {this.renderButton("Order")}
             </form>

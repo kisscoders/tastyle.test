@@ -29,7 +29,6 @@ function AddressCard(props) {
             clicked={() => props.clicked}
             onClick={() => props.onDelete(data)}
           />
-          ,
         </div>
       ),
     },

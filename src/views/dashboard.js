@@ -9,13 +9,18 @@ import PurchasesDash from "../components/dashboard/purchasesDash";
 import UsersDash from "../components/dashboard/usersDash";
 import { Redirect } from "react-router-dom";
 import { CardBody1, CardHeader1, Card1 } from "../components/common/cards";
+import { Container } from "react-bootstrap";
+import { H2 } from "../components/common/text/headings";
+import { RED } from "../theme/colors";
 const user = getCurrentUser();
 
 const Dashboard = () => {
   if (!user) return <Redirect to="/" />;
   return (
-    <Card1>
-      <CardHeader1 as="h2">Hi {user.name}!</CardHeader1>
+    <Container>
+      <H2>
+        Hi <RED>{user.name}</RED> !
+      </H2>
       <CardBody1>
         <Tab.Container defaultActiveKey="#profile">
           <Row>
@@ -78,7 +83,7 @@ const Dashboard = () => {
           </Row>
         </Tab.Container>
       </CardBody1>
-    </Card1>
+    </Container>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   getMyAddresses,
   deleteAddress,
   saveAddress,
-  getAddress,
 } from "../../services/orderService";
 import { paginate } from "../../utils/paginate";
 
@@ -13,6 +12,8 @@ import { TextInput } from "../common/inputs";
 import { Button } from "../common/buttons";
 import { Card1, CardBody1, CardHeader1 } from "../common/cards";
 import AddressCard from "../common/addressCard";
+import { Toast } from "bootstrap";
+import AddressForm from "../common/addressForm";
 
 const AddressBook = () => {
   const [addresses, setAddresses] = useState([]);
@@ -49,9 +50,9 @@ const AddressBook = () => {
   useEffect(() => {
     getData();
     toast("addressbook useEffect executed!");
-    addresses.filter((o) => {
-      console.log(o);
-    });
+    // addresses.filter((o) => {
+    //   console.log(o);
+    // });
   }, []);
 
   const getData = async () => {
@@ -80,6 +81,7 @@ const AddressBook = () => {
       await deleteAddress(address._id);
     } catch (error) {
       if (error.response && error.response.status === 404) {
+        Toast;
         toast.error("This address has already been deleted");
         setAddresses(backup);
       }
@@ -100,7 +102,7 @@ const AddressBook = () => {
     //   console.log(o);
     //   o._id == address.id;
     // });
-    console.log(mapped);
+    // console.log(mapped);
     // try {
     //   const { data: address } = await getAddress(id);
     //   console.log(address);
@@ -122,13 +124,13 @@ const AddressBook = () => {
     toast("Updated");
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
 
-  const handleSort = (sortColumn) => {
-    setSortColumn(sortColumn);
-  };
+  // const handleSort = (sortColumn) => {
+  //   setSortColumn(sortColumn);
+  // };
 
   const getPagedData = () => {
     const all = addresses;
@@ -185,40 +187,10 @@ const AddressBook = () => {
   const { displayData } = getPagedData();
   return (
     <div className="row">
-      <div className="col col-6">
-        {totalCount === 0 ? (
-          <Card1>
-            <CardHeader1 as="h6">
-              You haven't added any addresses, you're pretty anonymous!
-            </CardHeader1>
-          </Card1>
-        ) : (
-          <div>
-            {/* <Table
-                columns={columns}
-                data={displayData}
-                sortColumn={sortColumn}
-                onSort={handleSort}
-                onDelete={handleDelete}
-              /> */}
-            <AddressCard
-              data={displayData}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              clicked={handleClicked}
-            />
-            {/* <Pagination
-                itemsCount={totalCount}
-                pageSize={pageSize}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              /> */}
-          </div>
-        )}
-      </div>
-      <div className="col col-6">
+      {AddressForm(data, handleChange, errors)}
+      {/* <div className="col col-6">
         <Card1>
-          {/* <CardHeader1 as="h5">Add an Address</CardHeader1> */}
+          <CardHeader1 as="h5">Add/Update Address</CardHeader1>
           <CardBody1>
             <form onSubmit={handleSubmit}>
               {renderInput("nickName", "What do we call you?")}
@@ -232,6 +204,24 @@ const AddressBook = () => {
             </form>
           </CardBody1>
         </Card1>
+      </div> */}
+      <div className="col col-6">
+        {totalCount === 0 ? (
+          <Card1>
+            <CardHeader1 as="h6">
+              You haven't added any addresses, you're pretty anonymous!
+            </CardHeader1>
+          </Card1>
+        ) : (
+          <div>
+            <AddressCard
+              data={displayData}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              clicked={handleClicked}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

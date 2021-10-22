@@ -1,71 +1,125 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Container, Nav, NavDropdown, Image } from "react-bootstrap";
 import { getCurrentUser } from "../../services/authService";
+import { BRAND } from "../common/text/headings";
+import styled from "styled-components";
 const user = getCurrentUser();
+
+const MainNavBar = styled.div`
+  /* background-color: antiquewhite; */
+  padding: 15px 10px 40px 10px;
+  margin: 20px auto;
+  /* border-radius: 50px; */
+  width: 60%;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ProfileMark = styled.div`
+  text-align: center;
+  padding: 0px 10px 10px 10px;
+  margin: auto;
+  background-color: var(--red);
+  border-radius: 0 0 50px 50px;
+  position: absolute;
+  top: 0;
+  right: 50px;
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+`;
+
+const ProfileLink = styled(Link)`
+  text-decoration: none;
+  margin: auto;
+  transition: all 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
+`;
+
+const NavLink = styled(Link)`
+  text-decoration: none;
+  margin: 5px;
+  padding: 6px 10px;
+  color: var(--red);
+  font-weight: 500;
+  transition: all 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
+  border-radius: 20px;
+  &:hover {
+    border-radius: 20px;
+    background-color: var(--red);
+    color: white;
+  }
+`;
+const IconLink = styled(Link)`
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  display: flex;
+  padding: 10px 2px;
+  margin: auto;
+  font-size: 20px;
+  font-weight: 500;
+  transition: all 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
+  border-radius: 20px;
+  &:hover {
+    border-radius: 20px;
+    background-color: none;
+    color: black;
+  }
+`;
 
 export default function NavBar() {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container fluid>
-        <Navbar.Brand as={Link} to="/">
-          tastyle
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
-        <Navbar.Collapse id="navbarScroll">
-          <Nav
-            className="me-auto my-2 my-lg-0"
-            style={{ maxHeight: "100px" }}
-            navbarScroll
-          >
-            <Nav.Link as={Link} to="/list">
-              Products
-            </Nav.Link>
-            <Nav.Link as={Link} to="/test">
-              Test
-            </Nav.Link>
-          </Nav>
-
+    <div>
+      <BRAND as={Link} to="/">
+        tastyle
+      </BRAND>
+      <MainNavBar className="d-flex mb-3 align-items-center">
+        <div className="">
+          <NavLink to="/list">Our Products</NavLink>
+          <NavLink to="/about">Why us?</NavLink>
+        </div>
+        {/* <div>
           {!user && (
-            <Nav className="d-flex pe-1">
-              <Nav.Link as={Link} to="/login">
-                Login
-              </Nav.Link>
-              <Nav.Link as={Link} to="/signup">
-                Signup
-              </Nav.Link>
-            </Nav>
-          )}
-
-          {user && (
-            <div className="d-flex bg-dark text-white">
-              <NavDropdown
-                className="pe-1 "
-                title={<span className="text-white my-auto">{user.name}</span>}
-                menuVariant="dark"
-                drop="start"
-                // align="left"
-              >
-                <NavDropdown.Item as={Link} to="/dash">
-                  Dashboard
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item as={Link} to="/logout">
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-              <div className="m-auto me-3">
-                <img
-                  className="rounded-circle"
-                  src={user.avatar.url}
-                  alt="profile"
-                  width="30"
-                />
-              </div>
+            <div>
+              <NavLink to="/login">Login</NavLink>
+              <NavLink to="/signup">Signup</NavLink>
             </div>
           )}
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+          {user && (
+            <div className="d-flex align-items-center">
+              <NavLink className="icon" to="/dash">
+                <i className="ri-dashboard-fill"></i>
+              </NavLink>
+              <NavLink className="icon" to="/logout">
+                <i className="ri-logout-box-r-line"></i>
+              </NavLink>
+              <NavLink className="me-2" to="/dash">
+                <Image roundedCircle src={user.avatar.url} width="40" />
+              </NavLink>
+            </div>
+          )}
+        </div> */}
+      </MainNavBar>
+      <ProfileMark>
+        {!user && (
+          <IconLink to="/login" className="px-3">
+            <i className="ri-login-box-line"></i>
+          </IconLink>
+        )}
+        {user && (
+          <div>
+            <IconLink to="/logout">
+              <i className="ri-logout-box-r-line"></i>
+            </IconLink>
+            <ProfileLink to="/dash">
+              <Image roundedCircle src={user.avatar.url} width="60" />
+            </ProfileLink>
+          </div>
+        )}
+      </ProfileMark>
+    </div>
   );
 }
