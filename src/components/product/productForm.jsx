@@ -3,81 +3,122 @@ import Joi from "joi-browser"; // a pretty sweet library for doing validation st
 import Form from "../common/form";
 import { toast } from "react-toastify";
 import { getProduct, saveProduct } from "../../services/productService";
+import { Col, Row } from "react-bootstrap";
+import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import { Button } from "../common/buttons";
 
 class ProductForm extends Form {
-	state = {
-		data: {
-			title: "",
-			price: "",
-			category: "",
-			description: "",
-			img: "",
-		},
-		errors: {},
-	};
+  state = {
+    data: {
+      title: "",
+      price: "",
+      category: "",
+      description: "",
+      img: "",
+    },
+    errors: {},
+  };
 
-	schema = {
-		_id: Joi.string(),
-		title: Joi.string().required().label("Title"),
-		price: Joi.number().required().label("Price"),
-		category: Joi.string().min(0).max(100).required().label("Category"),
-		description: Joi.string().min(0).max(50).required().label("Description"),
-	};
+  schema = {
+    _id: Joi.string(),
+    title: Joi.string().required().label("Title"),
+    price: Joi.number().required().label("Price"),
+    category: Joi.string().min(0).max(100).required().label("Category"),
+    description: Joi.string().min(0).max(50).required().label("Description"),
+  };
 
-	async populateProducts() {
-		try {
-			const productId = this.props.match.params.id;
-			if (productId === "new") return;
+  async populateProducts() {
+    try {
+      const productId = this.props.match.params.id;
+      if (productId === "new") return;
 
-			const { data: product } = await getProduct(productId);
-			this.setState({
-				data: this.mapToViewModel(product),
-			});
-		} catch (error) {
-			if (error.response && error.response.status === 404)
-				this.props.history.replace("/not-found");
-			toast.error("What can I say get the backend ready");
-		}
-	}
+      const { data: product } = await getProduct(productId);
+      this.setState({
+        data: this.mapToViewModel(product),
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 404)
+        this.props.history.replace("/not-found");
+      toast.error("What can I say get the backend ready");
+    }
+  }
 
-	async componentDidMount() {
-		await this.populateProducts();
-	}
+  async componentDidMount() {
+    await this.populateProducts();
+  }
 
-	mapToViewModel(product) {
-		return {
-			_id: product._id,
-			title: product.title,
-			category: product.category,
-			price: product.price,
-			description: product.description,
-			img: product.img,
-		};
-	}
+  mapToViewModel(product) {
+    return {
+      _id: product._id,
+      title: product.title,
+      category: product.category,
+      price: product.price,
+      description: product.description,
+      img: product.img,
+    };
+  }
 
-	doSubmit = async () => {
-		await saveProduct(this.state.data);
-		// Call the server
-		this.props.history.push("/products");
-		let changedTitle = this.state.data.title;
-		console.log("Submitted", changedTitle);
-		toast("Updated");
-	};
+  doSubmit = async () => {
+    await saveProduct(this.state.data);
+    // Call the server
+    this.props.history.push("/dash#products");
+    const changedTitle = this.state.data.title;
+    console.log("Submitted", changedTitle);
+    toast("Updated");
+  };
 
-	render() {
-		return (
-			<div>
-				<h1>Product Form</h1>
-				<form onSubmit={this.handleSubmit}>
-					{this.renderInput("title", "Title")}
-					{this.renderInput("category", "Category")}
-					{this.renderInput("price", "Price")}
-					{this.renderInput("description", "Description")}
-					{this.renderButton("Save")}
-				</form>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <Row>
+        {/* <Col sm={5}>
+          <Card1 className="m-0 bg-primary bg-opacity-10">
+            <div className="my-3 mx-auto">
+              <img
+                className="rounded-circle mt-3 border border-4 border-primary"
+                src={data.avatarurl}
+                alt="profile"
+                width="140"
+              />
+            </div>
+            <CardBody1 className="mx-auto text-center">
+              <h3>{data.name}</h3>
+              {FileInput(doc.text, this.handleFileStats)}
+              <Button onClick={this.handleUpload} className={doc.style1}>
+                Upload
+              </Button>
+            </CardBody1>
+          </Card1>
+        </Col> */}
+        <Col sm={7}>
+          <Card1 className="m-0">
+            <CardHeader1 as="h4" className="mx-3 px-0">
+              Product Details
+            </CardHeader1>
+            <CardBody1>
+              <form>
+                {this.renderInput("title", "Title")}
+                {this.renderInput("category", "Category")}
+                {this.renderInput("price", "Price")}
+                {this.renderInput("description", "Description")}
+                <Button onClick={this.handleSubmit} className="mt-2">
+                  Save
+                </Button>
+                {/* {this.renderButton("Save", this.handleSubmit)} */}
+                <div className="my-3 mx-auto">
+                  <img
+                    className="mt-3 border border-2 border-primary"
+                    src={this.state.data.img}
+                    alt="product image"
+                    width="200"
+                  />
+                </div>
+              </form>
+            </CardBody1>
+          </Card1>
+        </Col>
+      </Row>
+    );
+  }
 }
 
 export default ProductForm;

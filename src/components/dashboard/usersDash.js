@@ -19,6 +19,19 @@ class UsersDash extends Component {
 
 	columns = [
 		{
+			path: "avatar.url",
+			label: "Avatar",
+			content: (user) =>
+				user.avatar && (
+					<img
+						className="rounded-circle"
+						src={user.avatar.url}
+						alt="profile"
+						width="30"
+					/>
+				),
+		},
+		{
 			path: "name",
 			label: "Name",
 			content: (user) => <Link to={`/users/${user._id}`}>{user.name}</Link>,
@@ -42,6 +55,7 @@ class UsersDash extends Component {
 		// const { data } = await getGenres();
 		// const genres = [{ _id: "", name: "All Genres" }, ...data];
 		const users = await getAllUsers();
+		console.log(users);
 		this.setState({ users });
 	}
 
@@ -134,35 +148,36 @@ class UsersDash extends Component {
 		const { totalCount, data: users } = this.getPagedData();
 
 		return (
-			<div className="container-fluid mt-4">
-				{/* <div className="">
-					<ListGroup
-						items={this.state.genres}
-						selectedItem={this.state.selectedGenre}
-						onItemSelect={this.handleGenreSelect}
-					/>
-				</div> */}
-				<div>
+			// {/* <div className="">
+			// 	<ListGroup
+			// 		items={this.state.genres}
+			// 		selectedItem={this.state.selectedGenre}
+			// 		onItemSelect={this.handleGenreSelect}
+			// 	/>
+			// </div> */}
+			<div>
+				{/* <Button as={Link} className="m-0 mb-3" to="/users/new">
+					New User
+				</Button>
 					<Link className="btn btn-primary mb-3" to="/users/new">
 						New User
-					</Link>
-					<p>Showing {totalCount} users from the database</p>
-					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<Table
-						columns={this.columns}
-						data={users}
-						sortColumn={sortColumn}
-						onSort={this.handleSort}
-						onLike={this.handleLike}
-						onDelete={this.handleDelete}
-					/>
-					<Pagination
-						itemsCount={totalCount}
-						pageSize={pageSize}
-						currentPage={currentPage}
-						onPageChange={this.handlePageChange}
-					/>
-				</div>
+					</Link> */}
+				<p>Showing {totalCount} users from the database</p>
+				<SearchBar value={searchQuery} onChange={this.handleSearch} />
+				<Table
+					columns={this.columns}
+					data={users}
+					sortColumn={sortColumn}
+					onSort={this.handleSort}
+					onLike={this.handleLike}
+					onDelete={this.handleDelete}
+				/>
+				<Pagination
+					itemsCount={totalCount}
+					pageSize={pageSize}
+					currentPage={currentPage}
+					onPageChange={this.handlePageChange}
+				/>
 			</div>
 		);
 	}

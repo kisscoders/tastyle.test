@@ -1,0 +1,54 @@
+.title{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 300px;
+  }
+  
+  .cardbody{
+    text-align: center;
+  }
+
+  .shadowbox{
+    width: 180px;
+    padding: 20px;
+    /* border-radius: 40px; */
+    margin: 20px;
+    background-color: #fff;
+    /* border: none; */
+    /* border-radius: 0.625rem; */
+    box-shadow: 0 2px 0 rgba(90, 97, 105, 0.11), 0 4px 8px rgba(90, 97, 105, 0.12),
+		0 10px 10px rgba(90, 97, 105, 0.06), 0 7px 70px rgba(90, 97, 105, 0.1);
+  
+  }
+
+  .shadowbox:hover {
+    /* transform: scale(1.03); */
+    transform: scale(1.01);
+    box-shadow: 0 3px 4px rgba(0,0,0,0.3);
+    }
+  .icon1{
+    width: 500px;
+    height: 400px;
+    padding:30px;
+    margin-left: 60px;
+    
+    border-radius: 15px 50px; 
+  }
+
+  /* .box1{
+    border: 2px solid red;
+    
+    border-radius: 40px;
+   
+  } */
+
+  .box2:hover{
+    transform: scale(1.01);
+    background-color: #FFF4F3;
+
+  }
+
+  .btn1:hover{
+      background-color: #8f7e7d;
+  }

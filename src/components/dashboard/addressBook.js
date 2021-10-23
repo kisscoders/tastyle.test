@@ -1,183 +1,230 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getMyAddresses, deleteAddress } from "../../services/orderService";
-import Pagination from "../common/pagination";
+import {
+  getMyAddresses,
+  deleteAddress,
+  saveAddress,
+} from "../../services/orderService";
 import { paginate } from "../../utils/paginate";
-import SearchBar from "../common/searchBar";
-import Table from "../common/table";
-import Like from "../common/like";
 
-class AddressBook extends Component {
-	state = {
-		addresses: [],
-		currentPage: 1,
-		pageSize: 4,
-		searchQuery: "",
-		selectedGenre: null,
-		sortColumn: { path: "title", order: "asc" },
-	};
+import { TextInput } from "../common/inputs";
+import { Button } from "../common/buttons";
+import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import AddressCard from "../common/addressCard";
+import { Toast } from "bootstrap";
+import AddressForm from "../common/addressForm";
 
-	columns = [
-		{
-			path: "firstName",
-			label: "First Name",
-			// content: (address) => (
-			// 	<Link to={`/addresses/${address._id}`}>{address.product.title}</Link>
-			// ),
-		},
-		{ path: "lastName", label: "Last Name" },
-		{ path: "contactNo", label: "Contact No" },
-		{ path: "addLine1", label: "Address" },
-		{ path: "zipcode", label: "Zip Code" },
-		{
-			key: "like",
-			content: (address) => (
-				<Like liked={address.liked} onClick={() => this.props.onLike(address)} />
-			),
-		},
-		{
-			key: "delete",
-			content: (order) => (
-				<button
-					onClick={() => this.props.onDelete(order)}
-					className="btn btn-danger btn-sm"
-				>
-					Delete
-				</button>
-			),
-		},
-	];
+const AddressBook = () => {
+  const [addresses, setAddresses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
+  const [sortColumn, setSortColumn] = useState({ path: "title", order: "asc" });
+  const [data, setData] = useState({
+    nickName: "",
+    contactNo: "",
+    addLine1: "",
+    addLine2: "",
+    city: "",
+    zipcode: "",
+    landmarks: "",
+  });
+  const [errors, setErrors] = useState({});
 
-	async componentDidMount() {
-		// const { data } = await getGenres();
-		// const genres = [{ _id: "", name: "All Genres" }, ...data];
-		const addresses = await getMyAddresses();
-		this.setState({ addresses });
-	}
+  // const schema = {
+  //   _id: Joi.string(),
+  //   title: Joi.string().required().label("Title"),
+  //   genreId: Joi.string().required().label("Genre"),
+  //   numberInStock: Joi.number()
+  //     .min(0)
+  //     .max(100)
+  //     .required()
+  //     .label("Number in Stock"),
+  //   dailyRentalRate: Joi.number()
+  //     .min(0)
+  //     .max(10)
+  //     .required()
+  //     .label("Daily Rental Rate"),
+  // };
 
-	handleDelete = async (address) => {
-		const originaladdresses = this.state.addresses;
-		const addresses = originaladdresses.filter((m) => m._id !== address._id);
-		this.setState({ addresses });
-		try {
-			await deleteAddress(address._id);
-		} catch (error) {
-			if (error.response && error.response.status === 404) {
-				toast.error("This address has already been deleted");
-				this.setState({ addresses: originaladdresses });
-			}
-		}
-	};
+  useEffect(() => {
+    getData();
+    toast("addressbook useEffect executed!");
+    // addresses.filter((o) => {
+    //   console.log(o);
+    // });
+  }, []);
 
-	handleLike = (movie) => {
-		console.log(this.state.addresses);
-		const addresses = [...this.state.addresses];
-		const index = addresses.indexOf(movie);
-		addresses[index] = { ...addresses[index] };
-		addresses[index].liked = !addresses[index].liked;
-		this.setState({ addresses });
-	};
+  const getData = async () => {
+    const getaddresses = await getMyAddresses();
+    setAddresses(getaddresses);
+  };
 
-	handlePageChange = (page) => {
-		this.setState({ currentPage: page });
-	};
+  const mapToViewModel = (data) => {
+    return {
+      _id: data._id,
+      nickName: data.nickName,
+      contactNo: data.contactNo,
+      addLine1: data.addLine1,
+      addLine2: data.addLine2,
+      city: data.city,
+      zipcode: data.zipcode,
+      landmarks: data.landmarks,
+    };
+  };
 
-	handleSearch = (query) => {
-		this.setState({
-			searchQuery: query,
-			selectedGenre: null,
-			currentPage: 1,
-		});
-	};
+  const handleDelete = async (address) => {
+    const backup = addresses;
+    const filter = addresses.filter((m) => m._id !== address._id);
+    setAddresses(filter);
+    try {
+      await deleteAddress(address._id);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        Toast;
+        toast.error("This address has already been deleted");
+        setAddresses(backup);
+      }
+    }
+  };
+  const handleEdit = (address) => {
+    populateForm(address);
+    console.log(address._id);
+  };
 
-	// handleGenreSelect = (genre) => {
-	// 	this.setState({
-	// 		selectedGenre: genre,
-	// 		searchQuery: "",
-	// 		currentPage: 1,
-	// 	});
-	// };
+  const populateForm = (address) => {
+    const found = addresses.find((o) => {
+      if (o._id === address._id) return true;
+    });
+    const mapped = mapToViewModel(found);
+    setData(mapped);
+    // let filtered = addresses.filter((o) => {
+    //   console.log(o);
+    //   o._id == address.id;
+    // });
+    // console.log(mapped);
+    // try {
+    //   const { data: address } = await getAddress(id);
+    //   console.log(address);
+    //   // setData(mapToViewModel(address));
+    // } catch (error) {
+    //   if (error.response && error.response.status === 404)
+    //     // this.props.history.replace("/not-found");
+    //     toast.error("error ocurred on populating");
+    // }
+  };
 
-	handleSort = (sortColumn) => {
-		this.setState({ sortColumn });
-	};
+  const handleClicked = (page) => {
+    setCurrentPage(page);
+  };
 
-	getPagedData = () => {
-		const {
-			pageSize,
-			currentPage,
-			sortColumn,
-			// selectedGenre,
-			searchQuery,
-			addresses: allAddresses,
-		} = this.state;
+  const doSubmit = async () => {
+    console.log(data);
+    await saveAddress(data);
+    toast("Updated");
+  };
 
-		let filtered = allAddresses;
-		if (searchQuery)
-			filtered = allAddresses.filter((o) =>
-				o.title.toLowerCase().startsWith(searchQuery.toLowerCase())
-			);
-		// else if (selectedGenre && selectedGenre._id)
-		// 	filtered = allAddresses.filter((o) => o.genre._id === selectedGenre._id);
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
 
-		const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+  // const handleSort = (sortColumn) => {
+  //   setSortColumn(sortColumn);
+  // };
 
-		const addresses = paginate(sorted, currentPage, pageSize);
+  const getPagedData = () => {
+    const all = addresses;
 
-		return {
-			totalCount: filtered.length,
-			data: addresses,
-		};
-	};
+    const sorted = _.orderBy(all, [sortColumn.path], [sortColumn.order]);
 
-	// constructor() {
-	// 	super();
-	// 	const user = authService.getCurrentUser();
-	// 	if (user && user.role === "admin") this.columns.push(this.deleteColumn);
-	// }
-	render() {
-		const { length: orderCount } = this.state.addresses;
-		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+    const displayData = paginate(sorted, currentPage, pageSize);
 
-		if (orderCount === 0) return <p>There are no addresses in the database.</p>;
+    return {
+      displayData,
+    };
+  };
 
-		const { totalCount, data: addresses } = this.getPagedData();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-		return (
-			<div className="container-fluid mt-4">
-				{/* <div className="">
-					<ListGroup
-						items={this.state.genres}
-						selectedItem={this.state.selectedGenre}
-						onItemSelect={this.handleGenreSelect}
-					/>
-				</div> */}
-				<div>
-					<Link className="btn btn-primary mb-3" to="/addresses/new">
-						New Address
-					</Link>
-					<p>Showing {totalCount} addresses from the database</p>
-					<SearchBar value={searchQuery} onChange={this.handleSearch} />
-					<Table
-						columns={this.columns}
-						data={addresses}
-						sortColumn={sortColumn}
-						onSort={this.handleSort}
-						onLike={this.handleLike}
-						onDelete={this.handleDelete}
-					/>
-					<Pagination
-						itemsCount={totalCount}
-						pageSize={pageSize}
-						currentPage={currentPage}
-						onPageChange={this.handlePageChange}
-					/>
-				</div>
-			</div>
-		);
-	}
-}
+    // const err = validate();
+    // setErrors(err || {});
+    // if (err) return;
+
+    doSubmit();
+    getData();
+  };
+
+  const handleChange = ({ currentTarget: input }) => {
+    // const errorMessage = this.validateProperty(input);
+    // if (errorMessage) errors[input.name] = errorMessage;
+    // else delete errors[input.name];
+    const type = { ...data };
+    type[input.name] = input.value;
+
+    setData(type);
+  };
+
+  const renderInput = (name, label, type = "text") => {
+    return (
+      <TextInput
+        type={type}
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={handleChange}
+        error={errors[name]}
+      />
+    );
+  };
+
+  const renderButton = (label) => {
+    return <Button className="mt-2">{label}</Button>;
+  };
+
+  const totalCount = addresses.length;
+
+  const { displayData } = getPagedData();
+  return (
+    <div className="row">
+      {AddressForm(data, handleChange, errors)}
+      {/* <div className="col col-6">
+        <Card1>
+          <CardHeader1 as="h5">Add/Update Address</CardHeader1>
+          <CardBody1>
+            <form onSubmit={handleSubmit}>
+              {renderInput("nickName", "What do we call you?")}
+              {renderInput("contactNo", "Contact Number")}
+              {renderInput("addLine1", "Address Line 1")}
+              {renderInput("addLine2", "Address Line 2")}
+              {renderInput("city", "City")}
+              {renderInput("zipcode", "Zip Code")}
+              {renderInput("landmarks", "Landmarks")}
+              {renderButton("Save")}
+            </form>
+          </CardBody1>
+        </Card1>
+      </div> */}
+      <div className="col col-6">
+        {totalCount === 0 ? (
+          <Card1>
+            <CardHeader1 as="h6">
+              You haven't added any addresses, you're pretty anonymous!
+            </CardHeader1>
+          </Card1>
+        ) : (
+          <div>
+            <AddressCard
+              data={displayData}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              clicked={handleClicked}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default AddressBook;

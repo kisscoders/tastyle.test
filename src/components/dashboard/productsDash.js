@@ -7,6 +7,8 @@ import Pagination from "../common/pagination";
 import { paginate } from "../../utils/paginate";
 import ProductsTable from "../product/productsTable";
 import SearchBar from "../common/searchBar";
+import authService from "../../services/authService";
+import { Button } from "../common/buttons";
 class ProductsDash extends Component {
 	state = {
 		prodcts: [],
@@ -86,7 +88,7 @@ class ProductsDash extends Component {
 	};
 
 	render() {
-		const { user } = this.props;
+		const user = authService.getCurrentUser();
 		const { length: prodCount } = this.state.prodcts;
 		const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
@@ -95,27 +97,33 @@ class ProductsDash extends Component {
 		const { totalCount, data: prodcts } = this.getPagedData();
 
 		return (
-			<div className="container-fluid mt-4">
+			<div>
 				{user && (
-					<Link className="btn btn-primary mb-3" to="/products/new">
+					<Button as={Link} className="m-0 mb-3" to="/products/new">
 						New Product
-					</Link>
+					</Button>
 				)}
-				<p>Showing {totalCount} products in the database</p>
-				<SearchBar value={searchQuery} onChange={this.handleSearch} />
-				<ProductsTable
-					products={prodcts}
-					sortColumn={sortColumn}
-					onLike={this.handleLike}
-					onDelete={this.handleDelete}
-					onSort={this.handleSort}
-				/>
-				<Pagination
-					itemsCount={totalCount}
-					pageSize={pageSize}
-					currentPage={currentPage}
-					onPageChange={this.handlePageChange}
-				/>
+				{prodCount === 0 ? (
+					<p>There are no products in the database.</p>
+				) : (
+					<div>
+						<p>Showing {totalCount} products in the database</p>
+						<SearchBar value={searchQuery} onChange={this.handleSearch} />
+						<ProductsTable
+							products={prodcts}
+							sortColumn={sortColumn}
+							onLike={this.handleLike}
+							onDelete={this.handleDelete}
+							onSort={this.handleSort}
+						/>
+						<Pagination
+							itemsCount={totalCount}
+							pageSize={pageSize}
+							currentPage={currentPage}
+							onPageChange={this.handlePageChange}
+						/>
+					</div>
+				)}
 			</div>
 		);
 	}
