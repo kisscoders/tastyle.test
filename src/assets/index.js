@@ -9,6 +9,7 @@ import homeImg8 from "./img/img8.jpg";
 import homeImg9 from "./img/img9.webp";
 import homeImg10 from "./img/img10.jpg";
 import homeImg11 from "./img/img11.jpg";
+import brandImg1 from "./img/brandv3.png";
 
 import Illust1 from "./illustrations/cabin.svg";
 import Illust2 from "./illustrations/error.svg";
@@ -27,6 +28,7 @@ export const GrHomeIngredients = homeImg8;
 export const GrHomeProtein = homeImg9;
 export const GrHomePack1 = homeImg10;
 export const GrHomePack2 = homeImg11;
+export const GrBrandV3 = brandImg1;
 
 export const IGCabin = Illust1;
 export const IGError = Illust2;

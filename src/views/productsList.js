@@ -7,6 +7,8 @@ import Button from "react-bootstrap/Button";
 import { Image } from "react-bootstrap";
 import "./product.css";
 import { GrHomeAllProd2, GrHomeIngredients, GrHomePack2 } from "../assets";
+import { Link } from "react-router-dom";
+
 //import { Link } from "react-router-dom";
 
 class ProductsGrid extends Component {
@@ -230,6 +232,7 @@ class ProductsGrid extends Component {
                   <Card.Text>{item.price}</Card.Text>
                   <Card.Text>{item.description}</Card.Text>
                   {/* <Card.Text>Buy Now</Card.Text> */}
+                  <Link to={`/productdetails/${item._id}`}>Buy Now</Link>
                   <Button
                     variant="#F54749"
                     className="btn1"

@@ -10,6 +10,7 @@ import {
   Tab,
 } from "react-bootstrap";
 import { AiFillEdit, AiFillCloseCircle } from "react-icons/ai";
+import { GrHomeIngredients, GrHomePack1, GrHomePack2 } from "../assets";
 //import Form from 'react-bootstrap/Form';
 //import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
@@ -43,13 +44,13 @@ export default class ProductDetails extends Component {
             <div className="bg">
               <Carousel>
                 <Carousel.Item interval={1000}>
-                  <Image className="d-block" src={image1} />
+                  <Image className="d-block" src={GrHomePack1} />
                 </Carousel.Item>
                 <Carousel.Item interval={500}>
-                  <Image className="d-block " src={image2} />
+                  <Image className="d-block " src={GrHomePack2} />
                 </Carousel.Item>
                 <Carousel.Item>
-                  <Image className="d-block" src={image3} />
+                  <Image className="d-block" src={GrHomeIngredients} />
                 </Carousel.Item>
               </Carousel>
             </div>
@@ -149,7 +150,7 @@ export default class ProductDetails extends Component {
             <p>With vitamin C, D3, zinc and selenium.</p>
           </Col>
           <Col xs={4}>
-            <Image src={image2} alt="" className="huel" />
+            <Image src={GrHomePack1} alt="" className="huel" />
           </Col>
           <Col xs={4}>
             <div className="contant">

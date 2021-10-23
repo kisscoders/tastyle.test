@@ -44,8 +44,6 @@ const Crop = styled.div`
   overflow: hidden;
   margin: 0;
   border-radius: 30px;
-  ${Image} {
-  }
 `;
 
 const About = () => {
