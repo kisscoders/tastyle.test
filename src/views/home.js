@@ -1,10 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   GrHomeLanding,
-  GrHomeAllProd1,
   GrHomePerson1,
   GrHomePnB2,
   GrHomePack1,
+  GrHomeProduct1,
 } from "../assets";
 import {
   Card1,
@@ -66,7 +67,9 @@ const Home = () => {
                 Fundamentally Healthy, 💪🏽 <br /> Taste and Style comes with the
                 Brand as a 🎁 Gift 😉
               </Quote>
-              <ButtonL> Get Shopping 🛍 </ButtonL>
+              <ButtonL as={Link} to="/list">
+                Get Shopping 🛍
+              </ButtonL>
             </div>
             <LandingImage fluid src={GrHomeLanding} alt="land image" />
           </Row>
@@ -93,7 +96,7 @@ const Home = () => {
               <CardBody1>
                 <CardImg1
                   variant="bottom"
-                  src={GrHomeAllProd1}
+                  src={GrHomeProduct1}
                   className=""
                   alt="Card image"
                 />
@@ -129,8 +132,10 @@ const Home = () => {
             </CustomCorousel.Item>
           </CustomCorousel>
         </div>
-        <Footer />
       </Container>
+      <div className="m-0 p-0 mt-4">
+        <Footer />
+      </div>
     </React.Fragment>
   );
 };

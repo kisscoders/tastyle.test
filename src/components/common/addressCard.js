@@ -9,9 +9,11 @@ function AddressCard(props) {
 
   const columns = [
     {
-      path: "nickName",
+      path: "addressName",
       label: "Name",
-      content: (data) => <CardTitle1>{data.nickName}</CardTitle1>,
+      content: (data) => (
+        <CardTitle1 key={data._id}>{data.addressName}</CardTitle1>
+      ),
     },
     { path: "addLine1", label: "City" },
     { path: "addLine2", label: "Zip" },
@@ -20,14 +22,19 @@ function AddressCard(props) {
     {
       key: "action",
       content: (data) => (
-        <div key={data._id} className="mt-3 d-flex justify-content-end">
+        <div
+          // key={createKey(data, "")}
+          className="mt-3 d-flex justify-content-end"
+        >
           <EditAtom
             clicked={() => props.clicked}
             onClick={() => props.onEdit(data)}
+            key={createKey(data, "editatom")}
           />
           <DeleteAtom
             clicked={() => props.clicked}
             onClick={() => props.onDelete(data)}
+            key={createKey(data, "deleteatom")}
           />
         </div>
       ),
@@ -45,7 +52,7 @@ function AddressCard(props) {
   };
 
   const createKey = (item, column) => {
-    return item._id + (column.path || column.key);
+    return item._id + (column.path || column.key || column) + item._id;
   };
 
   return (

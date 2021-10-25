@@ -10,11 +10,14 @@ const ColorScheme = styled.div`
 
 export const RED = styled.span`
   color: #f54749;
+  margin: none;
 `;
 export const GREEN = styled.span`
+  margin: none;
   color: #4caf50;
 `;
 export const YELLOW = styled.span`
+  margin: none;
   color: #fec65e;
 `;
 

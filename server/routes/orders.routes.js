@@ -3,34 +3,45 @@ const router = Router();
 import { auth, admin } from "../middleware/auth";
 
 import {
-	getOrders, // @route   GET /api/orders/
-	getMyOrders, // @route   GET /api/orders/me
-	addOrder, // @route   POST /api/orders
-	updateOrder, // @route   PUT /api/orders/:id
-	deleteOrder, // @route   DELETE /api/orders/:id
-	viewOrder, // @route   GET /api/orders/:id
-	getAddresses, // @route   GET /api/a
-	addAddress, // @route   POST /api/a
-	updateAddress, // @route   PUT /api/a/:id
-	deleteAddress, // @route   DELETE /api/a/:id
-	viewAddress, // @route   GET /api/a/:id
-	getMyAddresses,
+  getOrders, // @route   GET /api/orders/
+  getMyOrders, // @route   GET /api/orders/me
+  addOrder, // @route   POST /api/orders
+  updateOrder, // @route   PUT /api/orders/:id
+  deleteOrder, // @route   DELETE /api/orders/:id
+  viewOrder, // @route   GET /api/orders/:id
+  addMyAddress,
+  updateMyAddress,
+  deleteMyAddress,
+  viewMyAddress,
+  getMyAddresses,
+  getMyPendingOrders,
+  getMyHistoryOrders,
+  makeDeliveredById,
 } from "../controllers/orders.controller";
 
+// Order Routes
 router.route("/").post(auth, addOrder).get([auth, admin], getOrders);
+router.route("/pending").get(auth, getMyPendingOrders);
+router.route("/history").get(auth, getMyHistoryOrders);
 router.route("/me").get(auth, getMyOrders);
-router.route("/a/").post(auth, addAddress).get([auth, admin], getAddresses);
+router
+  .route("/:id")
+  .put(auth, updateOrder)
+  .delete([auth, admin], deleteOrder) // admin required
+  .get(viewOrder);
+
+router
+  .route("/changestatus/:id") // admin required
+  .get([auth, admin], makeDeliveredById);
+
+// Address Routes
+router.route("/a/").post(auth, addMyAddress);
 router.route("/a/me").get(auth, getMyAddresses);
 router
-	.route("/a/:id")
-	.put(auth, updateAddress)
-	.delete(auth, deleteAddress) // admin required
-	.get(auth, viewAddress);
-router
-	.route("/:id")
-	.put(auth, updateOrder)
-	.delete([auth, admin], deleteOrder) // admin required
-	.get(viewOrder);
+  .route("/a/:id")
+  .put(auth, updateMyAddress)
+  .delete(auth, deleteMyAddress)
+  .get(auth, viewMyAddress);
 
 export default router;
 

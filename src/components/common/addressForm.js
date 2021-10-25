@@ -3,7 +3,7 @@ import { Button } from "./buttons";
 import { Card1, CardBody1, CardHeader1 } from "./cards";
 import { TextInput } from "./inputs";
 
-const AddressForm = (data, handleChange, errors) => {
+const AddressForm = (data, handleSubmit, handleChange, errors) => {
   const renderInput = (name, label, type = "text") => {
     return (
       <TextInput
@@ -21,16 +21,16 @@ const AddressForm = (data, handleChange, errors) => {
     return <Button className="mt-2">{label}</Button>;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
 
-    // const err = validate();
-    // setErrors(err || {});
-    // if (err) return;
+  //   // const err = validate();
+  //   // setErrors(err || {});
+  //   // if (err) return;
 
-    doSubmit();
-    getData();
-  };
+  //   doSubmit();
+  //   getData();
+  // };
 
   return (
     <div className="col col-6">
@@ -38,7 +38,8 @@ const AddressForm = (data, handleChange, errors) => {
         <CardHeader1 as="h5">Add/Update Address</CardHeader1>
         <CardBody1>
           <form onSubmit={handleSubmit}>
-            {renderInput("nickName", "What do we call you?")}
+            {renderInput("displayName", "What do we call you?")}
+            {renderInput("addressName", "Address Name")}
             {renderInput("contactNo", "Contact Number")}
             {renderInput("addLine1", "Address Line 1")}
             {renderInput("addLine2", "Address Line 2")}

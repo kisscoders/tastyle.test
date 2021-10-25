@@ -1,60 +1,3 @@
-// import React from "react";
-// import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
-// import Form from "../components/common/form";
-// import authService from "../services/authService";
-// import { Card1, CardBody1, CardHeader1 } from "../components/common/cards";
-
-// class SignupForm extends Form {
-// 	state = {
-// 		data: {
-// 			username: "",
-// 			password: "",
-// 			name: "",
-// 		},
-// 		errors: {},
-// 	};
-
-// 	schema = {
-// 		username: Joi.string().email().required().label("Username"),
-// 		password: Joi.string().min(5).required().label("Password"),
-// 		name: Joi.string().required().label("Name"),
-// 	};
-
-// 	doSubmit = async () => {
-// 		try {
-// 			const response = await authService.register(this.state.data);
-// 			authService.loginWithJwt(response.headers["x-auth-token"]);
-// 			window.location = "/";
-// 		} catch (ex) {
-// 			if (ex.response && ex.response.status === 400) {
-// 				const errors = { ...this.state.errors };
-// 				errors.username = ex.response.data;
-// 				this.setState({ errors });
-// 			}
-// 		}
-// 	};
-
-// 	render() {
-// 		return (
-// 			<div className="justify-content-md-center row">
-// 				<Card1 className="col col-lg-6">
-// 					<CardHeader1 as="h2">Register</CardHeader1>
-// 					<CardBody1>
-// 						<form onSubmit={this.handleSubmit}>
-// 							{this.renderInput("name", "Name")}
-// 							{this.renderInput("username", "Username")}
-// 							{this.renderInput("password", "Password", "password")}
-// 							{this.renderButton("Register")}
-// 						</form>
-// 					</CardBody1>
-// 				</Card1>
-// 			</div>
-// 		);
-// 	}
-// }
-
-// export default SignupForm;
-
 import React from "react";
 import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../components/common/form";
@@ -64,8 +7,6 @@ import styled from "styled-components";
 import { GrHomeProtein } from "../assets";
 
 import { Link } from "react-router-dom";
-
-// import "./login.css";
 
 const NavLink = styled(Link)`
   text-decoration: none;
@@ -82,50 +23,47 @@ const NavLink = styled(Link)`
   }
 `;
 
-const Card1 = styled(Card)`
-  background-color: #fff;
-  border: none;
-  border-radius: 0.825rem;
+const SIGNUPBOX1 = styled(Card)`
+  border-radius: 1rem;
   box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
     0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
     0 7px 70px rgba(90, 97, 105, 0.1);
-  margin-top: 100px;
-  width: 830px;
-  height: 550px;
-  margin-left: 250px;
-  margin-right: 150px;
+  width: 800px;
+  height: 500px;
 `;
 
 const COL = styled(Col)`
   background-color: #ef9a9a;
-  border-top-right-radius: 0.625rem;
-  border-bottom-right-radius: 0.625rem;
-  width: 800px;
-  height: 550px;
-  padding-top: 30px;
-  padding-left: 20px;
-  padding-right: 20px;
+  height: 500px;
+  border-radius: 0 1rem 1rem 0;
+
+  /* border-top-right-radius: 0.625rem; */
+  /* border-bottom-right-radius: 0.625rem; */
+  /* width: 800px; */
+  /* padding-top: 30px; */
+  /* padding-left: 20px; */
+  /* padding-right: 20px; */
 `;
 
 const CARD = styled(Card)`
   border: none;
   border-radius: 0.825rem;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   width: 300px;
   height: 400px;
-  margin-left: 50px;
-  margin-right: 15px;
+  /* margin-left: 50px; */
+  /* margin-right: 15px; */
   box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
     0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
     0 7px 70px rgba(90, 97, 105, 0.1);
 `;
 const Div = styled.div`
-  border: none;
-  border-radius: 0.3rem;
-  margin-left: -0.5px;
-  margin-right: 1px;
-  width: 300px;
-  height: 400px;
+  /* border: none; */
+  /* border-radius: 0.3rem; */
+  /* margin-left: -0.5px; */
+  /* margin-right: 1px; */
+  /* width: 300px; */
+  /* height: 400px; */
   background-color: #fff3e0;
 `;
 const H6 = styled.h6`
@@ -184,10 +122,10 @@ class SignupForm extends Form {
   render() {
     return (
       <div>
-        <Card1>
-          <Row>
-            <Col>
-              <h3 className="text-center mt-4">Registertion info &#128077;</h3>
+        <SIGNUPBOX1 className="mx-auto">
+          <Row className="p-0 m-0">
+            <Col sm={6} className="m-0">
+              <h3 className="text-center mt-4">Registration info &#128077;</h3>
               <form onSubmit={this.handleSubmit} className="mt-4 mx-3 my-3">
                 {this.renderInput("username", "Username")}
                 {this.renderInput("password", "Password", "password")}
@@ -196,33 +134,30 @@ class SignupForm extends Form {
               </form>
               <NavLink to="/login">Login</NavLink>
             </Col>
-
             <COL>
-              <CARD>
-                <Div>
-                  <H6>
-                    "<span style={{ color: "#00695c" }}>Quality </span>and{" "}
-                    <span style={{ color: "#33691e" }}>healthy 🥙 </span>
-                    solution to{" "}
-                    <span style={{ color: "#ef5350" }}>Fast food market</span>
-                    ."
-                  </H6>
-                  <H6>
-                    "To be the most{" "}
-                    <span style={{ color: "#01579b" }}>trusted </span> and{" "}
-                    <span style={{ color: "#b71c1c" }}>loved 🌽 </span>{" "}
-                    <span style={{ color: "#f57f17" }}>
-                      healthy-consumable manufacturing company
-                    </span>{" "}
-                    in Sri Lanka, and of course the most
-                    <span style={{ color: "#9c27b0" }}> profitable</span> one.
-                  </H6>
-                  <IMAGE src={GrHomeProtein} />
-                </Div>
+              <CARD className="m-auto mt-5">
+                <H6>
+                  "<span style={{ color: "#00695c" }}>Quality </span>and{" "}
+                  <span style={{ color: "#33691e" }}>healthy 🥙 </span>
+                  solution to{" "}
+                  <span style={{ color: "#ef5350" }}>Fast food market</span>
+                  ."
+                </H6>
+                <H6>
+                  "To be the most{" "}
+                  <span style={{ color: "#01579b" }}>trusted </span> and{" "}
+                  <span style={{ color: "#b71c1c" }}>loved 🌽 </span>{" "}
+                  <span style={{ color: "#f57f17" }}>
+                    healthy-consumable manufacturing company
+                  </span>{" "}
+                  in Sri Lanka, and of course the most
+                  <span style={{ color: "#9c27b0" }}> profitable</span> one.
+                </H6>
+                <IMAGE src={GrHomeProtein} />
               </CARD>
             </COL>
           </Row>
-        </Card1>
+        </SIGNUPBOX1>
       </div>
     );
   }

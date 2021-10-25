@@ -1,45 +1,93 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import styled from "styled-components";
 import { getProducts } from "../services/productService";
-import { Card, Row, Col } from "react-bootstrap";
-import { Container } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import { Image } from "react-bootstrap";
-import "./product.css";
-import { GrHomeAllProd2, GrHomeIngredients, GrHomePack2 } from "../assets";
+import { Card, Row, Col, Container, Image } from "react-bootstrap";
+import { GrHomePack3, GrHomeLanding } from "../assets";
 import { Link } from "react-router-dom";
+import { ButtonL } from "../components/common/buttons";
+import { GREEN, RED } from "../theme/colors";
+import { TAG2 } from "../components/common/text/headings";
 
-//import { Link } from "react-router-dom";
+const H1 = styled.h1`
+  font-weight: 600;
+  font-size: 48px;
+  margin: 40px 0 20px 0;
+  padding: 0 0 0 30px;
+`;
+
+const H3 = styled.h3`
+  font-weight: 600;
+  /* margin: 30px 0px; */
+  padding: 10px 0 0 10px;
+  margin: 2px;
+`;
+
+const BOX1 = styled(Card)`
+  border-radius: 25px;
+  background-color: #fff4f3;
+  /* height: 450px; */
+  padding: 10px;
+  box-shadow: 3px 5px #ef9a9a;
+  transition: all 0.3s ease-in-out 0s;
+
+  &:hover {
+    transform: scale(1.01);
+    background-color: #fff4f3;
+    box-shadow: 7px 10px #ef9a9a;
+  }
+`;
+
+const BOX2 = styled(Card)`
+  padding: 20px;
+  border-radius: 40px;
+  transition: all 0.3s ease-in-out 0s;
+  background-color: #fff;
+  box-shadow: 0 2px 0 rgba(90, 97, 105, 0.11), 0 4px 8px rgba(90, 97, 105, 0.12),
+    0 10px 10px rgba(90, 97, 105, 0.06), 0 7px 70px rgba(90, 97, 105, 0.1);
+  &:hover {
+    transform: scale(1.01);
+    background-color: #fff4f3;
+  }
+`;
+
+const PROBOX1 = styled(Card)`
+  width: 23rem;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out 0s;
+  box-shadow: 0 2px 0 rgba(90, 97, 105, 0.11), 0 4px 8px rgba(90, 97, 105, 0.12),
+    0 10px 10px rgba(90, 97, 105, 0.06), 0 7px 70px rgba(90, 97, 105, 0.1);
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+const BOXIMAGE2 = styled(Image)`
+  /* width: 250px; */
+  padding: none;
+  margin: 2px;
+  border-radius: 40px;
+`;
+
+const BOXIMAGE1 = styled(Image)`
+  position: absolute;
+  width: 45%;
+  top: 15%;
+  right: 2%;
+`;
+
+const Para = styled.p`
+  padding: 10px 0 0 13px;
+  margin: 2px;
+  font-weight: 600;
+  font-size: 18px;
+`;
 
 class ProductsGrid extends Component {
-  // columns = [
-  // 	{
-  // 		path: "title",
-  // 		content: (product) => (
-  // 			<Link to={`/products/${product._id}`}>{product.title}</Link>
-  // 		),
-  // 	},
-  // 	{ path: "price", label: "Price" },
-  // 	{ path: "category", label: "Category" },
-  // 	{ path: "description", label: "Description" },
-  // 	{ path: "img", label: "Image" },
-  // 	// { path: "cloudinary_id", label: "cloudinary" },
-  // 	// {
-  // 	// 	key: "like",
-  // 	// 	content: (product) => (
-  // 	// 		<Like liked={product.liked} onClick={() => this.props.onLike(product)} />
-  // 	// 	),
-  // 	// },
-  // 	{
-  // 		key: "image",
-  // 		content: (product) => <image src={product.img} />,
-  // 	},
-  // 	{
-  // 		key: "Des",
-  // 		content: (product) => <Link to={`/products/d/${product._id}`}>Buy Now</Link>,
-  // 	},
-  // ];
-
   state = {
     products: [],
     currentPage: 1,
@@ -69,153 +117,93 @@ class ProductsGrid extends Component {
 
     return (
       <Container className="mt-5">
-        <div
-          className="box1"
-          style={{ width: "100%", height: "500px", align: "center" }}
-        >
-          <Card
-            style={{
-              borderRadius: "40px",
-              backgroundColor: "#FFF4F3",
-              height: "450px",
-            }}
-          >
-            <Row>
-              <Col xs={6}>
-                <h1 style={{ padding: "60px", textAlign: "center" }}>
-                  Fast Food Not A Junk Food
-                </h1>
-                <p
-                  style={{
-                    textAlign: "justify",
-                    paddingLeft: "30px",
-                    fontStyle: "italic",
-                  }}
-                >
+        <div style={{ width: "100%", height: "500px", align: "center" }}>
+          <Row>
+            <Col xs={7}>
+              <BOX1 className="box1">
+                <H1 className="anim-typewriter anim-line-1">
+                  <GREEN>Fast Food </GREEN>Not <RED>Junk Food.</RED> 😊
+                </H1>
+                <Para className="p-4">
                   Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in
-                </p>
-              </Col>
-              <Col xs={6}>
-                <Image src={GrHomeAllProd2} className="icon1"></Image>
-              </Col>
-            </Row>
-          </Card>
+                  typesetting industry. <br />
+                  <br /> Lorem Ipsum has been the industry's standard dummy text
+                  ever since the 1500s, when an unknown printer took a galley of
+                  type and scrambled it to make a type specimen book. <br />
+                  <br /> It has survived not only five centuries, but also the
+                  leap into electronic typesetting, remaining essentially
+                  unchanged.
+                </Para>
+              </BOX1>
+            </Col>
+            <Col xs={5}>
+              <BOXIMAGE1 fluid src={GrHomeLanding} />
+            </Col>
+          </Row>
         </div>
         <div>
           <Row>
             <Col xs={6}>
-              <Card style={{ borderRadius: "40px" }} className="box2">
-                <Row>
-                  <Col xs={6}>
-                    <h4 style={{ paddingTop: "40px", paddingLeft: "30px" }}>
-                      {" "}
-                      Tastyle Shaker Bottle{" "}
-                    </h4>
-                    <p
-                      style={{
-                        textAlign: "justify",
-                        paddingLeft: "20px",
-                        fontStyle: "italic",
-                      }}
-                    >
+              <BOX2>
+                <Row className="m-0 p-0">
+                  <Col xs={6} className="m-0 p-0">
+                    <H3>Tastyle Shaker Bottle</H3>
+                    <Para>
                       Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s,{" "}
-                    </p>
-                    <Button
-                      variant="#F54749"
-                      className="btn1"
-                      style={{
-                        backgroundColor: "#F54749",
-                        color: "white",
-                        marginLeft: "50px",
-                      }}
-                    >
-                      More Info
-                    </Button>
+                      typesetting industry. <br />
+                      <br />
+                      Lorem Ipsum has been the industry's standard dummy text
+                      ever since the 1500s.
+                    </Para>
                   </Col>
-
-                  <Col xs={6}>
-                    <Image
-                      src={GrHomeIngredients}
-                      style={{
-                        width: "250px",
-                        paddingTop: "20px",
-                        paddingBottom: "20px",
-                      }}
-                    ></Image>
+                  <Col xs={6} className="m-0 p-0">
+                    <BOXIMAGE2 fluid src={GrHomePack3}></BOXIMAGE2>
                   </Col>
+                  <ButtonL className="m-auto mt-2 text-dark border-dark">
+                    More Info
+                  </ButtonL>
                 </Row>
-              </Card>
+              </BOX2>
             </Col>
             <Col xs={6}>
-              <Card style={{ borderRadius: "40px" }} className="box2">
-                <Row>
-                  <Col xs={6}>
-                    <h4 style={{ paddingTop: "40px", paddingLeft: "30px" }}>
-                      {" "}
-                      Tastyle Shaker Bottle{" "}
-                    </h4>
-                    <p
-                      style={{
-                        textAlign: "justify",
-                        paddingLeft: "20px",
-                        fontStyle: "italic",
-                      }}
-                    >
+              <BOX2>
+                <Row className="m-0 p-0">
+                  <Col xs={6} className="m-0 p-0">
+                    <H3>Tastyle T-Shirt</H3>
+                    <Para>
                       Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry. Lorem Ipsum has been the industry's
-                      standard dummy text ever since the 1500s,{" "}
-                    </p>
-                    <Button
-                      variant="#F54749"
-                      className="btn1"
-                      style={{
-                        backgroundColor: "#F54749",
-                        color: "white",
-                        marginLeft: "50px",
-                      }}
-                    >
-                      More Info
-                    </Button>
+                      typesetting industry. <br />
+                      <br />
+                      Lorem Ipsum has been the industry's standard dummy text
+                      ever since the 1500s.
+                    </Para>
                   </Col>
-
-                  <Col xs={6}>
-                    <Image
-                      src={GrHomePack2}
-                      style={{
-                        width: "250px",
-                        paddingTop: "20px",
-                        paddingBottom: "20px",
-                      }}
-                    ></Image>
+                  <Col xs={6} className="m-0 p-0">
+                    <BOXIMAGE2 fluid src={GrHomePack3}></BOXIMAGE2>
                   </Col>
+                  <ButtonL className="m-auto mt-2 text-dark border-dark">
+                    More Info
+                  </ButtonL>
                 </Row>
-              </Card>
+              </BOX2>
             </Col>
           </Row>
         </div>
-        <br />
-        <br />
+
+        <div className="my-5 pt-2">
+          <H1 className="anim-typewriter2 anim-line-1 ">
+            <RED>Trending 🥂 </RED>
+            <GREEN>Now... </GREEN>
+          </H1>
+        </div>
         <Row md={"auto"} className="g-4">
           {products.map((item) => (
             <Col>
-              <Card
-                key={item._id}
-                style={{ width: "23rem", borderRadius: "15px" }}
-                className="shadowbox"
-              >
-                {/* <Card.Header>{item.title}</Card.Header> */}
-                <Card.Title className="title">{item.title}</Card.Title>
+              <PROBOX1 key={item._id}>
+                <H3 className="text-center mb-4">{item.title}</H3>
                 <Card.Img
                   variant="top"
-                  alt=""
+                  alt={"product" + item.title}
                   src={item.img}
                   style={{
                     width: "19rem",
@@ -226,23 +214,23 @@ class ProductsGrid extends Component {
                     borderRadius: "12px",
                   }}
                 />
-                {/* <Card.Header>{item.title}</Card.Header> */}
-                <Card.Body className="cardbody">
-                  <Card.Title>{item.category}</Card.Title>
-                  <Card.Text>{item.price}</Card.Text>
-                  <Card.Text>{item.description}</Card.Text>
+                <Card.Body className="text-center">
+                  <Card.Text className="my-4">
+                    <TAG2 className="">{"Rs. " + item.price}</TAG2>
+                  </Card.Text>
+                  {/* <Card.Text>{item.description}</Card.Text> */}
                   {/* <Card.Text>Buy Now</Card.Text> */}
-                  <Link to={`/productdetails/${item._id}`}>Buy Now</Link>
-                  <Button
-                    variant="#F54749"
-                    className="btn1"
-                    style={{ backgroundColor: "#F54749", color: "white" }}
-                  >
-                    Buy Now
-                  </Button>
-                  {""} {""} {""} {""}
+                  {/* <Link to={`/productdetails/${item._id}`}>Buy Now</Link> */}
+                  <ButtonL>
+                    <Link
+                      to={`/productdetails/${item._id}`}
+                      className="prolink"
+                    >
+                      Buy Now
+                    </Link>
+                  </ButtonL>
                 </Card.Body>
-              </Card>
+              </PROBOX1>
             </Col>
           ))}
         </Row>

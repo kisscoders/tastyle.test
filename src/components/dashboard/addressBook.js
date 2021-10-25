@@ -21,7 +21,8 @@ const AddressBook = () => {
   const [pageSize, setPageSize] = useState(4);
   const [sortColumn, setSortColumn] = useState({ path: "title", order: "asc" });
   const [data, setData] = useState({
-    nickName: "",
+    displayName: "",
+    addressName: "",
     contactNo: "",
     addLine1: "",
     addLine2: "",
@@ -63,7 +64,8 @@ const AddressBook = () => {
   const mapToViewModel = (data) => {
     return {
       _id: data._id,
-      nickName: data.nickName,
+      displayName: data.displayName,
+      addressName: data.addressName,
       contactNo: data.contactNo,
       addLine1: data.addLine1,
       addLine2: data.addLine2,
@@ -114,9 +116,9 @@ const AddressBook = () => {
     // }
   };
 
-  const handleClicked = (page) => {
-    setCurrentPage(page);
-  };
+  // const handleClicked = (page) => {
+  //   setCurrentPage(page);
+  // };
 
   const doSubmit = async () => {
     console.log(data);
@@ -165,29 +167,29 @@ const AddressBook = () => {
     setData(type);
   };
 
-  const renderInput = (name, label, type = "text") => {
-    return (
-      <TextInput
-        type={type}
-        name={name}
-        value={data[name]}
-        label={label}
-        onChange={handleChange}
-        error={errors[name]}
-      />
-    );
-  };
+  // const renderInput = (name, label, type = "text") => {
+  //   return (
+  //     <TextInput
+  //       type={type}
+  //       name={name}
+  //       value={data[name]}
+  //       label={label}
+  //       onChange={handleChange}
+  //       error={errors[name]}
+  //     />
+  //   );
+  // };
 
-  const renderButton = (label) => {
-    return <Button className="mt-2">{label}</Button>;
-  };
+  // const renderButton = (label) => {
+  //   return <Button className="mt-2">{label}</Button>;
+  // };
 
   const totalCount = addresses.length;
 
   const { displayData } = getPagedData();
   return (
     <div className="row">
-      {AddressForm(data, handleChange, errors)}
+      {AddressForm(data, handleSubmit, handleChange, errors)}
       {/* <div className="col col-6">
         <Card1>
           <CardHeader1 as="h5">Add/Update Address</CardHeader1>
@@ -218,7 +220,7 @@ const AddressBook = () => {
               data={displayData}
               onDelete={handleDelete}
               onEdit={handleEdit}
-              clicked={handleClicked}
+              // clicked={handleClicked}
             />
           </div>
         )}
