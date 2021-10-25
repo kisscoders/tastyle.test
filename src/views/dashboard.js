@@ -17,7 +17,7 @@ const user = getCurrentUser();
 const Dashboard = () => {
   if (!user) return <Redirect to="/" />;
   return (
-    <Container>
+    <Container fluid>
       <H2>
         Hi <RED>{user.name}</RED> !
       </H2>

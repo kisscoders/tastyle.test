@@ -2,10 +2,15 @@ import React from "react";
 import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../common/form";
 import { toast } from "react-toastify";
-import { getProduct, saveProduct } from "../../services/productService";
+import {
+  getAllProducts,
+  getProduct,
+  saveProduct,
+} from "../../services/productService";
 import { Col, Row } from "react-bootstrap";
 import { Card1, CardBody1, CardHeader1 } from "../common/cards";
 import { Button } from "../common/buttons";
+import { FileInput } from "../common/inputs";
 
 class ProductForm extends Form {
   state = {
@@ -16,6 +21,7 @@ class ProductForm extends Form {
       description: "",
       img: "",
     },
+    imageFile: null,
     errors: {},
   };
 
@@ -58,65 +64,140 @@ class ProductForm extends Form {
     };
   }
 
-  doSubmit = async () => {
+  doSubmit = async (e) => {
+    e.preventDefault();
+    console.log("do submit");
     await saveProduct(this.state.data);
     // Call the server
-    this.props.history.push("/dash#products");
-    const changedTitle = this.state.data.title;
-    console.log("Submitted", changedTitle);
+    this.props.history.push("/dash");
     toast("Updated");
   };
 
+  // handleImage = (e) => {
+  //   e.preventDefault();
+
+  //   const errors = this.validate();
+  //   this.setState({ errors: errors || {} });
+  //   if (errors) return;
+
+  //   this.doSubmit();
+  // };
+
+  handleUpload = async (e) => {
+    e.preventDefault();
+    await this.doUpload();
+    const data = getAllProducts();
+    this.setState({ imageFile: null });
+    console.log(data);
+    this.setState({ data });
+    await this.populateProducts();
+  };
+
+  doUpload = async () => {
+    try {
+      const { title, price, category, description } = this.state.data;
+      let newData = new FormData();
+      newData.append("image", this.state.imageFile);
+      newData.append("title", title);
+      newData.append("category", price);
+      newData.append("price", category);
+      newData.append("description", description);
+      // await saveProduct(newData);
+      console.log(newData);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        const errors = { ...this.state.errors };
+        // errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
+  };
+
+  handleFileStats = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    console.log(file);
+    this.setState({
+      imageFile: file,
+      loaded: 0,
+    });
+    console.log(this.state);
+  };
+
   render() {
+    const { data, imageFile } = this.state;
+    const doc = {};
+    if (imageFile && imageFile.name) {
+      doc.text = imageFile.name;
+    } else doc.text = "Change Image";
+    if (data.img === "") {
+      doc.text = "Choose Image";
+    }
+    doc.style1 = imageFile ? "me-3" : "d-none";
+    doc.style2 = data.img !== "" ? "my-3 mx-auto" : "my-3 mx-auto d-none";
     return (
-      <Row>
+      <div className="m-auto container">
+        {/* <Row className="m-auto"> */}
         {/* <Col sm={5}>
-          <Card1 className="m-0 bg-primary bg-opacity-10">
-            <div className="my-3 mx-auto">
-              <img
-                className="rounded-circle mt-3 border border-4 border-primary"
-                src={data.avatarurl}
-                alt="profile"
-                width="140"
-              />
-            </div>
-            <CardBody1 className="mx-auto text-center">
-              <h3>{data.name}</h3>
+            <Card1 className="m-0 bg-primary bg-opacity-10">
+              <div className="my-3 mx-auto">
+                <img
+                  className="rounded-circle mt-3 border border-4 border-primary"
+                  src={data.primageurl}
+                  alt="profile"
+                  width="140"
+                />
+              </div>
+              <CardBody1 className="mx-auto text-center">
+                <h3>{data.name}</h3>
+                {FileInput(doc.text, this.handleFileStats)}
+                <Button onClick={this.handleUpload} className={doc.style1}>
+                  Upload
+                </Button>
+              </CardBody1>
+            </Card1>
+          </Col> */}
+        {/* <Col sm={7}> */}
+        <Card1 className="m-0">
+          <CardHeader1 as="h4" className="mx-3 px-0">
+            Edit Product
+          </CardHeader1>
+          <CardBody1>
+            <form>
+              {this.renderInput("title", "Title")}
+              {this.renderInput("category", "Category")}
+              {this.renderInput("price", "Price")}
+              {this.renderInput("description", "Description")}
+              <div className={doc.style2}>
+                <img
+                  className="mt-3 border border-2 border-primary"
+                  src={data.img}
+                  alt="product image"
+                  width="300"
+                />
+              </div>
               {FileInput(doc.text, this.handleFileStats)}
               <Button onClick={this.handleUpload} className={doc.style1}>
                 Upload
               </Button>
-            </CardBody1>
-          </Card1>
-        </Col> */}
-        <Col sm={7}>
-          <Card1 className="m-0">
-            <CardHeader1 as="h4" className="mx-3 px-0">
-              Product Details
-            </CardHeader1>
-            <CardBody1>
-              <form>
-                {this.renderInput("title", "Title")}
-                {this.renderInput("category", "Category")}
-                {this.renderInput("price", "Price")}
-                {this.renderInput("description", "Description")}
-                <Button onClick={this.handleSubmit} className="mt-2">
-                  Save
-                </Button>
-                {/* {this.renderButton("Save", this.handleSubmit)} */}
-                <div className="my-3 mx-auto">
-                  <img
-                    className="mt-3 border border-2 border-primary"
-                    src={this.state.data.img}
-                    alt="product image"
-                    width="200"
-                  />
-                </div>
-              </form>
-            </CardBody1>
-          </Card1>
-        </Col>
-      </Row>
+              <Button onClick={this.doSubmit} className="mt-2">
+                Save
+              </Button>
+              {/* {this.renderButton("Save", this.handleSubmit)} */}
+              {/* <div className="my-3 mx-auto">
+                <img
+                  className="mt-3 border border-2 border-primary"
+                  src={this.state.data.img}
+                  alt="product image"
+                  width="200"
+                />
+              </div> */}
+            </form>
+          </CardBody1>
+        </Card1>
+        {/* </Col> */}
+        {/* </Row> */}
+      </div>
     );
   }
 }

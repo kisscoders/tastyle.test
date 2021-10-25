@@ -16,15 +16,15 @@ class OrdersTable extends Component {
       ),
     },
     { path: "user.name", label: "Customer" },
-    { path: "priceSum", label: "Price" },
+    // { path: "priceSum", label: "Price" },
     { path: "orderType", label: "Type" },
     { path: "orderStatus", label: "Status" },
-    {
-      key: "like",
-      content: (order) => (
-        <Like liked={order.liked} onClick={() => this.props.onLike(order)} />
-      ),
-    },
+    // {
+    //   key: "like",
+    //   content: (order) => (
+    //     <Like liked={order.liked} onClick={() => this.props.onLike(order)} />
+    //   ),
+    // },
   ];
 
   deleteColumn = {
@@ -39,10 +39,29 @@ class OrdersTable extends Component {
     ),
   };
 
+  makeDeliveredColumn = {
+    key: "delivered",
+    content: (order) => {
+      if (order.orderStatus === "Processing...") {
+        return (
+          <button
+            onClick={() => this.props.onDeliver(order)}
+            className="btn btn-success btn-sm"
+          >
+            Deliver
+          </button>
+        );
+      } else return <span>Delivered</span>;
+    },
+  };
+
   constructor() {
     super();
     const user = authService.getCurrentUser();
-    if (user && user.role === "admin") this.columns.push(this.deleteColumn);
+    if (user && user.role === "admin") {
+      this.columns.push(this.deleteColumn);
+      this.columns.push(this.makeDeliveredColumn);
+    }
   }
 
   render() {

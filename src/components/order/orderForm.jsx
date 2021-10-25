@@ -1,57 +1,54 @@
 import React from "react";
-// import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
+import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
 import Form from "../common/form";
 import { toast } from "react-toastify";
+import SelectInput from "../common/selectInput";
 import {
-  saveOrder,
   getMyAddresses,
   getOrder,
+  addOrUpdateOrder,
 } from "../../services/orderService";
 import { getProducts } from "../../services/productService";
 import authService from "../../services/authService";
 import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import { ButtonL } from "../common/buttons";
+// import { Button } from "../common/buttons";
+
 class OrderForm extends Form {
   state = {
     data: {
-      product: "",
+      // product: "",
       productId: "",
-      user: "",
+      // user: "",
       quantityVar: "",
-      price: "",
+      priceSum: "",
       orderType: "",
-      deliverTo: "",
+      // deliverTo: "",
       addressId: "",
       orderStatus: "",
     },
+    displyData: [{ type: "onetime" }, { type: "subscription" }],
     addresses: [],
     products: [],
     errors: {},
   };
 
   schema = {
-    // _id: Joi.string(),
-    // name: Joi.string().required().label("Name"),
-    // isSubs: Joi.string().required().label("Subscription"),
-    // numberInStock: Joi.number()
-    // 	.min(0)
-    // 	.max(100)
-    // 	.required()
-    // 	.label("Number in Stock"),
-    // dailyRentalRate: Joi.number()
-    // 	.min(0)
-    // 	.max(10)
-    // 	.required()
-    // 	.label("Daily Rental Rate"),
+    _id: Joi.string(),
+    productId: Joi.string().required().label("Product"),
+    quantityVar: Joi.string().required().label("Quantity"),
+    orderType: Joi.string().required().label("Type"),
+    priceSum: Joi.number().required().label("Price"),
+    addressId: Joi.string().required().label("Address"),
+    orderStatus: Joi.string(),
   };
 
   async populateAddresses() {
-    const { data: addresses } = await getMyAddresses();
-    console.log(addresses);
+    const addresses = await getMyAddresses();
     this.setState({ addresses });
   }
   async populateProducts() {
     const { data: products } = await getProducts();
-    console.log(products);
     this.setState({ products });
   }
 
@@ -78,57 +75,103 @@ class OrderForm extends Form {
     await this.populateOrder();
   }
 
+  renderSelectMod(name, label, text, options, field) {
+    const { data, errors } = this.state;
+    return (
+      <SelectInput
+        name={name}
+        value={data[name]}
+        label={label}
+        options={options}
+        field={field}
+        onChange={this.handleChange}
+        error={errors[name]}
+        text={text}
+      />
+    );
+  }
+
+  renderPriceSum() {
+    console.log(this.state.addresses);
+  }
+
   mapToViewModel(order) {
     const user = authService.getCurrentUser();
     return {
-      _id: order._id,
-      productId: order.product._id,
-      product: order.product.title,
-      user: user.name,
-      quantityVar: order.quantityVar,
-      price: order.priceSum,
-      orderType: order.orderType,
-      deliverTo: order.deliverTo.contactNo,
-      addressId: order.deliverTo._id,
-      orderStatus: order.orderStatus,
+      // _id: order._id,
+      // productId: order.product._id,
+      // product: order.product.title,
+      // user: user.name,
+      // quantityVar: order.quantityVar,
+      // price: order.priceSum,
+      // orderType: order.orderType,
+      // deliverTo: order.deliverTo.contactNo,
+      // addressId: order.deliverTo._id,
+      // orderStatus: order.orderStatus,
     };
   }
 
+  handleSubmitMod = (e) => {
+    e.preventDefault();
+
+    const errors = this.validate();
+    console.log(errors);
+    this.setState({ errors: errors || {} });
+    // if (errors) return
+
+    console.log("handling Submit");
+    this.doSubmit();
+  };
+
   doSubmit = async () => {
-    await saveOrder(this.state.data);
+    console.log(this.state.data);
+    await addOrUpdateOrder(this.state.data);
     // Call the server
-    this.props.history.push("/orders");
+    this.props.history.push("/dash");
     // let changedTitle = this.state.data.title;
     // console.log("Submitted", changedTitle);
     toast("Updated");
   };
 
+  simpleLogging(e) {
+    e.preventDefault();
+    console.log("Hello execution");
+  }
+
   render() {
+    const { addresses, products, data } = this.state;
+
     return (
-      <div>
-        <Card1>
+      <div className="container m-auto mt-4">
+        <Card1 className="container">
           <CardHeader1 as="h5">Order Form</CardHeader1>
           <CardBody1>
-            <form onSubmit={this.handleSubmit}>
-              {this.renderInput("product", "Product")}
-              {this.renderInput("user", "Customer")}
-              {this.renderInput("price", "Price")}
-              {this.renderInput("quantityVar", "Quantity")}
-              {this.renderSelect(
+            <form>
+              {this.renderSelectMod(
                 "productId",
                 "Product",
                 "What's your favorite?",
-                this.state.products
+                this.state.products,
+                "title"
               )}
-              {/* {this.renderSelect(
+              {this.renderInput("quantityVar", "Quantity")}
+              {this.renderPriceSum()}
+              {this.renderInput("priceSum", "Price")}
+              {this.renderSelectMod(
                 "addressId",
                 "Address",
                 "Where you want it?",
-                this.state.addresses
-              )} */}
-              {this.renderInput("orderType", "Do you want it repeatedly?")}
-              {this.renderInput("orderStatus", "We are currently")}
-              {this.renderButton("Order")}
+                this.state.addresses,
+                "addressName"
+              )}
+              {this.renderSelectMod(
+                "orderType",
+                "Type",
+                "Do you want it repeatedly?",
+                this.state.displyData,
+                "type"
+              )}
+              <ButtonL onClick={this.handleSubmitMod}>Order</ButtonL>
             </form>
           </CardBody1>
         </Card1>

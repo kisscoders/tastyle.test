@@ -3,7 +3,17 @@ import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { getCurrentUser } from "../../services/authService";
 import { BRAND } from "../common/text/headings";
+import "./Footer.css";
 import styled from "styled-components";
+import { Button } from "../common/buttons";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaYoutube,
+  FaTwitter,
+  FaLinkedin,
+} from "react-icons/fa";
+import { MdFingerprint } from "react-icons/md";
 const user = getCurrentUser();
 
 const FooterContainer = styled(Container)``;
@@ -11,7 +21,72 @@ const SMIcon = styled;
 export default function Footer() {
   return (
     <FooterContainer>
-      <div className="container py-5">
+      <div>
+        <div className="footer-container">
+          <section className="social-media">
+            <div className="social-media-wrap">
+              <section className="footer-subscription">
+                <div className="input-areas">
+                  <form>
+                    <input
+                      className="footer-input"
+                      name="email"
+                      type="email"
+                      placeholder="Your Email"
+                    />
+                    <Button buttonStyle="btn--outline">Subscribe</Button>
+                  </form>
+                </div>
+              </section>
+              <small className="website-rights"></small>
+              <div className="social-icons">
+                <Link
+                  className="social-icon-link"
+                  to="/Facebook"
+                  target="_blank"
+                  aria-label="Facebook"
+                >
+                  <FaFacebook />
+                </Link>
+                <Link
+                  className="social-icon-link"
+                  to="/"
+                  target="_blank"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram />
+                </Link>
+                <Link
+                  className="social-icon-link"
+                  to="/"
+                  target="_blank"
+                  aria-label="Youtube"
+                >
+                  <FaYoutube />
+                </Link>
+                <Link
+                  className="social-icon-link"
+                  to="/"
+                  target="_blank"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter />
+                </Link>
+                <Link
+                  className="social-icon-link"
+                  to="/"
+                  target="_blank"
+                  aria-label="LinkedIn"
+                >
+                  <FaLinkedin />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* <div className="container py-5">
         <div className="row py-4">
           <div className="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <img src="img/logo.png" alt="" width="180" className="mb-3" />
@@ -128,7 +203,7 @@ export default function Footer() {
 
       <div className="py-2 text-center">
         <p className="text-muted mb-0">© 2021 tastyle All rights reserved.</p>
-      </div>
+      </div> */}
     </FooterContainer>
   );
 }

@@ -12,58 +12,58 @@ import cloudinary from "../utils/cloudinary";
 // @route   POST /api/users
 // @access  Public
 const createUser = catchAsyncErrors(async (req, res) => {
-	// const { error } = validate(req.body);
-	// if (error) return res.status(400).send(error.details[0].message);
-	const handle = { result: { public_id: null, secure_url: null } };
-	if (req.file) {
-		handle.result = await cloudinary.uploader.upload(req.file.path);
-	} else if (!req.file) {
-		handle.result.public_id = "lvj7owv0jefrj2gboika";
-		handle.result.secure_url =
-			"https://res.cloudinary.com/tastylemedia/image/upload/v1634204374/lvj7owv0jefrj2gboika.jpg";
-	}
+  // const { error } = validate(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
+  const handle = { result: { public_id: null, secure_url: null } };
+  if (req.file) {
+    handle.result = await cloudinary.uploader.upload(req.file.path);
+  } else if (!req.file) {
+    handle.result.public_id = "wocofvcne0yjec5vu8lz";
+    handle.result.secure_url =
+      "https://res.cloudinary.com/tastylemedia/image/upload/v1635060625/wocofvcne0yjec5vu8lz.png";
+  }
 
-	const { name, email, password } = req.body;
-	const { public_id, secure_url } = handle.result;
+  const { name, email, password } = req.body;
+  const { public_id, secure_url } = handle.result;
 
-	const user = await User.create({
-		name,
-		email,
-		password,
-		avatar: {
-			public_id,
-			url: secure_url,
-		},
-	});
-	// 	const salt = await bcrypt.genSalt(10);
-	// 	user.password = await bcrypt.hash(user.password, salt);
-	sendToken(user, 201, res);
+  const user = await User.create({
+    name,
+    email,
+    password,
+    avatar: {
+      public_id,
+      url: secure_url,
+    },
+  });
+  // 	const salt = await bcrypt.genSalt(10);
+  // 	user.password = await bcrypt.hash(user.password, salt);
+  sendToken(user, 201, res);
 });
 
 // @desc    Login and authorization
 // @route   POST /api/users/auth
 // @access  Public
 const loginUser = async (req, res, next) => {
-	const { email, password } = req.body;
+  const { email, password } = req.body;
 
-	// checking if user has given password and email both
-	if (!email || !password) {
-		return next(new ErrorHander("Please Enter Email & Password", 400));
-	}
+  // checking if user has given password and email both
+  if (!email || !password) {
+    return next(new ErrorHander("Please Enter Email & Password", 400));
+  }
 
-	const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password");
 
-	if (!user) {
-		return next(new ErrorHander("Invalid Email", 401));
-	}
+  if (!user) {
+    return next(new ErrorHander("Invalid Email", 401));
+  }
 
-	const isPasswordMatched = await user.comparePassword(password);
+  const isPasswordMatched = await user.comparePassword(password);
 
-	if (!isPasswordMatched) {
-		return next(new ErrorHander("Invalid Password", 401));
-	}
+  if (!isPasswordMatched) {
+    return next(new ErrorHander("Invalid Password", 401));
+  }
 
-	sendToken(user, 200, res);
+  sendToken(user, 200, res);
 };
 
 // @desc    Logout
@@ -97,183 +97,186 @@ const loginUser = async (req, res, next) => {
 // @route   GET /api/users/:id
 // @access  Admin
 const getUserDetail = catchAsyncErrors(async (req, res) => {
-	const user = await User.findById(req.params.id).select("-password");
+  const user = await User.findById(req.params.id).select("-password");
 
-	res.status(200).json({
-		success: true,
-		user,
-	});
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
 
 // @desc    Forgot password request
 // @route   POST /api/users/pass/forgot
 // @access  Public
 const forgotPassword = catchAsyncErrors(async (req, res, next) => {
-	const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email });
 
-	if (!user) {
-		return next(new ErrorHander("User not found", 404));
-	}
+  if (!user) {
+    return next(new ErrorHander("User not found", 404));
+  }
 
-	// Get ResetPassword Token
-	const resetToken = user.getResetPasswordToken();
+  // Get ResetPassword Token
+  const resetToken = user.getResetPasswordToken();
 
-	await user.save({ validateBeforeSave: false });
+  await user.save({ validateBeforeSave: false });
 
-	const resetPasswordUrl = `${req.protocol}://${req.get(
-		"host"
-	)}/password/reset/${resetToken}`;
+  const resetPasswordUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/password/reset/${resetToken}`;
 
-	const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
+  const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email then, please ignore it.`;
 
-	try {
-		await sendEmail({
-			email: user.email,
-			subject: `tastyle password recovery service`,
-			message,
-		});
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: `tastyle password recovery service`,
+      message,
+    });
 
-		res.status(200).json({
-			success: true,
-			message: `Email sent to ${user.email} successfully`,
-		});
-	} catch (error) {
-		user.resetPasswordToken = undefined;
-		user.resetPasswordExpire = undefined;
+    res.status(200).json({
+      success: true,
+      message: `Email sent to ${user.email} successfully`,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
 
-		await user.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
-		return next(new ErrorHander(error.message, 500));
-	}
+    return next(new ErrorHander(error.message, 500));
+  }
 });
 
 // @desc    Reset password
 // @route   POST /api/users/pass/reset
 // @access  Public
 const resetPassword = catchAsyncErrors(async (req, res, next) => {
-	// creating token hash
-	const resetPasswordToken = crypto
-		.createHash("sha256")
-		.update(req.params.token)
-		.digest("hex");
+  // creating token hash
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
 
-	const user = await User.findOne({
-		resetPasswordToken,
-		resetPasswordExpire: { $gt: Date.now() },
-	});
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
 
-	if (!user) {
-		return next(
-			new ErrorHander("Reset Password Token is invalid or has been expired", 400)
-		);
-	}
+  if (!user) {
+    return next(
+      new ErrorHander(
+        "Reset Password Token is invalid or has been expired",
+        400
+      )
+    );
+  }
 
-	if (req.body.password !== req.body.confirmPassword) {
-		return next(new ErrorHander("Password does not password", 400));
-	}
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHander("Password does not password", 400));
+  }
 
-	user.password = req.body.password;
-	user.resetPasswordToken = undefined;
-	user.resetPasswordExpire = undefined;
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
 
-	await user.save();
+  await user.save();
 
-	sendToken(user, 200, res);
+  sendToken(user, 200, res);
 });
 
 // @desc    Updating Password
 // @route   POST /api/users/pass/:id
 // @access  Private
 const updatePass = catchAsyncErrors(async (req, res, next) => {
-	const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id).select("+password");
 
-	const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
+  const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
 
-	if (!isPasswordMatched) {
-		return next(new ErrorHander("Old password is incorrect", 400));
-	}
+  if (!isPasswordMatched) {
+    return next(new ErrorHander("Old password is incorrect", 400));
+  }
 
-	if (req.body.newPassword !== req.body.confirmPassword) {
-		return next(new ErrorHander("Passwords do not match!", 400));
-	}
+  if (req.body.newPassword !== req.body.confirmPassword) {
+    return next(new ErrorHander("Passwords do not match!", 400));
+  }
 
-	user.password = req.body.newPassword;
+  user.password = req.body.newPassword;
 
-	await user.save();
+  await user.save();
 
-	sendToken(user, 200, res);
+  sendToken(user, 200, res);
 });
 
 // @desc    Updating Profile
 // @route   POST /api/users/profile/:id
 // @access  Private
 const updateProfile = catchAsyncErrors(async (req, res, next) => {
-	const { _id: id, name, email } = req.user;
-	const result = { img: null };
-	const newUserData = { name, email };
+  const { _id: id, name, email } = req.user;
+  const result = { img: null };
+  const newUserData = { name, email };
 
-	if (req.file) {
-		result.img = await cloudinary.uploader.upload(req.file.path);
-		const { public_id, secure_url } = result.img;
-		newUserData.avatar = {
-			public_id,
-			url: secure_url,
-		};
-	} else {
-		console.log(req);
-		res.send(req);
-	}
+  if (req.file) {
+    result.img = await cloudinary.uploader.upload(req.file.path);
+    const { public_id, secure_url } = result.img;
+    newUserData.avatar = {
+      public_id,
+      url: secure_url,
+    };
+  } else {
+    console.log(req);
+    res.send(req);
+  }
 
-	if (
-		req.body.name !== undefined &&
-		req.body.name !== name &&
-		req.body.name !== ""
-	) {
-		const newName = req.body.name;
-		newUserData.name = newName;
-	}
-	// else if (!req.body.name) {
-	// 	const newName = req.user.name;
-	// 	newUserData.name = newName;
-	// }
+  if (
+    req.body.name !== undefined &&
+    req.body.name !== name &&
+    req.body.name !== ""
+  ) {
+    const newName = req.body.name;
+    newUserData.name = newName;
+  }
+  // else if (!req.body.name) {
+  // 	const newName = req.user.name;
+  // 	newUserData.name = newName;
+  // }
 
-	if (
-		req.body.email !== undefined &&
-		req.body.email !== email &&
-		req.body.email !== ""
-	) {
-		const newEmail = req.body.email;
-		newUserData.email = newEmail;
-	}
-	// else if (!req.body.email) {
-	// 	const newEmail = req.user.email;
-	// 	newUserData.email = newEmail;
-	// }
+  if (
+    req.body.email !== undefined &&
+    req.body.email !== email &&
+    req.body.email !== ""
+  ) {
+    const newEmail = req.body.email;
+    newUserData.email = newEmail;
+  }
+  // else if (!req.body.email) {
+  // 	const newEmail = req.user.email;
+  // 	newUserData.email = newEmail;
+  // }
 
-	try {
-		const user = await User.findByIdAndUpdate(id, newUserData, {
-			new: true,
-			runValidators: true,
-			useFindAndModify: false,
-		});
+  try {
+    const user = await User.findByIdAndUpdate(id, newUserData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
 
-		sendToken(user, 200, res);
-	} catch (error) {
-		console.log(error);
-		res.send(error);
-	}
+    sendToken(user, 200, res);
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
 });
 
 // @desc    Get a list of all users
 // @route   GET /api/users/
 // @access  Admin
 const getAllUser = catchAsyncErrors(async (req, res, next) => {
-	const users = await User.find();
+  const users = await User.find().select("-password -__v -createdAt");
 
-	res.status(200).json({
-		success: true,
-		users,
-	});
+  res.status(200).json({
+    success: true,
+    users,
+  });
 });
 
 // Get single user (admin)
@@ -296,58 +299,76 @@ const getAllUser = catchAsyncErrors(async (req, res, next) => {
 // @route   POST /api/users/role/:id
 // @access  Admin
 const updateUserRole = catchAsyncErrors(async (req, res, next) => {
-	const newUserData = {
-		name: req.body.name,
-		email: req.body.email,
-		role: req.body.role,
-	};
+  const newUserData = {
+    // name: req.body.name,
+    // email: req.body.email,
+    role: "admin",
+  };
 
-	await User.findByIdAndUpdate(req.params.id, newUserData, {
-		new: true,
-		runValidators: true,
-		useFindAndModify: false,
-	});
+  const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
 
-	res.status(200).json({
-		success: true,
-	});
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
+// const updateUserRole = catchAsyncErrors(async (req, res, next) => {
+//   const newUserData = {
+//     name: req.body.name,
+//     email: req.body.email,
+//     role: req.body.role,
+//   };
+
+//   await User.findByIdAndUpdate(req.params.id, newUserData, {
+//     new: true,
+//     runValidators: true,
+//     useFindAndModify: false,
+//   });
+
+//   res.status(200).json({
+//     success: true,
+//   });
+// });
 
 // @desc    Delete User
 // @route   DELETE /api/users/:id
 // @access  Admin
 const deleteUser = catchAsyncErrors(async (req, res, next) => {
-	const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id);
 
-	if (!user) {
-		return next(
-			new ErrorHander(`User does not exist with Id: ${req.params.id}`, 400)
-		);
-	}
+  if (!user) {
+    return next(
+      new ErrorHander(`User does not exist with Id: ${req.params.id}`, 400)
+    );
+  }
 
-	// const imageId = user.avatar.public_id;
+  // const imageId = user.avatar.public_id;
 
-	// await cloudinary.v2.uploader.destroy(imageId);
+  // await cloudinary.v2.uploader.destroy(imageId);
 
-	await user.remove();
+  await user.remove();
 
-	res.status(200).json({
-		success: true,
-		message: "User Deleted Successfully",
-	});
+  res.status(200).json({
+    success: true,
+    message: "User Deleted Successfully",
+  });
 });
 
 export {
-	createUser,
-	loginUser,
-	updatePass,
-	updateProfile,
-	updateUserRole,
-	forgotPassword,
-	resetPassword,
-	deleteUser,
-	getAllUser,
-	getUserDetail,
+  createUser,
+  loginUser,
+  updatePass,
+  updateProfile,
+  updateUserRole,
+  forgotPassword,
+  resetPassword,
+  deleteUser,
+  getAllUser,
+  getUserDetail,
 };
 
 // TODO:

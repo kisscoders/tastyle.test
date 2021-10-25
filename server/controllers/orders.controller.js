@@ -18,18 +18,57 @@ const getMyOrders = catchAsyncErrors(async (req, res) => {
   });
 });
 
-// @desc    Get current user's addresses
-// @route   GET /api/orders/a/me
-// @access  Private/Admin
-const getMyAddresses = catchAsyncErrors(async (req, res) => {
-  const addresses = await Address.find({ user: req.user._id }).select(
-    "-user -__v"
-  );
+const getMyPendingOrders = catchAsyncErrors(async (req, res) => {
+  const orders = await Order.find({
+    user: req.user._id,
+    orderStatus: "Processing...",
+  })
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
+
   res.status(200).json({
     success: true,
-    addresses,
+    orders,
   });
 });
+
+const getMyHistoryOrders = catchAsyncErrors(async (req, res) => {
+  const orders = await Order.find({
+    user: req.user._id,
+    orderStatus: "Delivered",
+  })
+    .populate("user", "name email")
+    .populate("deliverTo", "contactNo city addLine1")
+    .populate("product", "title price");
+
+  res.status(200).json({
+    success: true,
+    orders,
+  });
+});
+
+const makeDeliveredById = async (req, res) => {
+  try {
+    let order = await Order.findById(req.params.id);
+    if (order.orderStatus === "Delivered") {
+      res.send(`${order._id} is already Delivered`);
+      return;
+    }
+
+    order = await Order.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          orderStatus: "Delivered",
+        },
+      }
+    );
+    res.json(`Order of ID: ${order._id} is Delivered`);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 // @desc    Get all orders
 // @route   GET /api/orders
@@ -63,7 +102,7 @@ const addOrder = catchAsyncErrors(async (req, res, next) => {
     orderType: req.body.orderType,
     deliverTo: req.body.addressId,
     user: req.user._id,
-    orderStatus: req.body.orderStatus,
+    orderStatus: req.body.orderStatus || "Processing...",
   });
 
   const orderDoc = await order.save();
@@ -155,19 +194,34 @@ const viewOrder = catchAsyncErrors(async (req, res) => {
   });
 });
 
-const getAddresses = catchAsyncErrors(async (req, res) => {
-  const addresses = await Address.find().select("-__v");
+//# Addresses Controls
+
+// const getAddresses = catchAsyncErrors(async (req, res) => {
+//   const addresses = await Address.find().select("-__v");
+//   res.status(200).json({
+//     success: true,
+//     addresses,
+//   });
+// });
+
+// @desc    Get current user's addresses
+// @route   GET /api/orders/a/me
+// @access  Private/Admin
+const getMyAddresses = catchAsyncErrors(async (req, res) => {
+  const addresses = await Address.find({ user: req.user._id }).select(
+    "-user -__v"
+  );
   res.status(200).json({
     success: true,
     addresses,
   });
 });
 
-const addAddress = catchAsyncErrors(async (req, res) => {
+const addMyAddress = catchAsyncErrors(async (req, res) => {
   let address = new Address({
     user: req.user._id,
-    displayName: req.body.nickName,
-    addressName: req.body.addName,
+    displayName: req.body.displayName,
+    addressName: req.body.addressName,
     contactNo: req.body.contactNo,
     addLine1: req.body.addLine1,
     addLine2: req.body.addLine2,
@@ -179,8 +233,13 @@ const addAddress = catchAsyncErrors(async (req, res) => {
   res.status(200).json(address);
 });
 
-const updateAddress = async (req, res) => {
-  const address = await Address.findByIdAndUpdate(
+const updateMyAddress = async (req, res) => {
+  let address = await Address.findById(req.params.id);
+  if (address.user !== req.user._id) {
+    return res.status(404).send("The address with the given ID was not found.");
+  }
+
+  address = await Address.findByIdAndUpdate(
     req.params.id,
     {
       user: req.user._id,
@@ -202,7 +261,7 @@ const updateAddress = async (req, res) => {
   res.send(address);
 };
 
-const deleteAddress = async (req, res) => {
+const deleteMyAddress = async (req, res) => {
   const address = await Address.findByIdAndRemove(req.params.id);
 
   if (!address)
@@ -211,7 +270,7 @@ const deleteAddress = async (req, res) => {
   res.send(address);
 };
 
-const viewAddress = async (req, res) => {
+const viewMyAddress = async (req, res) => {
   const address = await Address.findById(req.params.id).select("-__v");
 
   if (!address)
@@ -227,11 +286,14 @@ export {
   updateOrder,
   deleteOrder,
   viewOrder,
-  getAddresses,
-  addAddress,
-  updateAddress,
-  deleteAddress,
-  viewAddress,
+  makeDeliveredById,
+  getMyHistoryOrders,
+  getMyPendingOrders,
+  // getAddresses,
+  addMyAddress,
+  updateMyAddress,
+  deleteMyAddress,
+  viewMyAddress,
   getMyAddresses,
 };
 

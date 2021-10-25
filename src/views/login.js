@@ -64,6 +64,15 @@ import styled from "styled-components";
 
 // import "./login.css";
 
+const LOGINBOX1 = styled(Card)`
+  border-radius: 1rem;
+  box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
+    0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
+    0 7px 70px rgba(90, 97, 105, 0.1);
+  width: 800px;
+  height: 500px;
+`;
+
 const NavLink = styled(Link)`
   text-decoration: none;
   margin: 5px;
@@ -110,7 +119,7 @@ class LoginPage extends Form {
     if (auth.getCurrentUser()) return <Redirect to="/" />;
     return (
       <div>
-        <Card className="login_shadowbox">
+        <LOGINBOX1 className="mx-auto">
           <Row>
             <Col className="C_design">
               <Card className="login_shadowbox1">
@@ -124,7 +133,7 @@ class LoginPage extends Form {
                   </h4>
                 </div>
               </Card>
-            </Col>
+              {/* </Col>
             <Col>
               <form onSubmit={this.handleSubmit} className="mt-4 mx-3 my-3">
                 <h2>Login &#128073;</h2>
@@ -146,8 +155,33 @@ class LoginPage extends Form {
                 </p>
               </form>
             </Col>
+          </Row> */}
+            </Col>
+            <Col>
+              <Col>
+                <form onSubmit={this.handleSubmit} className="mt-4 mx-3 my-3">
+                  <fieldset>
+                    <h2>Login &#128073;</h2>
+                    <br></br>
+
+                    {this.renderInput("username", "Username")}
+
+                    {this.renderInput("password", "Password", "password")}
+                    <div className="text-center">
+                      {this.renderButton("Sign in")}
+                    </div>
+                    <br></br>
+
+                    <p className="text-center">
+                      Create a new account? Create a new account?
+                      <NavLink to="/signup">Sign Up</NavLink>
+                    </p>
+                  </fieldset>
+                </form>
+              </Col>
+            </Col>
           </Row>
-        </Card>
+        </LOGINBOX1>
       </div>
     );
   }
