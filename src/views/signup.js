@@ -4,9 +4,10 @@ import Form from "../components/common/form";
 import authService from "../services/authService";
 import { Row, Col, Card, Image } from "react-bootstrap";
 import styled from "styled-components";
-import { GrHomeProtein } from "../assets";
+import { GrHomeLanding } from "../assets";
 
 import { Link } from "react-router-dom";
+import { GREEN, RED, YELLOW, blue } from "../theme/colors";
 
 const NavLink = styled(Link)`
   text-decoration: none;
@@ -33,53 +34,48 @@ const SIGNUPBOX1 = styled(Card)`
 `;
 
 const COL = styled(Col)`
-  background-color: #ef9a9a;
+  background-color: #ff8a65;
   height: 500px;
   border-radius: 0 1rem 1rem 0;
-
-  /* border-top-right-radius: 0.625rem; */
-  /* border-bottom-right-radius: 0.625rem; */
-  /* width: 800px; */
-  /* padding-top: 30px; */
-  /* padding-left: 20px; */
-  /* padding-right: 20px; */
 `;
 
 const CARD = styled(Card)`
   border: none;
   border-radius: 0.825rem;
-  /* margin-top: 50px; */
   width: 300px;
   height: 400px;
-  /* margin-left: 50px; */
-  /* margin-right: 15px; */
   box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
     0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
     0 7px 70px rgba(90, 97, 105, 0.1);
 `;
+
 const Div = styled.div`
-  /* border: none; */
-  /* border-radius: 0.3rem; */
-  /* margin-left: -0.5px; */
-  /* margin-right: 1px; */
-  /* width: 300px; */
-  /* height: 400px; */
   background-color: #fff3e0;
 `;
+
+const H5 = styled.h5`
+  line-height: 1;
+  margin-left: 12px;
+  padding-top: 50px;
+  text-align: center;
+`;
+
 const H6 = styled.h6`
   line-height: 1;
   margin-left: 12px;
   padding-top: 50px;
   text-align: center;
 `;
+
 const IMAGE = styled(Image)`
   width: 200px;
   height: 150px;
-  margin-top: 20px;
-  margin-left: 50px;
-  border: 3px solid gray;
+  margin-top: 30px;
+  margin-left: 120px;
+  border: 3px solid #fec65e;
   border-radius: 0.625rem;
   box-shadow: 4px 8px #fff59d;
+  background-color: #f54749;
   &:hover {
     color: #fff;
     background-color: #f54749;
@@ -130,30 +126,28 @@ class SignupForm extends Form {
                 {this.renderInput("username", "Username")}
                 {this.renderInput("password", "Password", "password")}
                 {this.renderInput("name", "Name")}
-                {this.renderButton("Register")}
+                <div className="text-center">
+                  {this.renderButton("Register")}
+                </div>
               </form>
-              <NavLink to="/login">Login</NavLink>
+              <p className="text-center">
+                {" "}
+                Already create?
+                <NavLink to="/login">Login</NavLink>
+              </p>
             </Col>
             <COL>
               <CARD className="m-auto mt-5">
+                <H5>
+                  "<GREEN>Quality</GREEN> and <GREEN>healthy </GREEN>🥙 solution
+                  to <RED>Fast food market </RED>."
+                </H5>
                 <H6>
-                  "<span style={{ color: "#00695c" }}>Quality </span>and{" "}
-                  <span style={{ color: "#33691e" }}>healthy 🥙 </span>
-                  solution to{" "}
-                  <span style={{ color: "#ef5350" }}>Fast food market</span>
-                  ."
+                  "To be the most trusted and loved healthy-consumable
+                  manufacturing company 🌽 in Sri Lanka, and of course the most
+                  profitable one.
                 </H6>
-                <H6>
-                  "To be the most{" "}
-                  <span style={{ color: "#01579b" }}>trusted </span> and{" "}
-                  <span style={{ color: "#b71c1c" }}>loved 🌽 </span>{" "}
-                  <span style={{ color: "#f57f17" }}>
-                    healthy-consumable manufacturing company
-                  </span>{" "}
-                  in Sri Lanka, and of course the most
-                  <span style={{ color: "#9c27b0" }}> profitable</span> one.
-                </H6>
-                <IMAGE src={GrHomeProtein} />
+                <IMAGE src={GrHomeLanding} />
               </CARD>
             </COL>
           </Row>

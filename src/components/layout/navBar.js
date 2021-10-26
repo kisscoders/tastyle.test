@@ -4,6 +4,8 @@ import { Navbar, Container, Nav, NavDropdown, Image } from "react-bootstrap";
 import { getCurrentUser } from "../../services/authService";
 import { BRAND } from "../common/text/headings";
 import styled from "styled-components";
+import { GrTastyle } from "../../assets";
+
 const user = getCurrentUser();
 
 const MainNavBar = styled.div`
@@ -97,11 +99,21 @@ const IconLink = styled(Link)`
   }
 `;
 
+const Image1 = styled(Image)`
+  margin: 5px;
+  margin-top: 2px;
+  padding: 6px 10px;
+  image-color: var(--red);
+  width: 30%;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default function NavBar() {
   return (
     <div>
       <BRAND as={Link} to="/">
-        tastyle
+        <Image1 src={GrTastyle} />
       </BRAND>
       <MainNavBar className="d-flex mb-3 align-items-center">
         <div className="">

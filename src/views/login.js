@@ -61,6 +61,7 @@ import { Row, Col, Card, Image } from "react-bootstrap";
 import { GrBrandV3 } from "../assets";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { GREEN, RED, YELLOW } from "../theme/colors";
 
 // import "./login.css";
 
@@ -122,13 +123,16 @@ class LoginPage extends Form {
         <LOGINBOX1 className="mx-auto">
           <Row>
             <Col className="C_design">
-              <Card className="login_shadowbox1">
+              <Card className="login_shadowbox1 mx-auto">
                 <Image className="I_design" src={GrBrandV3} />
                 <div className="D_design">
                   <h4 className="h4_align">
-                    <h4>Very good works are Waitting for you</h4>
                     <h4>
-                      Login Now <span> &#128512;</span>{" "}
+                      Very <RED>good works </RED>are{" "}
+                      <YELLOW>Waitting for you</YELLOW>
+                    </h4>
+                    <h4>
+                      <GREEN>Login Now</GREEN> <span> &#128512;</span>{" "}
                     </h4>
                   </h4>
                 </div>
@@ -173,7 +177,7 @@ class LoginPage extends Form {
                     <br></br>
 
                     <p className="text-center">
-                      Create a new account? Create a new account?
+                      Create a new account?
                       <NavLink to="/signup">Sign Up</NavLink>
                     </p>
                   </fieldset>
