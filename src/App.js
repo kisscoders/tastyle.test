@@ -48,7 +48,7 @@ export default function App() {
         <Route path="/" exact component={Home} />
         <Redirect to="/not-found" />
       </Switch>
-      {/* <Footer /> */}
+      <Footer />
     </Colors>
   );
 }
