@@ -111,6 +111,14 @@ const Image1 = styled(Image)`
 
 export default function NavBar() {
   return (
+    // <>
+    //   <Navbar
+    //     fluid
+    //     // className="bg-info"
+    //     sticky="top"
+    //     fixed="top"
+    //     style={{ display: "block", backgroundColor: "#fce4ec" }}
+    //   >
     <div>
       <BRAND as={Link} to="/">
         <Image1 src={GrTastyle} />
@@ -120,27 +128,6 @@ export default function NavBar() {
           <NavLink to="/list">Our Products</NavLink>
           <NavLink to="/about">Why us?</NavLink>
         </div>
-        {/* <div>
-          {!user && (
-            <div>
-              <NavLink to="/login">Login</NavLink>
-              <NavLink to="/signup">Signup</NavLink>
-            </div>
-          )}
-          {user && (
-            <div className="d-flex align-items-center">
-              <NavLink className="icon" to="/dash">
-                <i className="ri-dashboard-fill"></i>
-              </NavLink>
-              <NavLink className="icon" to="/logout">
-                <i className="ri-logout-box-r-line"></i>
-              </NavLink>
-              <NavLink className="me-2" to="/dash">
-                <Image roundedCircle src={user.avatar.url} width="40" />
-              </NavLink>
-            </div>
-          )}
-        </div> */}
       </MainNavBar>
       <ProfileMark>
         {!user && (
@@ -160,5 +147,7 @@ export default function NavBar() {
         )}
       </ProfileMark>
     </div>
+    //   </Navbar>
+    // </>
   );
 }
