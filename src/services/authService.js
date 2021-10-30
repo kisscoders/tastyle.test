@@ -25,6 +25,7 @@ export async function login(email, password) {
   const { data } = await http.post(loginEndpoint, { email, password });
   const { token: jwt } = data;
   localStorage.setItem(tokenKey, jwt);
+  return data;
 }
 
 export function register(user) {

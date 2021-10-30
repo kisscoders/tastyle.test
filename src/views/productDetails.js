@@ -1,31 +1,182 @@
-// import React, { Component } from "react";
-// import {
-//   Image,
-//   Col,
-//   Row,
-//   ListGroup,
-//   Button,
-//   Carousel,
-//   Tabs,
-//   Tab,
-// } from "react-bootstrap";
-// import { AiFillEdit, AiFillCloseCircle } from "react-icons/ai";
-// import { GrInfo2, GrHomePack1, GrInfo1, GrInfo4 } from "../assets";
-// //import Form from 'react-bootstrap/Form';
-// //import FloatingLabel from 'react-bootstrap/FloatingLabel'
-// import { GREEN, RED } from "../theme/colors";
-// import { ButtonL } from "../components/common/buttons";
+import styled from "styled-components";
+import React, { Component } from "react";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { Image, Col, Row, Container } from "react-bootstrap";
+import { GREEN, RED } from "../theme/colors";
+import { ButtonL } from "../components/common/buttons";
+import { DiDatabase } from "react-icons/di";
+import { FaClipboardList, FaLeaf, FaBullseye } from "react-icons/fa";
+import { getCurrentUser } from "../services/authService";
+import { img_merch2_1, img_merch3_1, img_merch5_1 } from "../assets";
+import { getProduct } from "../services/productService";
+import IncrementCount from "../components/common/incrementCounter";
 
-// // import "./Productinfo.css";
-// import styled from "styled-components";
-// import { getCurrentUser } from "../services/authService";
+const H1 = styled.h1`
+  font-weight: 700;
+  font-size: 48px;
+  margin: 20px 0px;
+`;
 
-// export const H1 = styled.h1`
-//   font-weight: 450;
-//   font-size: 48px;
-//   margin: 20px 0px;
-// `;
+const INFOBACKBOX1 = styled(Container)`
+  background-color: #fff4f3;
+  border-radius: 15px;
+  box-shadow: 8px 8px #ef9a9a;
+  transition: all 0.4s ease-in-out 0s;
+  padding: 30px 20px;
+  margin: 10px auto 40px auto;
+  &:hover {
+    box-shadow: 12px 12px #ef9a9a, 0 2px 0 rgba(90, 97, 105, 0.11),
+      0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
+      0 7px 70px rgba(90, 97, 105, 0.1);
+  }
+`;
+
+const Crop = styled.div`
+  width: 200px;
+  height: 150px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border-radius: 30px;
+  object-fit: fill;
+`;
+
+export default class ProductDetails extends Component {
+  state = {
+    data: {
+      title: "",
+      price: "",
+      category: "",
+      description: "",
+      img: "",
+    },
+    count: 1,
+    errors: {},
+  };
+
+  componentDidMount() {
+    this.populateProductDetails();
+  }
+
+  mapToViewModel(product) {
+    return {
+      _id: product._id,
+      title: product.title,
+      category: product.category,
+      price: product.price,
+      description: product.description,
+      img: product.img,
+    };
+  }
+
+  async populateProductDetails() {
+    try {
+      const productId = this.props.match.params.id;
+      // if (productId === "new") return;
+      const { data: product } = await getProduct(productId);
+      this.setState({
+        data: this.mapToViewModel(product),
+      });
+    } catch (error) {
+      if (error.response && error.response.status === 404)
+        this.props.history.replace("/not-found");
+      toast.error("Oops Something went wrong in ProductDetails");
+    }
+  }
+  render() {
+    const productId = this.props.match.params.id;
+    const user = getCurrentUser();
+    const { title, price, category, description, img } = this.state.data;
+    return (
+      <INFOBACKBOX1>
+        <Row className="mx-5">
+          <Col lg={5}>
+            <H1>{title}</H1>
+            <span>&#11088; &#11088; &#11088; &#11088; &#11088;</span>
+            <h4>Rs. {price}</h4>
+            <br />
+            <p style={{ align: "justify" }}>
+              {description}
+              Tastyle Complete Protein is a nutritionally complete, plant-based,
+              high-protein snack that contains more essential amino acids (EAAs)
+              per gram than whey protein. It's made from sustainably sourced,
+              high-quality animal-free ingredients such as hemp, fun, and pea
+              protein, and is naturally gluten-free.
+            </p>
+            <Row>
+              <Col>
+                <br />
+                <h5>
+                  <RED>
+                    <DiDatabase />
+                  </RED>
+                  <GREEN> Affordable </GREEN>
+                </h5>
+                <br />
+                <h5>
+                  <RED>
+                    <FaClipboardList />
+                  </RED>
+                  <GREEN> Complete </GREEN>
+                </h5>
+              </Col>
+              <Col>
+                <br />
+                <h5>
+                  <RED>
+                    <FaLeaf />
+                  </RED>
+                  <GREEN> Plant-based </GREEN>
+                </h5>
+                <br />
+                <h5>
+                  <RED>
+                    <FaBullseye />
+                  </RED>
+                  <GREEN> Convenient </GREEN>
+                </h5>
+              </Col>
+            </Row>
+            {user && (
+              <div>
+                <IncrementCount />
+                <ButtonL as={Link} to={`/orders/${productId}`} flex>
+                  Order Now
+                </ButtonL>
+              </div>
+            )}
+            {!user && (
+              <ButtonL as={Link} to="/login" flex>
+                Join & Order Now
+              </ButtonL>
+            )}
+          </Col>
+          <Col lg={5} className="m-auto">
+            <Image fluid width="500" height="auto" src={img} />
+          </Col>
+          <Col lg={2} className="my-auto me-0">
+            <Row className="mx-auto">
+              <Crop className="mx-auto">
+                <Image fluid className="my-2 d-block" src={img_merch2_1} />
+              </Crop>
+            </Row>
+            <Row className="mx-auto">
+              <Crop className="mx-auto">
+                <Image fluid className="my-2 d-block" src={img_merch3_1} />
+              </Crop>
+            </Row>
+            <Row className="mx-auto">
+              <Crop className="mx-auto">
+                <Image fluid className="my-2 d-block" src={img_merch5_1} />
+              </Crop>
+            </Row>
+          </Col>
+        </Row>
+      </INFOBACKBOX1>
+    );
+  }
+}
 
 // export default class ProductDetails extends Component {
 //   render() {
@@ -263,138 +414,3 @@ import { Link } from "react-router-dom";
 //     );
 //   }
 // }
-
-import React, { Component } from "react";
-import { Image, Col, Row, Container } from "react-bootstrap";
-
-import { GrInfo1, GrInfo4, GrInfo5 } from "../assets";
-//import Form from 'react-bootstrap/Form';
-//import FloatingLabel from 'react-bootstrap/FloatingLabel'
-import { GREEN, RED } from "../theme/colors";
-import { ButtonL } from "../components/common/buttons";
-import { DiDatabase } from "react-icons/di";
-import { FaClipboardList, FaLeaf, FaBullseye } from "react-icons/fa";
-import styled from "styled-components";
-import { getCurrentUser } from "../services/authService";
-
-const H1 = styled.h1`
-  font-weight: 450;
-  font-size: 48px;
-  margin: 20px 0px;
-`;
-
-const INFOBACKBOX1 = styled(Container)`
-  background-color: #fff4f3;
-  border-radius: 6px;
-  box-shadow: 8px 12px #ef9a9a;
-  transition: all 0.2s ease-in-out 0s;
-  padding: 30px 20px;
-  &:hover {
-    box-shadow: 12px 16px #ef9a9a;
-  }
-`;
-
-const Crop = styled.div`
-  /* border: 4px solid white; */
-  width: 200px;
-  height: 150px;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  border-radius: 30px;
-  object-fit: fill;
-`;
-
-export default class ProductDetails extends Component {
-  render() {
-    const user = getCurrentUser();
-    return (
-      <INFOBACKBOX1>
-        <Row className="mx-5">
-          <Col lg={5}>
-            <H1>
-              <RED>Tastyle</RED>
-              <GREEN>Brew V1</GREEN>
-            </H1>
-            <h4>
-              <span>&#11088; &#11088; &#11088; &#11088; &#11088;</span> $
-              1200.00
-            </h4>
-            <br />
-            <p style={{ align: "justify" }}>
-              Tastyle Complete Protein is a nutritionally complete, plant-based,
-              high-protein snack that contains more essential amino acids (EAAs)
-              per gram than whey protein. It's made from sustainably sourced,
-              high-quality animal-free ingredients such as hemp, faba, and pea
-              protein, and is naturally gluten-free.
-            </p>
-            <Row>
-              <Col>
-                <br />
-                <h5>
-                  <RED>
-                    <DiDatabase />
-                  </RED>
-                  <GREEN> Affordable</GREEN>
-                </h5>
-                <br />
-                <h5>
-                  <RED>
-                    <FaClipboardList />
-                  </RED>
-                  <GREEN> Complete </GREEN>
-                </h5>
-              </Col>
-              <Col>
-                <br />
-                <h5>
-                  <RED>
-                    <FaLeaf />
-                  </RED>
-                  <GREEN> Plant-based </GREEN>
-                </h5>
-                <br />
-                <h5>
-                  <RED>
-                    <FaBullseye />
-                  </RED>
-                  <GREEN> Convenient </GREEN>
-                </h5>
-              </Col>
-            </Row>
-            {user && (
-              <ButtonL as={Link} to="/orders/new" flex>
-                Order Now
-              </ButtonL>
-            )}
-            {!user && (
-              <ButtonL as={Link} to="/login" flex>
-                Join & Order Now
-              </ButtonL>
-            )}
-          </Col>
-          <Col lg={5} className="m-auto">
-            <Image fluid width="500" height="auto" src={GrInfo4} />
-          </Col>
-          <Col lg={2} className="my-auto me-0">
-            <Row className="mx-auto">
-              <Crop className="mx-auto">
-                <Image fluid className="my-2 d-block" src={GrInfo1} />
-              </Crop>
-            </Row>
-            <Row className="mx-auto">
-              <Crop className="mx-auto">
-                <Image fluid className="my-2 d-block" src={GrInfo1} />
-              </Crop>
-            </Row>
-            <Row className="mx-auto">
-              <Crop className="mx-auto">
-                <Image fluid className="my-2 d-block" src={GrInfo1} />
-              </Crop>
-            </Row>
-          </Col>
-        </Row>
-      </INFOBACKBOX1>
-    );
-  }
-}

@@ -6,6 +6,7 @@ const ColorScheme = styled.div`
   --blue: #007bff;
   --red: #f54749;
   --yellow: #fec65e;
+  --green: #4caf50;
 `;
 
 export const RED = styled.span`

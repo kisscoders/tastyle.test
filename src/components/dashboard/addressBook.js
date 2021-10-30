@@ -8,12 +8,11 @@ import {
 } from "../../services/orderService";
 import { paginate } from "../../utils/paginate";
 
-import { TextInput } from "../common/inputs";
-import { Button } from "../common/buttons";
-import { Card1, CardBody1, CardHeader1 } from "../common/cards";
+import { Card1, CardBody1, CardHeader1, CardTitle1 } from "../common/cards";
 import AddressCard from "../common/addressCard";
 import { Toast } from "bootstrap";
 import AddressForm from "../common/addressForm";
+import { Col, Row } from "react-bootstrap";
 
 const AddressBook = () => {
   const [addresses, setAddresses] = useState([]);
@@ -50,10 +49,6 @@ const AddressBook = () => {
 
   useEffect(() => {
     getData();
-    toast("addressbook useEffect executed!");
-    // addresses.filter((o) => {
-    //   console.log(o);
-    // });
   }, []);
 
   const getData = async () => {
@@ -124,15 +119,8 @@ const AddressBook = () => {
     console.log(data);
     await saveAddress(data);
     toast("Updated");
+    window.location.reload();
   };
-
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
-
-  // const handleSort = (sortColumn) => {
-  //   setSortColumn(sortColumn);
-  // };
 
   const getPagedData = () => {
     const all = addresses;
@@ -188,31 +176,21 @@ const AddressBook = () => {
 
   const { displayData } = getPagedData();
   return (
-    <div className="row">
-      {AddressForm(data, handleSubmit, handleChange, errors)}
-      {/* <div className="col col-6">
-        <Card1>
-          <CardHeader1 as="h5">Add/Update Address</CardHeader1>
-          <CardBody1>
-            <form onSubmit={handleSubmit}>
-              {renderInput("nickName", "What do we call you?")}
-              {renderInput("contactNo", "Contact Number")}
-              {renderInput("addLine1", "Address Line 1")}
-              {renderInput("addLine2", "Address Line 2")}
-              {renderInput("city", "City")}
-              {renderInput("zipcode", "Zip Code")}
-              {renderInput("landmarks", "Landmarks")}
-              {renderButton("Save")}
-            </form>
-          </CardBody1>
-        </Card1>
-      </div> */}
-      <div className="col col-6">
+    <Row>
+      <Col>
+        {/* <Card1> */}
+        <h3>Add/Update Address</h3>
+        {/* <CardBody1> */}
+        <div>{AddressForm(data, handleSubmit, handleChange, errors)}</div>
+        {/* </CardBody1> */}
+        {/* </Card1> */}
+      </Col>
+      <Col>
         {totalCount === 0 ? (
           <Card1>
-            <CardHeader1 as="h6">
-              You haven't added any addresses, you're pretty anonymous!
-            </CardHeader1>
+            <h3>
+              You haven't added any addresses 🤷🏽‍♂️, you're pretty anonymous! 👽
+            </h3>
           </Card1>
         ) : (
           <div>
@@ -220,12 +198,11 @@ const AddressBook = () => {
               data={displayData}
               onDelete={handleDelete}
               onEdit={handleEdit}
-              // clicked={handleClicked}
             />
           </div>
         )}
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 

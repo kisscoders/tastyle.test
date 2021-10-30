@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
+import authService, {
   getAllUsers,
   deleteUser,
   roleChange,
@@ -74,8 +74,10 @@ class UsersDash extends Component {
     this.populateUsers();
   }
   populateUsers = async () => {
-    const users = await getAllUsers();
-    // console.log(users);
+    const user = authService.getCurrentUser();
+    const allUsers = await getAllUsers();
+    const users = allUsers.filter((m) => m._id !== user._id);
+    console.log(users);
     this.setState({ users });
   };
 

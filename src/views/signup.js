@@ -1,11 +1,8 @@
 import React from "react";
-import Joi from "joi-browser"; // a pretty sweet library for doing validation stuff in forms
+import styled from "styled-components";
+import Joi from "joi-browser";
 import Form from "../components/common/form";
 import authService from "../services/authService";
-import { Row, Col, Card, Image } from "react-bootstrap";
-import styled from "styled-components";
-import { GrHomeProtein } from "../assets";
-
 import { Link } from "react-router-dom";
 
 const NavLink = styled(Link)`
@@ -23,72 +20,37 @@ const NavLink = styled(Link)`
   }
 `;
 
-const SIGNUPBOX1 = styled(Card)`
-  border-radius: 1rem;
-  box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
-    0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
-    0 7px 70px rgba(90, 97, 105, 0.1);
-  width: 800px;
-  height: 500px;
-`;
-
-const COL = styled(Col)`
-  background-color: #ef9a9a;
-  height: 500px;
-  border-radius: 0 1rem 1rem 0;
-
-  /* border-top-right-radius: 0.625rem; */
-  /* border-bottom-right-radius: 0.625rem; */
-  /* width: 800px; */
-  /* padding-top: 30px; */
-  /* padding-left: 20px; */
-  /* padding-right: 20px; */
-`;
-
-const CARD = styled(Card)`
-  border: none;
-  border-radius: 0.825rem;
-  /* margin-top: 50px; */
-  width: 300px;
-  height: 400px;
-  /* margin-left: 50px; */
-  /* margin-right: 15px; */
-  box-shadow: 0 2px 0 rgba(138, 182, 231, 0.11),
-    0 4px 8px rgba(90, 97, 105, 0.12), 0 10px 10px rgba(90, 97, 105, 0.06),
-    0 7px 70px rgba(90, 97, 105, 0.1);
-`;
 const Div = styled.div`
-  /* border: none; */
-  /* border-radius: 0.3rem; */
-  /* margin-left: -0.5px; */
-  /* margin-right: 1px; */
-  /* width: 300px; */
-  /* height: 400px; */
-  background-color: #fff3e0;
-`;
-const H6 = styled.h6`
-  line-height: 1;
-  margin-left: 12px;
-  padding-top: 50px;
-  text-align: center;
-`;
-const IMAGE = styled(Image)`
-  width: 200px;
-  height: 150px;
-  margin-top: 20px;
-  margin-left: 50px;
-  border: 3px solid gray;
-  border-radius: 0.625rem;
-  box-shadow: 4px 8px #fff59d;
-  &:hover {
-    color: #fff;
-    background-color: #f54749;
-    border-color: #fec65e;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05),
-      0 4px 10px rgba(0, 123, 255, 0.25);
-  }
+  background: #ed4264;
+  background: -webkit-linear-gradient(to right, #ffedbc, #ed4264);
+  background: linear-gradient(to right, #ffedbc, #ed4264);
+  min-width: 100%;
+  min-width: 100vw;
+  min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flow-root;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
 `;
 
+const RegisterBox1 = styled.div`
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  min-width: 30%;
+  min-width: 30vw;
+  background: #ffff;
+  text-align: center;
+  padding: 30px;
+  margin: auto;
+`;
+
+export const H3 = styled.h3`
+  font-weight: 700;
+  font-size: 36px;
+  margin: auto auto 30px auto;
+`;
 class SignupForm extends Form {
   state = {
     data: {
@@ -121,44 +83,22 @@ class SignupForm extends Form {
 
   render() {
     return (
-      <div>
-        <SIGNUPBOX1 className="mx-auto">
-          <Row className="p-0 m-0">
-            <Col sm={6} className="m-0">
-              <h3 className="text-center mt-4">Registration info &#128077;</h3>
-              <form onSubmit={this.handleSubmit} className="mt-4 mx-3 my-3">
-                {this.renderInput("username", "Username")}
-                {this.renderInput("password", "Password", "password")}
-                {this.renderInput("name", "Name")}
-                {this.renderButton("Register")}
-              </form>
-              <NavLink to="/login">Login</NavLink>
-            </Col>
-            <COL>
-              <CARD className="m-auto mt-5">
-                <H6>
-                  "<span style={{ color: "#00695c" }}>Quality </span>and{" "}
-                  <span style={{ color: "#33691e" }}>healthy 🥙 </span>
-                  solution to{" "}
-                  <span style={{ color: "#ef5350" }}>Fast food market</span>
-                  ."
-                </H6>
-                <H6>
-                  "To be the most{" "}
-                  <span style={{ color: "#01579b" }}>trusted </span> and{" "}
-                  <span style={{ color: "#b71c1c" }}>loved 🌽 </span>{" "}
-                  <span style={{ color: "#f57f17" }}>
-                    healthy-consumable manufacturing company
-                  </span>{" "}
-                  in Sri Lanka, and of course the most
-                  <span style={{ color: "#9c27b0" }}> profitable</span> one.
-                </H6>
-                <IMAGE src={GrHomeProtein} />
-              </CARD>
-            </COL>
-          </Row>
-        </SIGNUPBOX1>
-      </div>
+      <Div className="d-flex align-items-center">
+        <RegisterBox1>
+          <H3>
+            Hi there! 👋🏽 <br /> Are you excited? 🥳
+          </H3>
+          <form onSubmit={this.handleSubmit}>
+            {this.renderInput("name", "Name")}
+            {this.renderInput("username", "E-mail")}
+            {this.renderInput("password", "Password", "password")}
+            <div className="my-3">{this.renderButton("Register")}</div>
+            <p className="">Already joined the family?</p>
+            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/home">Home</NavLink>
+          </form>
+        </RegisterBox1>
+      </Div>
     );
   }
 }

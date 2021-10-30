@@ -20,8 +20,8 @@ class OrderForm extends Form {
       // product: "",
       productId: "",
       // user: "",
-      quantityVar: "",
-      priceSum: "",
+      quantityVar: "2cl",
+      priceSum: "4500",
       orderType: "",
       // deliverTo: "",
       addressId: "",
@@ -31,6 +31,7 @@ class OrderForm extends Form {
     addresses: [],
     products: [],
     errors: {},
+    quantity: 2,
   };
 
   schema = {
@@ -98,16 +99,16 @@ class OrderForm extends Form {
   mapToViewModel(order) {
     const user = authService.getCurrentUser();
     return {
-      // _id: order._id,
-      // productId: order.product._id,
-      // product: order.product.title,
-      // user: user.name,
-      // quantityVar: order.quantityVar,
-      // price: order.priceSum,
-      // orderType: order.orderType,
-      // deliverTo: order.deliverTo.contactNo,
-      // addressId: order.deliverTo._id,
-      // orderStatus: order.orderStatus,
+      _id: order._id,
+      productId: order.product._id,
+      product: order.product.title,
+      user: user.name,
+      quantityVar: order.quantityVar,
+      price: order.priceSum,
+      orderType: order.orderType,
+      deliverTo: order.deliverTo.contactNo,
+      addressId: order.deliverTo._id,
+      orderStatus: order.orderStatus,
     };
   }
 
@@ -154,9 +155,8 @@ class OrderForm extends Form {
                 this.state.products,
                 "title"
               )}
-              {this.renderInput("quantityVar", "Quantity")}
-              {this.renderPriceSum()}
-              {this.renderInput("priceSum", "Price")}
+              <h4>Total Amount : {this.state.data.priceSum}</h4>
+              <h4>Quantity : {this.state.quantity}</h4>
               {this.renderSelectMod(
                 "addressId",
                 "Address",

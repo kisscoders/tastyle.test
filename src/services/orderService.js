@@ -14,55 +14,20 @@ function addressUrl(id) {
   return `${addApiEndpoint}/${id}`;
 }
 
-export async function getOrders() {
-  const {
-    data: { orders },
-  } = await http.get(apiEndpoint);
-  return orders;
-}
+//# Orders
 
-export async function getMyPendingOrders() {
-  const {
-    data: { orders },
-  } = await http.get(apiEndpoint + "/pending");
-  return orders;
-}
-
-export async function getMyHistoryOrders() {
-  const {
-    data: { orders },
-  } = await http.get(apiEndpoint + "/history");
-  return orders;
-}
-
-export function makeOrderDelivered(orderId) {
-  return http.get(orderStatusUrl(orderId));
-}
-
-export async function getMyOrders() {
-  const {
-    data: { orders },
-  } = await http.get(apiEndpoint + "/me");
-  return orders;
-}
-
-export async function getMyAddresses() {
-  const {
-    data: { addresses },
-  } = await http.get(addApiEndpoint + "/me");
-  return addresses;
-}
 export async function getOrder(orderId) {
   const {
     data: { order },
   } = await http.get(orderUrl(orderId));
   return order;
 }
-export async function getAddress(Id) {
+
+export async function getOrders() {
   const {
-    data: { address },
-  } = await http.get(addressUrl(Id));
-  return address;
+    data: { orders },
+  } = await http.get(apiEndpoint);
+  return orders;
 }
 
 export async function addOrUpdateOrder(order) {
@@ -76,6 +41,47 @@ export async function addOrUpdateOrder(order) {
   return http.post(apiEndpoint, order);
 }
 
+export async function getMyOrders(variant) {
+  if (variant === "pending") {
+    const {
+      data: { orders },
+    } = await http.get(apiEndpoint + "/pending");
+    return orders;
+  }
+  if (variant === "history") {
+    const {
+      data: { orders },
+    } = await http.get(apiEndpoint + "/history");
+    return orders;
+  }
+  const {
+    data: { orders },
+  } = await http.get(apiEndpoint + "/me");
+  return orders;
+}
+
+export function deleteOrder(orderId) {
+  return http.delete(orderUrl(orderId));
+}
+
+export function makeOrderDelivered(orderId) {
+  return http.get(orderStatusUrl(orderId));
+}
+
+export async function getMyAddresses() {
+  const {
+    data: { addresses },
+  } = await http.get(addApiEndpoint + "/me");
+  return addresses;
+}
+
+export async function getAddress(Id) {
+  const {
+    data: { address },
+  } = await http.get(addressUrl(Id));
+  return address;
+}
+
 export function saveAddress(address) {
   if (address._id) {
     const body = { ...address };
@@ -84,10 +90,6 @@ export function saveAddress(address) {
   }
 
   return http.post(addApiEndpoint, address);
-}
-
-export function deleteOrder(orderId) {
-  return http.delete(orderUrl(orderId));
 }
 
 export function deleteAddress(addId) {

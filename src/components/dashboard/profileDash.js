@@ -5,9 +5,15 @@ import authService from "../../services/authService";
 import { Input } from "../common/inputs";
 import { Button } from "../common/buttons";
 import { Card1, CardBody1, CardHeader1 } from "../common/cards";
-import { Col, Row } from "react-bootstrap";
+import { Col, Row, Image } from "react-bootstrap";
 import FileInput from "../common/inputs/fileInput";
+import styled from "styled-components";
 
+const AvatarImg = styled(Image)`
+  border: solid 7px var(--yellow);
+  border-radius: 50%;
+  margin-top: 20px;
+`;
 class ProfileDash extends Component {
   state = {
     avatarFile: null,
@@ -69,11 +75,7 @@ class ProfileDash extends Component {
   handleUpload = async (e) => {
     e.preventDefault();
     await this.doUpload();
-    const data = authService.getCurrentUser();
-    this.setState({ avatarFile: null });
-    console.log(data);
-    this.setState({ data });
-    await this.populateFields();
+    window.location.reload();
   };
 
   doUpload = async () => {
@@ -190,15 +192,11 @@ class ProfileDash extends Component {
         <Col sm={5}>
           <Card1 className="m-0">
             <div className="my-3 mx-auto">
-              <img
-                className="rounded-circle mt-3 border border-4 border-primary"
-                src={data.avatarurl}
-                alt="profile"
-                width="140"
-              />
+              <AvatarImg src={data.avatarurl} alt="profile" width={140} />
             </div>
             <CardBody1 className="mx-auto text-center">
               <h3>{data.name}</h3>
+              <p>{data.email}</p>
               {FileInput(doc.text, this.handleFileStats)}
               <Button onClick={this.handleUpload} className={doc.style1}>
                 Upload

@@ -3,11 +3,12 @@ import _ from "lodash";
 import styled from "styled-components";
 import { getProducts } from "../services/productService";
 import { Card, Row, Col, Container, Image } from "react-bootstrap";
-import { GrHomePack3, GrHomeLanding } from "../assets";
+import { img_landing_1, img_merch1_1, img_merch2_1 } from "../assets";
 import { Link } from "react-router-dom";
 import { ButtonL } from "../components/common/buttons";
 import { GREEN, RED } from "../theme/colors";
 import { TAG2 } from "../components/common/text/headings";
+import { getCurrentUser } from "../services/authService";
 
 const H1 = styled.h1`
   font-weight: 600;
@@ -67,7 +68,6 @@ const PROBOX1 = styled(Card)`
 `;
 
 const BOXIMAGE2 = styled(Image)`
-  /* width: 250px; */
   padding: none;
   margin: 2px;
   border-radius: 40px;
@@ -114,9 +114,10 @@ class ProductsGrid extends Component {
 
   render() {
     const { products } = this.state;
+    const user = getCurrentUser();
 
     return (
-      <Container className="mt-5">
+      <Container className="my-5">
         <div style={{ width: "100%", height: "500px", align: "center" }}>
           <Row>
             <Col xs={7}>
@@ -137,7 +138,7 @@ class ProductsGrid extends Component {
               </BOX1>
             </Col>
             <Col xs={5}>
-              <BOXIMAGE1 fluid src={GrHomeLanding} />
+              <BOXIMAGE1 fluid src={img_landing_1} />
             </Col>
           </Row>
         </div>
@@ -157,7 +158,7 @@ class ProductsGrid extends Component {
                     </Para>
                   </Col>
                   <Col xs={6} className="m-0 p-0">
-                    <BOXIMAGE2 fluid src={GrHomePack3}></BOXIMAGE2>
+                    <BOXIMAGE2 fluid src={img_merch1_1}></BOXIMAGE2>
                   </Col>
                   <ButtonL className="m-auto mt-2 text-dark border-dark">
                     More Info
@@ -179,7 +180,7 @@ class ProductsGrid extends Component {
                     </Para>
                   </Col>
                   <Col xs={6} className="m-0 p-0">
-                    <BOXIMAGE2 fluid src={GrHomePack3}></BOXIMAGE2>
+                    <BOXIMAGE2 fluid src={img_merch2_1}></BOXIMAGE2>
                   </Col>
                   <ButtonL className="m-auto mt-2 text-dark border-dark">
                     More Info
@@ -196,21 +197,22 @@ class ProductsGrid extends Component {
             <GREEN>Now... </GREEN>
           </H1>
         </div>
-        <Row md={"auto"} className="g-4">
+        <Row md={"auto"} className="g-4 mx-auto">
           {products.map((item) => (
             <Col>
               <PROBOX1 key={item._id}>
                 <H3 className="text-center mb-4">{item.title}</H3>
                 <Card.Img
+                  fluid
+                  className="mx-auto"
                   variant="top"
                   alt={"product" + item.title}
                   src={item.img}
                   style={{
-                    width: "19rem",
+                    // width: "19rem",
                     height: "15rem",
-                    display: "block",
-                    marginLeft: "auto",
-                    marginRight: "auto",
+                    overflow: "hidden",
+                    // display: "block",
                     borderRadius: "12px",
                   }}
                 />
@@ -218,17 +220,22 @@ class ProductsGrid extends Component {
                   <Card.Text className="my-4">
                     <TAG2 className="">{"Rs. " + item.price}</TAG2>
                   </Card.Text>
-                  {/* <Card.Text>{item.description}</Card.Text> */}
-                  {/* <Card.Text>Buy Now</Card.Text> */}
-                  {/* <Link to={`/productdetails/${item._id}`}>Buy Now</Link> */}
-                  <ButtonL>
-                    <Link
-                      to={`/productdetails/${item._id}`}
-                      className="prolink"
-                    >
+                  {user && (
+                    <div>
+                      <ButtonL
+                        as={Link}
+                        className="prolink"
+                        to={`/productdetails/${item._id}`}
+                      >
+                        Buy Now
+                      </ButtonL>
+                    </div>
+                  )}
+                  {!user && (
+                    <ButtonL as={Link} className="prolink" to={`/signup`}>
                       Buy Now
-                    </Link>
-                  </ButtonL>
+                    </ButtonL>
+                  )}
                 </Card.Body>
               </PROBOX1>
             </Col>
@@ -240,34 +247,3 @@ class ProductsGrid extends Component {
 }
 
 export default ProductsGrid;
-
-// </div>
-//         </div>
-// 			<tbody>
-// 				{data.map((item) => (
-// 					<tr key={item._id}>
-// 						{columns.map((column) => (
-// 							<td key={this.createKey(item, column)}>
-// 								{this.renderCell(item, column)}
-// 							</td>
-// 						))}
-// 					</tr>
-// 				))}
-// 			</tbody>
-// <Row xs={1} md={2} className="g-4">
-
-// 	{Array.from({ length: 4 }).map((_, idx) => (
-// 		<Col>
-// 			<Card>
-// 				<Card.Img variant="top" src="holder.js/100px160" />
-// 				<Card.Body>
-// 					<Card.Title>Card title</Card.Title>
-// 					<Card.Text>
-// 						This is a longer card with supporting text below as a natural lead-in
-// 						to additional content. This content is a little bit longer.
-// 					</Card.Text>
-// 				</Card.Body>
-// 			</Card>
-// 		</Col>
-// 	))}
-// </Row>

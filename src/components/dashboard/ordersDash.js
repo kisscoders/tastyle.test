@@ -24,12 +24,14 @@ class OrdersDash extends Component {
     searchQuery: "",
     selectedGenre: null,
     sortColumn: { path: "title", order: "asc" },
+    totalCount: 0,
   };
 
   async componentDidMount() {
     // const { data } = await getGenres();
     // const genres = [{ _id: "", name: "All Genres" }, ...data];
     const orders = await getOrders();
+    this.setState({ totalCount: orders.length });
     this.setState({ orders });
     // console.log(orders);
   }
@@ -49,7 +51,7 @@ class OrdersDash extends Component {
   };
 
   handleDeliver = async (order) => {
-    const originalOrders = this.state.orders;
+    // const originalOrders = this.state.orders;
     // const orders = originalOrders.filter((m) => m._id !== order._id);
     // this.setState({ orders });
     try {
@@ -120,18 +122,16 @@ class OrdersDash extends Component {
     const orders = paginate(sorted, currentPage, pageSize);
 
     return {
-      totalCount: filtered.length,
       data: orders,
     };
   };
 
   render() {
     // const user = getCurrentUser();
-    const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+    const { pageSize, currentPage, sortColumn, searchQuery, totalCount } =
+      this.state;
 
-    // if (orderCount === 0) return <p>There are no orders in the database.</p>;
-
-    const { totalCount, data: orders } = this.getPagedData();
+    const { data: orders } = this.getPagedData();
 
     return (
       // {/* <div className="">
@@ -152,7 +152,6 @@ class OrdersDash extends Component {
             <OrdersTable
               orders={orders}
               sortColumn={sortColumn}
-              // onLike={this.handleLike}
               onDelete={this.handleDelete}
               onSort={this.handleSort}
               onDeliver={this.handleDeliver}

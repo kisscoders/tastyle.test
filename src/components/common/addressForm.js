@@ -33,24 +33,17 @@ const AddressForm = (data, handleSubmit, handleChange, errors) => {
   // };
 
   return (
-    <div className="col col-6">
-      <Card1>
-        <CardHeader1 as="h5">Add/Update Address</CardHeader1>
-        <CardBody1>
-          <form onSubmit={handleSubmit}>
-            {renderInput("displayName", "What do we call you?")}
-            {renderInput("addressName", "Address Name")}
-            {renderInput("contactNo", "Contact Number")}
-            {renderInput("addLine1", "Address Line 1")}
-            {renderInput("addLine2", "Address Line 2")}
-            {renderInput("city", "City")}
-            {renderInput("zipcode", "Zip Code")}
-            {renderInput("landmarks", "Landmarks")}
-            {renderButton("Save")}
-          </form>
-        </CardBody1>
-      </Card1>
-    </div>
+    <form onSubmit={handleSubmit}>
+      {renderInput("displayName", "What do we call you?")}
+      {renderInput("addressName", "Address Name")}
+      {renderInput("contactNo", "Contact Number")}
+      {renderInput("addLine1", "Address Line 1")}
+      {renderInput("addLine2", "Address Line 2")}
+      {renderInput("city", "City")}
+      {renderInput("zipcode", "Zip Code")}
+      {renderInput("landmarks", "Landmarks")}
+      {renderButton("Save")}
+    </form>
   );
 };
 

@@ -26,6 +26,7 @@ class ProductsDash extends Component {
   async componentDidMount() {
     const { data: products } = await getAllProducts();
     this.setState({ products });
+    console.log(products);
   }
 
   handleDelete = async (product) => {
@@ -49,6 +50,7 @@ class ProductsDash extends Component {
     try {
       await makeProductListed(product._id);
       const { data: products } = await getAllProducts();
+
       this.setState({ products });
     } catch (error) {
       if (error.response && error.response.status === 404) {

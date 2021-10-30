@@ -10,7 +10,7 @@ class OrdersTable extends Component {
       path: "product.title",
       label: "Product",
       content: (order) => (
-        <Link to={`/orders/${order._id}`}>
+        <Link className="text-link" to={`/orders/${order._id}`}>
           {order.product && order.product.title}
         </Link>
       ),
