@@ -6,7 +6,7 @@ import Joi from "joi-browser"; // a pretty sweet library for doing validation st
 // import auth from "../../services/authService";
 import { Redirect } from "react-router-dom";
 import { Row, Col, Card, Image, Container } from "react-bootstrap";
-import { GrBrandV3 } from "../assets";
+import { GrBrandV3, GrBubbles, GrTastyle } from "../assets";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GREEN, RED, YELLOW } from "../theme/colors";
@@ -17,6 +17,24 @@ const Div = styled.div`
   top: 35%;
   left: 40%;
   margin: -25px 0 0 -25px;
+`;
+const Image1 = styled(Image)`
+  margin-top: 2px;
+  image-color: var(--red);
+  width: 30%;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.2;
+`;
+const Image2 = styled(Image)`
+  margin-top: -380px;
+  margin-right: 700px;
+  margin-left: 30px;
+  image-color: var(--red);
+  width: 20%;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
 `;
 
 const LOGINBOX1 = styled(Card)`
@@ -74,13 +92,15 @@ class LoginPage extends Form {
     return (
       <div>
         <Container fluid className="Login_design">
-          {/* <Container> */}
+          <Image1 src={GrBubbles} />
+
           <Div>
             <LOGINBOX1 className=" mx-auto">
               <form onSubmit={this.handleSubmit} className="mt-4 mx-3 my-3">
                 <fieldset>
-                  <h2 className="text-center">Login &#128073;</h2>
-
+                  <div className="bg-danger">
+                    <h2 className="text-center">Login &#128073;</h2>
+                  </div>
                   <br></br>
 
                   {this.renderInput("username", "Username")}
@@ -97,11 +117,10 @@ class LoginPage extends Form {
                   </p>
                 </fieldset>
               </form>
-              {/* </Col>
-            </Col>
-          </Row> */}
             </LOGINBOX1>
           </Div>
+
+          <Image2 src={GrTastyle} />
         </Container>
       </div>
     );

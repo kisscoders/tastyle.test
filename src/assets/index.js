@@ -26,6 +26,7 @@ import S2 from "./img/S.jpg";
 import brandImg1 from "./img/brandv3.png";
 import brandImg2 from "./img/product1.png";
 import tastyle from "./img/textyle.png";
+import bubbles from "./img/bubbles.png";
 
 import Illust1 from "./illustrations/cabin.svg";
 import Illust2 from "./illustrations/error.svg";
@@ -60,6 +61,7 @@ export const GrA = A2;
 export const GrT = T2;
 export const GrD = D2;
 export const GrS = S2;
+export const GrBubbles = bubbles;
 
 export const IGCabin = Illust1;
 export const IGError = Illust2;
