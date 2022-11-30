@@ -255,8 +255,9 @@ import {
   GrHomePack1,
   GrHomeProduct3,
   GrHomeProduct5,
-  GrMain,
-  GrAccount,
+  GrHomeProduct1,
+  GrInfo5
+ 
 } from "../assets";
 import { TAG2 } from "../components/common/text/headings";
 import { GREEN, RED } from "../theme/colors";
@@ -279,7 +280,7 @@ const UlList = styled.ul`
 `;
 
 const CustomCorousel = styled(Carousel)`
-  margin-top: 100px;
+ 
   box-shadow: rgba(50, 50, 93, 0.4) 0px 2px 5px -1px,
     rgba(255, 0, 0, 0.6) 0px 10px 30px -10px;
   border-radius: 30px;
@@ -387,7 +388,7 @@ const About = () => {
       <CustomCorousel>
         <CustomCorousel.Item>
           <Crop>
-            <Image fluid className="d-block w-100" src={GrMain} />
+            <Image fluid className="d-block w-100" src={GrHomeProduct1} />
           </Crop>
           <CustomCorousel.Caption>
             <TAG2>We are Health nerds</TAG2>
@@ -499,15 +500,17 @@ const About = () => {
           </li>
         </UlList>
       </Card>
-      <div className="bg-light mt-4 ">
+      <div>
+         <Image src={GrInfo5} style={{ display: "block", marginLeft: "auto", "marginRight": "auto"}}></Image>
+
+      </div>
+      {/* <div className="bg-light mt-4 ">
         <Row>
           <h3 className="mt-4 mb-4">Our Team us..</h3>
 
-          <Col xs={6} md={4}>
-            <Image1 src={GrAccount} />
-          </Col>
+         
 
-          <Col xs={6} md={4}>
+         <Col xs={6} md={4}>
             <div>
               <h5>Mr. S . Thuvaragan</h5>
               <h6>Designer</h6>
@@ -531,16 +534,12 @@ const About = () => {
               </p>
             </div>
           </Col>
-          <Col xs={6} md={4}>
-            <Image2 src={GrAccount} />
-          </Col>
+         
         </Row>
         <br></br>
         <br></br>
         <Row>
-          <Col xs={6} md={4}>
-            <Image1 src={GrAccount} />
-          </Col>
+         
           <br></br>
           <br></br>
           <Col xs={6} md={4}>
@@ -568,11 +567,8 @@ const About = () => {
             </div>
           </Col>
 
-          <Col xs={6} md={4}>
-            <Image2 src={GrAccount} />
-          </Col>
-        </Row>
-      </div>
+        </Row>  */}
+      {/* </div> */}
     </Container>
   );
 };

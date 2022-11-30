@@ -153,7 +153,7 @@ class SignupForm extends Form {
                   in Sri Lanka, and of course the most
                   <span style={{ color: "#9c27b0" }}> profitable</span> one.
                 </H6>
-                <IMAGE src={GrHomeProtein} />
+                {/* <IMAGE src={GrHomeProtein} /> */}
               </CARD>
             </COL>
           </Row>

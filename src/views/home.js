@@ -6,6 +6,7 @@ import {
   GrHomePnB2,
   GrHomePack1,
   GrHomeProduct1,
+  GrHomeProduct5,
 } from "../assets";
 import {
   Card1,
@@ -16,7 +17,7 @@ import {
   CardHeader1,
 } from "../components/common/cards";
 import { ButtonL } from "../components/common/buttons";
-
+import {Col} from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import { H1, Quote, TAG, TAG2 } from "../components/common/text/headings";
 import { GREEN, RED } from "../theme/colors";
@@ -48,6 +49,13 @@ const Crop = styled.div`
   border-radius: 30px;
   ${Image} {
   }
+`;
+
+const Para = styled.p`
+  padding: 10px 0 0 13px;
+  margin: 2px;
+  font-weight: 600;
+  font-size: 18px;
 `;
 
 const Home = () => {
@@ -103,8 +111,16 @@ const Home = () => {
                 <br />
               </CardBody1>
             </Card1>
-          </div>
+          </div> 
 
+
+{/* example */}
+
+{/* 
+           <div className="row my-4">
+
+            
+          <Card1 className="col col-lg-50">
           <CustomCorousel>
             <CustomCorousel.Item>
               <Crop>
@@ -131,6 +147,113 @@ const Home = () => {
               </CustomCorousel.Caption>
             </CustomCorousel.Item>
           </CustomCorousel>
+            </Card1>
+
+
+
+            <Card1 className="col col-lg-50">
+              <CardHeader1 as="h5">
+                The Complete Food <br /> You have been waiting For...
+              </CardHeader1>
+              <CardBody1>
+                <CardTitle1>Over 150 million meals sold</CardTitle1>
+                <CardText1>
+                  Swap out lunch, swap in tastyle. Get all the carbs, protein,
+                  fiber, fats and 27 vitamins and minerals you need from a meal.
+                  Plus, save time on meal prep. From just $1.91 per serving.
+                </CardText1>
+                <br />
+                <div class="d-grid mx-auto mt-4">
+                  <ButtonL className="mx-auto">Shop Now</ButtonL>
+                </div>
+              </CardBody1>
+            </Card1>
+         
+          </div>
+  */}
+
+        
+      <div style={{backgroundColor:'#fff4f3'}} >
+        <Row  className="row my-4">
+          <Col xs={6}>
+          <Carousel>
+                <Carousel.Item interval={1000}>
+                 <Image className="d-block" src={GrHomeProduct5} />
+                 </Carousel.Item>
+                <Carousel.Item interval={500}>
+                   <Image className="d-block " src={GrHomeProduct5} />
+                </Carousel.Item>
+                <Carousel.Item>
+                  <Image className="d-block" src={GrHomeProduct5} />
+                </Carousel.Item>
+          </Carousel>
+          </Col>
+          <Col xs={6}>
+                
+           
+              <CardHeader1 as="h5">
+                The Complete Food <br /> You have been waiting For...
+              </CardHeader1>
+              <CardBody1>
+                <CardTitle1>Over 150 million meals sold</CardTitle1>
+                <Para className="p-4">
+                  Lorem Ipsum is simply dummy text of the printing and
+                  typesetting industry. <br />
+                  <br /> Lorem Ipsum has been the industry's standard dummy text
+                  ever since the 1500s, when an unknown printer took a galley of
+                  type and scrambled it to make a type specimen book. <br />
+                  
+                </Para>
+                <br />
+                <div class="d-grid mx-auto mt-4">
+                  <ButtonL className="mx-auto">Shop Now</ButtonL>
+                </div>
+              </CardBody1>
+        
+           </Col>
+ 
+
+
+        </Row>
+
+
+
+      </div>
+
+
+        
+
+          {/* exampla */}
+
+
+          {/* <CustomCorousel>
+            <CustomCorousel.Item>
+              <Crop>
+                <Image fluid className="d-block w-100" src={GrHomePerson1} />
+              </Crop>
+              <CustomCorousel.Caption className="my-3">
+                <TAG2>Community First</TAG2>
+              </CustomCorousel.Caption>
+            </CustomCorousel.Item>
+            <CustomCorousel.Item>
+              <Crop>
+                <Image fluid className="d-block w-100" src={GrHomePnB2} />
+              </Crop>
+              <CustomCorousel.Caption className="my-3">
+                <TAG2>We are Health nerds</TAG2>
+              </CustomCorousel.Caption>
+            </CustomCorousel.Item>
+            <CustomCorousel.Item>
+              <Crop>
+                <Image fluid className="d-block w-100" src={GrHomePack1} />
+              </Crop>
+              <CustomCorousel.Caption className="my-3">
+                <TAG2>Robust Team</TAG2>
+              </CustomCorousel.Caption>
+            </CustomCorousel.Item>
+          </CustomCorousel> */}
+
+
         </div>
       </Container>
       <div className="m-0 p-0 mt-4">

@@ -221,13 +221,9 @@ class ProductsGrid extends Component {
                   {/* <Card.Text>{item.description}</Card.Text> */}
                   {/* <Card.Text>Buy Now</Card.Text> */}
                   {/* <Link to={`/productdetails/${item._id}`}>Buy Now</Link> */}
-                  <ButtonL>
-                    <Link
-                      to={`/productdetails/${item._id}`}
-                      className="prolink"
-                    >
-                      Buy Now
-                    </Link>
+                 
+                  <ButtonL as={Link}   to={`/productdetails/${item._id}`}>
+                    Buy Now
                   </ButtonL>
                 </Card.Body>
               </PROBOX1>

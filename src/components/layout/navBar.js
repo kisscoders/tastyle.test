@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, NavDropdown, Image } from "react-bootstrap";
 import { getCurrentUser } from "../../services/authService";
 import { BRAND } from "../common/text/headings";
+// import {GrBrandV3} from
 import styled from "styled-components";
 const user = getCurrentUser();
 
@@ -103,6 +104,9 @@ export default function NavBar() {
       <BRAND as={Link} to="/">
         tastyle
       </BRAND>
+       {/* <BRAND as={Link} to="/">
+        <Image src={GrBrandV3}></Image>
+      </BRAND> */}
       <MainNavBar className="d-flex mb-3 align-items-center">
         <div className="">
           <NavLink to="/list">Our Products</NavLink>
