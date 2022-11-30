@@ -133,9 +133,9 @@ const Home = () => {
           </CustomCorousel>
         </div>
       </Container>
-      <div className="m-0 p-0 mt-4">
+      {/* <div className="m-0 p-0 mt-4">
         <Footer />
-      </div>
+      </div> */}
     </React.Fragment>
   );
 };

@@ -4,6 +4,8 @@ import { Navbar, Container, Nav, NavDropdown, Image } from "react-bootstrap";
 import { getCurrentUser } from "../../services/authService";
 import { BRAND } from "../common/text/headings";
 import styled from "styled-components";
+import { GrTastyle } from "../../assets";
+
 const user = getCurrentUser();
 
 const MainNavBar = styled.div`
@@ -97,38 +99,35 @@ const IconLink = styled(Link)`
   }
 `;
 
+const Image1 = styled(Image)`
+  margin: 5px;
+  margin-top: 2px;
+  padding: 6px 10px;
+  image-color: var(--red);
+  width: 30%;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default function NavBar() {
   return (
+    // <>
+    //   <Navbar
+    //     fluid
+    //     // className="bg-info"
+    //     sticky="top"
+    //     fixed="top"
+    //     style={{ display: "block", backgroundColor: "#fce4ec" }}
+    //   >
     <div>
       <BRAND as={Link} to="/">
-        tastyle
+        <Image1 src={GrTastyle} />
       </BRAND>
       <MainNavBar className="d-flex mb-3 align-items-center">
         <div className="">
           <NavLink to="/list">Our Products</NavLink>
           <NavLink to="/about">Why us?</NavLink>
         </div>
-        {/* <div>
-          {!user && (
-            <div>
-              <NavLink to="/login">Login</NavLink>
-              <NavLink to="/signup">Signup</NavLink>
-            </div>
-          )}
-          {user && (
-            <div className="d-flex align-items-center">
-              <NavLink className="icon" to="/dash">
-                <i className="ri-dashboard-fill"></i>
-              </NavLink>
-              <NavLink className="icon" to="/logout">
-                <i className="ri-logout-box-r-line"></i>
-              </NavLink>
-              <NavLink className="me-2" to="/dash">
-                <Image roundedCircle src={user.avatar.url} width="40" />
-              </NavLink>
-            </div>
-          )}
-        </div> */}
       </MainNavBar>
       <ProfileMark>
         {!user && (
@@ -148,5 +147,7 @@ export default function NavBar() {
         )}
       </ProfileMark>
     </div>
+    //   </Navbar>
+    // </>
   );
 }
